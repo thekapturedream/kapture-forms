@@ -27,7 +27,8 @@ export async function GET(
   if (!schema) return new Response("Schema not authored for this product yet", { status: 404 });
 
   const docx = await buildDocx({ schema, licenseSlug: license.slug });
-  return new Response(docx, {
+  // Buffer.from gives us a BodyInit-compatible value (Node Buffer extends Uint8Array)
+  return new Response(Buffer.from(docx), {
     headers: {
       "Content-Type":
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

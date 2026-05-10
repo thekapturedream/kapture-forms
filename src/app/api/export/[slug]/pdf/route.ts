@@ -34,7 +34,8 @@ export async function GET(
   }
 
   const pdf = await buildPdf({ schema, licenseSlug: license.slug });
-  return new Response(pdf, {
+  // Buffer.from gives us a BodyInit-compatible value (Node Buffer extends Uint8Array)
+  return new Response(Buffer.from(pdf), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="${license.product_id}.pdf"`,
