@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "next build",
+  "framework": "nextjs",
+  "regions": ["lhr1"],
+  "trailingSlash": false,
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/forms", "destination": "/", "permanent": true },
+    { "source": "/store", "destination": "/", "permanent": true },
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    {
+      "source": "/products/staff-onboarding-uk-care.html",
+      "destination": "/products/staff-onboarding-uk-care",
+      "permanent": true
+    }
+  ]
+}
