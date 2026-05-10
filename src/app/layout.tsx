@@ -36,35 +36,34 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kapture-forms.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Forms · store — pre-built compliance forms for every industry",
-    template: "%s · forms · store",
+    default: "Kapture Forms — pre-built compliance forms for every industry",
+    template: "%s · Kapture Forms",
   },
   description:
-    "The forms store. Pre-built, branded, audit-hashed compliance forms for healthcare, HR, finance, legal, education, hospitality, real estate, construction, public sector, logistics. Five export formats. Pay once or run hosted. By Kapture.",
+    "Pre-built, audit-hashed compliance forms for UK care, HR, finance, legal, and more. Five export formats. Pay once or run hosted. By Kapture.",
   keywords: [
+    "Kapture Forms",
     "compliance forms",
     "UK care onboarding",
     "CQC forms",
     "audit hash",
-    "Kapture",
-    "kooper care",
     "form templates",
   ],
   applicationName: "Kapture Forms",
   authors: [{ name: "Kapture" }],
   openGraph: {
     type: "website",
-    title: "Forms · store — by Kapture",
+    title: "Kapture Forms — pre-built compliance forms",
     description:
-      "Pre-built, branded, audit-hashed compliance forms. Pay once or run hosted with magic-link invitations and a queue.",
+      "Pre-built, audit-hashed compliance forms. Pay once or run hosted. £29 a pack.",
     url: siteUrl,
     siteName: "Kapture Forms",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Forms · store — by Kapture",
+    title: "Kapture Forms",
     description:
-      "Pre-built, branded, audit-hashed compliance forms. Pay once or run hosted.",
+      "Pre-built, audit-hashed compliance forms. £29 a pack. By Kapture.",
   },
   robots: { index: true, follow: true },
   icons: { icon: "/kapture-sun.svg" },

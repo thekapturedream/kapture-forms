@@ -1,83 +1,89 @@
 import Link from "next/link";
+import { KaptureSun } from "./Logo";
 
 export function Footer() {
   return (
-    <footer className="bg-kapture-black text-white py-12">
-      <div className="container-c grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-        <div>
-          <Link href="/" className="flex items-center gap-2 mb-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-kapture-yellow"
-            >
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-            </svg>
-            <span className="font-display font-semibold lowercase tracking-wide text-base">
-              forms · store
+    <footer className="bg-kapture-black text-white border-t border-white/5">
+      <div className="container-c py-14 grid grid-cols-2 md:grid-cols-4 gap-8 items-start">
+        <div className="col-span-2 md:col-span-1">
+          <Link href="/" className="flex items-center gap-2.5 mb-4">
+            <KaptureSun size={22} />
+            <span className="font-display tracking-[-0.01em]">
+              <span className="font-semibold">Kapture</span>
+              <span className="font-medium ml-1.5 text-kapture-yellow">Forms</span>
             </span>
           </Link>
-          <p className="text-xs text-white/55 leading-relaxed">
-            By Kapture. The forms store for every industry, every workflow. Pre-built.
-            Audit-hashed. Exportable. White-label ready.
+          <p className="text-xs text-white/55 leading-relaxed max-w-[14rem]">
+            Pre-built compliance forms for every industry. Pay once. Run hosted. Audit-hashed
+            on every submission.
           </p>
         </div>
         <div>
-          <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-yellow mb-3">
-            FORMS
+          <div className="font-mono text-[0.625rem] uppercase tracking-widest text-white/40 mb-3">
+            Product
           </div>
-          <Link href="/#industries" className="block text-sm text-white/55 hover:text-white mb-1.5">
-            Industries
+          <Link
+            href="/products/staff-onboarding-uk-care"
+            className="block text-sm text-white/65 hover:text-white mb-1.5"
+          >
+            Staff onboarding
           </Link>
-          <Link href="/#featured" className="block text-sm text-white/55 hover:text-white mb-1.5">
-            Featured products
-          </Link>
-          <Link href="/#exports" className="block text-sm text-white/55 hover:text-white mb-1.5">
-            Export formats
-          </Link>
-          <Link href="/#pricing" className="block text-sm text-white/55 hover:text-white mb-1.5">
+          <Link href="/#pricing" className="block text-sm text-white/65 hover:text-white mb-1.5">
             Pricing
           </Link>
-          <Link href="/#partner" className="block text-sm text-white/55 hover:text-white mb-1.5">
-            Become a publisher
+          <Link href="/dashboard" className="block text-sm text-white/65 hover:text-white mb-1.5">
+            Dashboard
           </Link>
-          <Link href="/how-to" className="block text-sm text-white/55 hover:text-white mb-1.5">
-            How-to guides
+          <Link href="/auth/login" className="block text-sm text-white/65 hover:text-white mb-1.5">
+            Sign in
           </Link>
         </div>
         <div>
-          <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-yellow mb-3">
-            KAPTURE
+          <div className="font-mono text-[0.625rem] uppercase tracking-widest text-white/40 mb-3">
+            Resources
+          </div>
+          <Link href="/how-to" className="block text-sm text-white/65 hover:text-white mb-1.5">
+            How-to guides
+          </Link>
+          <Link href="/how-to/audit-hash" className="block text-sm text-white/65 hover:text-white mb-1.5">
+            Audit hash
+          </Link>
+          <Link href="/how-to/regulators" className="block text-sm text-white/65 hover:text-white mb-1.5">
+            Regulator mapping
+          </Link>
+          <Link href="/#partner" className="block text-sm text-white/65 hover:text-white mb-1.5">
+            Become a publisher
+          </Link>
+        </div>
+        <div>
+          <div className="font-mono text-[0.625rem] uppercase tracking-widest text-white/40 mb-3">
+            Kapture
           </div>
           <Link
             href="https://kooper-care.vercel.app/kooper-care-landing.html"
-            className="block text-sm text-white/55 hover:text-white mb-1.5"
+            className="block text-sm text-white/65 hover:text-white mb-1.5"
           >
             kooper · care
           </Link>
           <Link
-            href="/products/staff-onboarding-uk-care"
-            className="block text-sm text-white/55 hover:text-white mb-1.5"
+            href="https://thekapture.com"
+            className="block text-sm text-white/65 hover:text-white mb-1.5"
           >
-            kooper · onboarding
+            thekapture.com
           </Link>
-          <Link href="/auth/login" className="block text-sm text-white/55 hover:text-white mb-1.5">
-            Sign in
-          </Link>
-          <Link href="/dashboard" className="block text-sm text-white/55 hover:text-white mb-1.5">
-            Dashboard
-          </Link>
+          <a
+            href="mailto:forms@thekapture.com"
+            className="block text-sm text-white/65 hover:text-white mb-1.5"
+          >
+            forms@thekapture.com
+          </a>
         </div>
       </div>
-      <div className="container-c mt-8 pt-6 border-t border-kapture-ash text-xs text-white/40 font-mono flex flex-wrap items-center justify-between gap-3">
-        <span>Forms · v0.1 early access · By Kapture</span>
-        <span>· Curated marketplace · Editorial review on submit · 70/30 publisher share</span>
+      <div className="border-t border-white/5">
+        <div className="container-c py-5 flex items-center justify-between gap-3 flex-wrap text-xs text-white/40 font-mono">
+          <span>© {new Date().getFullYear()} Kapture · All rights reserved</span>
+          <span>v0.1 · early access</span>
+        </div>
       </div>
     </footer>
   );

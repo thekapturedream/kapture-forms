@@ -2,6 +2,7 @@ import {
   AlignmentType,
   BorderStyle,
   Document,
+  Footer,
   HeadingLevel,
   Packer,
   Paragraph,
@@ -210,8 +211,8 @@ function signatureTable(label: string): Table {
   });
 }
 
-function footer(licenseSlug: string) {
-  return {
+function footer(licenseSlug: string): Footer {
+  return new Footer({
     children: [
       new Paragraph({
         alignment: AlignmentType.LEFT,
@@ -227,5 +228,5 @@ function footer(licenseSlug: string) {
         ],
       }),
     ],
-  };
+  });
 }

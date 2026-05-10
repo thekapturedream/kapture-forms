@@ -17,13 +17,17 @@ export async function POST(
     return NextResponse.json({ error: "Product not available" }, { status: 404 });
   }
 
-  let body: { mode?: "oneoff" | "subscription" };
+  let body: { mode?: "oneoff" | "subscription"; email?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
   const mode = body.mode === "subscription" ? "subscription" : "oneoff";
+  const customerEmail =
+    typeof body.email === "string" && /.+@.+\..+/.test(body.email)
+      ? body.email.trim()
+      : undefined;
 
   const priceId =
     mode === "subscription" ? product.price.subscription : product.price.oneOff;
@@ -31,7 +35,7 @@ export async function POST(
   if (!priceId) {
     // Fallback — Stripe price not yet created. Use price_data inline so
     // the buy button still works in dev before publisher seeds prices.
-    return createCheckoutWithInlinePrice(req, product, mode);
+    return createCheckoutWithInlinePrice(req, product, mode, customerEmail);
   }
 
   const origin = req.headers.get("origin") ?? new URL(req.url).origin;
@@ -46,6 +50,7 @@ export async function POST(
       allow_promotion_codes: true,
       billing_address_collection: "required",
       automatic_tax: { enabled: true },
+      customer_email: customerEmail,
       metadata: {
         productId: product.id,
         productSlug: product.slug,
@@ -67,7 +72,8 @@ export async function POST(
 async function createCheckoutWithInlinePrice(
   req: NextRequest,
   product: ReturnType<typeof getProduct> & object,
-  mode: "oneoff" | "subscription"
+  mode: "oneoff" | "subscription",
+  customerEmail?: string
 ) {
   const origin = req.headers.get("origin") ?? new URL(req.url).origin;
   const stripe = getStripe();
@@ -96,6 +102,7 @@ async function createCheckoutWithInlinePrice(
       allow_promotion_codes: true,
       billing_address_collection: "required",
       automatic_tax: { enabled: true },
+      customer_email: customerEmail,
       metadata: {
         productId: product.id,
         productSlug: product.slug,
