@@ -1,15 +1,11 @@
 import { NextRequest } from "next/server";
 import { createSupabaseAdminClient } from "@lib/supabase/server";
 import { getSchema } from "@lib/schemas";
-import { buildPdf } from "@lib/exports/pdf";
+import { buildDocx } from "@lib/exports/docx";
 
 export const runtime = "nodejs";
 
-/**
- * GET /api/export/[slug]/pdf
- * Generates a print-ready A4 PDF for the buyer's pack from the live schema.
- * Streams the binary directly. Browser downloads it as <pack>.pdf.
- */
+/** GET /api/export/[slug]/docx — editable Word .docx of the form schema. */
 export async function GET(
   _req: NextRequest,
   { params }: { params: { slug: string } }
@@ -17,7 +13,7 @@ export async function GET(
   const supabase = createSupabaseAdminClient();
   const { data: license } = await supabase
     .from("licenses")
-    .select("id, product_id, slug, status, active_until")
+    .select("product_id, slug, status, active_until")
     .eq("slug", params.slug)
     .maybeSingle();
 
@@ -27,17 +23,15 @@ export async function GET(
   if (license.active_until && new Date(license.active_until) < new Date()) {
     return new Response("License expired", { status: 403 });
   }
-
   const schema = getSchema(license.product_id);
-  if (!schema) {
-    return new Response("Schema not authored for this product yet", { status: 404 });
-  }
+  if (!schema) return new Response("Schema not authored for this product yet", { status: 404 });
 
-  const pdf = await buildPdf({ schema, licenseSlug: license.slug });
-  return new Response(pdf, {
+  const docx = await buildDocx({ schema, licenseSlug: license.slug });
+  return new Response(docx, {
     headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="${license.product_id}.pdf"`,
+      "Content-Type":
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "Content-Disposition": `attachment; filename="${license.product_id}.docx"`,
       "Cache-Control": "no-store",
     },
   });

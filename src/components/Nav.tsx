@@ -23,6 +23,9 @@ export function Nav({ variant = "marketing" }: NavProps) {
               <Link href="/#exports" className="nav-link">
                 Exports
               </Link>
+              <Link href="/how-to" className="nav-link">
+                How-to
+              </Link>
               <Link href="/#pricing" className="nav-link">
                 Pricing
               </Link>

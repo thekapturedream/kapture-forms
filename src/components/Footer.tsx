@@ -47,6 +47,9 @@ export function Footer() {
           <Link href="/#partner" className="block text-sm text-white/55 hover:text-white mb-1.5">
             Become a publisher
           </Link>
+          <Link href="/how-to" className="block text-sm text-white/55 hover:text-white mb-1.5">
+            How-to guides
+          </Link>
         </div>
         <div>
           <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-yellow mb-3">
