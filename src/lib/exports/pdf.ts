@@ -263,9 +263,11 @@ function drawField(ctx: Ctx, field: Field) {
 
   if (field.options && field.type === "select") {
     const opts = field.options.join(" · ");
+    // Inside this branch type is "select" so the row offset is the
+    // single-line value (28). Textarea selects don't exist in our schema.
     page.drawText(`Options: ${opts}`, {
       x: MARGIN.left,
-      y: y - (field.type === "textarea" ? 56 : 28),
+      y: y - 28,
       size: 7,
       font: ctx.fontMono,
       color: NEUTRAL_MUTED,
