@@ -17,7 +17,9 @@ export function getStripe(): Stripe {
     );
   }
   _stripe = new Stripe(secret, {
-    apiVersion: "2024-09-30.acacia",
+    // Use the account's pinned API version — keeps the build green
+    // across Stripe SDK upgrades. Override per call if you need a
+    // specific version for an idempotent request.
     appInfo: { name: "kapture-forms", version: "0.1.0" },
   });
   return _stripe;
