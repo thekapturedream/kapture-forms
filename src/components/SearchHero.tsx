@@ -9,10 +9,9 @@ import {
 } from "@lib/search-catalog";
 
 /**
- * Search-first landing hero. One input, suggestions below, dropdown of
- * matching packs as the buyer types. Press Enter to open the top result.
- *
- * Lives on the homepage. Renders ~30 entries from `search-catalog.ts`.
+ * Search-first landing widget. Single rounded input on a white canvas,
+ * two action buttons below ("Search forms" + "I'm feeling regulated"),
+ * popular-search chips and a live dropdown of matches as the buyer types.
  */
 export function SearchHero() {
   const [q, setQ] = useState("");
@@ -21,9 +20,8 @@ export function SearchHero() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const results: SearchEntry[] = useMemo(() => searchCatalog(q), [q]);
-  const showDropdown = focused && (q.length > 0 || results.length > 0);
+  const showDropdown = focused && q.length > 0 && results.length >= 0;
 
-  // Click outside → close dropdown
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
       if (!containerRef.current) return;
@@ -33,22 +31,40 @@ export function SearchHero() {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
+  function go(href: string) {
+    window.location.href = href;
+  }
+
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const top = results[0];
-    if (top) window.location.href = top.href;
+    if (top) go(top.href);
+  }
+
+  function feelingRegulated() {
+    // Hand the buyer the live pack — Kapture's "I'm Feeling Lucky".
+    const live = results.find((r) => r.status === "live");
+    if (live) go(live.href);
+    else go("/products/staff-onboarding-uk-care");
   }
 
   return (
-    <div ref={containerRef} className="w-full max-w-2xl mx-auto relative">
-      <form onSubmit={onSubmit} className="w-full">
-        <div className="relative">
-          <span className="absolute left-5 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none">
+    <div ref={containerRef} className="w-full max-w-[584px] mx-auto relative">
+      <form onSubmit={onSubmit}>
+        {/* SEARCH BAR — Google's pill, our chrome */}
+        <div
+          className={`relative flex items-center gap-3 bg-white rounded-full border transition-all ${
+            focused
+              ? "border-kapture-fog shadow-[0_2px_18px_rgba(0,0,0,0.10)]"
+              : "border-kapture-fog hover:shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
+          }`}
+        >
+          <span className="pl-5 text-kapture-mist pointer-events-none">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              width="18"
-              height="18"
+              width="20"
+              height="20"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -68,36 +84,77 @@ export function SearchHero() {
             placeholder="Search forms — staff onboarding, AML, RAMS, tenant referencing…"
             spellCheck={false}
             autoComplete="off"
-            className="w-full bg-white text-kapture-black placeholder:text-kapture-mist text-base lg:text-lg pl-14 pr-5 py-5 rounded-2xl border border-kapture-fog focus:outline-none focus:border-kapture-black focus:ring-4 focus:ring-kapture-yellow/30 transition"
+            aria-label="Search forms"
+            className="flex-1 bg-transparent text-kapture-black placeholder:text-kapture-mist text-base py-3.5 pr-5 focus:outline-none"
           />
+          {q && (
+            <button
+              type="button"
+              onClick={() => {
+                setQ("");
+                inputRef.current?.focus();
+              }}
+              aria-label="Clear search"
+              className="mr-3 text-kapture-mist hover:text-kapture-black p-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
         </div>
 
-        {/* Popular row — hidden once user starts typing */}
-        {!q && (
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
-            <span className="font-mono text-[0.625rem] uppercase tracking-widest text-white/45 mr-1">
-              Popular:
-            </span>
-            {POPULAR_QUERIES.map((p) => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => {
-                  setQ(p);
-                  inputRef.current?.focus();
-                }}
-                className="px-3 py-1.5 rounded-full bg-white/5 text-white/70 hover:bg-white/10 hover:text-white border border-white/10 transition font-medium"
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-        )}
+        {/* BUTTON ROW — Google parallel: "Search" + "Feeling Lucky" */}
+        <div className="mt-7 flex items-center justify-center gap-3">
+          <button type="submit" className="btn-search">
+            Search forms
+          </button>
+          <button
+            type="button"
+            onClick={feelingRegulated}
+            className="btn-search"
+          >
+            I&apos;m feeling regulated
+          </button>
+        </div>
       </form>
+
+      {/* POPULAR — only when input empty */}
+      {!q && (
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs">
+          <span className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mr-1">
+            Popular:
+          </span>
+          {POPULAR_QUERIES.map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => {
+                setQ(p);
+                inputRef.current?.focus();
+              }}
+              className="px-3 py-1.5 rounded-full bg-kapture-paper text-kapture-smoke hover:bg-kapture-fog/40 hover:text-kapture-black border border-kapture-fog transition font-medium"
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* DROPDOWN */}
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-full mt-3 bg-white text-kapture-black border border-kapture-fog rounded-2xl shadow-2xl overflow-hidden z-50">
+        <div className="absolute left-0 right-0 top-[60px] bg-white text-kapture-black border border-kapture-fog rounded-2xl shadow-2xl overflow-hidden z-50">
           {results.length === 0 ? (
             <div className="p-5">
               <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mb-2">
@@ -145,12 +202,6 @@ export function SearchHero() {
               ))}
             </ul>
           )}
-          <div className="border-t border-kapture-fog bg-kapture-paper px-5 py-3 text-[0.625rem] font-mono uppercase tracking-widest text-kapture-mist flex items-center justify-between gap-3 flex-wrap">
-            <span>Press ENTER for the top result</span>
-            <Link href="/how-to" className="hover:text-kapture-black">
-              How-to guides →
-            </Link>
-          </div>
         </div>
       )}
     </div>
