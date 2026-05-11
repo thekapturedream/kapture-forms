@@ -14,15 +14,15 @@ export function Nav({ variant = "marketing" }: NavProps) {
           {variant === "marketing" && (
             <div className="hidden md:flex items-center gap-1">
               <Link href="/products/staff-onboarding-uk-care" className="nav-link">
-                Product
+                Live pack
               </Link>
               <Link href="/how-to" className="nav-link">
                 How-to
               </Link>
-              <Link href="/#pricing" className="nav-link">
-                Pricing
-              </Link>
-              <Link href="/#partner" className="nav-link">
+              <Link
+                href="mailto:forms@thekapture.com?subject=Publisher%20application"
+                className="nav-link"
+              >
                 Publishers
               </Link>
             </div>
