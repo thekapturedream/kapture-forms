@@ -9,9 +9,10 @@ import {
 } from "@lib/search-catalog";
 
 /**
- * Search-first landing widget. Single rounded input on a white canvas,
- * two action buttons below ("Search forms" + "I'm feeling regulated"),
- * popular-search chips and a live dropdown of matches as the buyer types.
+ * Conversion-tuned search hero.
+ * One input + one primary yellow CTA in the same row. Live dropdown of
+ * matches as the buyer types. Popular chips below. ENTER opens the top
+ * result — same as clicking the button.
  */
 export function SearchHero() {
   const [q, setQ] = useState("");
@@ -20,7 +21,11 @@ export function SearchHero() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const results: SearchEntry[] = useMemo(() => searchCatalog(q), [q]);
-  const showDropdown = focused && q.length > 0 && results.length >= 0;
+  const topLive = useMemo(
+    () => results.find((r) => r.status === "live") ?? null,
+    [results]
+  );
+  const showDropdown = focused && q.length > 0;
 
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -39,102 +44,108 @@ export function SearchHero() {
     e.preventDefault();
     const top = results[0];
     if (top) go(top.href);
-  }
-
-  function feelingRegulated() {
-    // Hand the buyer the live pack — Kapture's "I'm Feeling Lucky".
-    const live = results.find((r) => r.status === "live");
-    if (live) go(live.href);
     else go("/products/staff-onboarding-uk-care");
   }
 
   return (
-    <div ref={containerRef} className="w-full max-w-[584px] mx-auto relative">
+    <div ref={containerRef} className="w-full max-w-[640px] mx-auto relative">
       <form onSubmit={onSubmit}>
-        {/* SEARCH BAR — Google's pill, our chrome */}
+        {/* SEARCH ROW — input + primary CTA inline */}
         <div
-          className={`relative flex items-center gap-3 bg-white rounded-full border transition-all ${
-            focused
-              ? "border-kapture-fog shadow-[0_2px_18px_rgba(0,0,0,0.10)]"
-              : "border-kapture-fog hover:shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
+          className={`flex items-stretch gap-2 transition-all ${
+            focused ? "" : ""
           }`}
         >
-          <span className="pl-5 text-kapture-mist pointer-events-none">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            onFocus={() => setFocused(true)}
-            placeholder="Search forms — staff onboarding, AML, RAMS, tenant referencing…"
-            spellCheck={false}
-            autoComplete="off"
-            aria-label="Search forms"
-            className="flex-1 bg-transparent text-kapture-black placeholder:text-kapture-mist text-base py-3.5 pr-5 focus:outline-none"
-          />
-          {q && (
-            <button
-              type="button"
-              onClick={() => {
-                setQ("");
-                inputRef.current?.focus();
-              }}
-              aria-label="Clear search"
-              className="mr-3 text-kapture-mist hover:text-kapture-black p-1"
-            >
+          <div
+            className={`flex-1 flex items-center bg-white rounded-2xl border transition-all ${
+              focused
+                ? "border-kapture-black shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
+                : "border-kapture-fog hover:border-kapture-mist hover:shadow-[0_2px_12px_rgba(0,0,0,0.05)]"
+            }`}
+          >
+            <span className="pl-5 text-kapture-mist pointer-events-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                width="18"
-                height="18"
+                width="20"
+                height="20"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
+                <circle cx="11" cy="11" r="7" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-            </button>
-          )}
-        </div>
-
-        {/* BUTTON ROW — Google parallel: "Search" + "Feeling Lucky" */}
-        <div className="mt-7 flex items-center justify-center gap-3">
-          <button type="submit" className="btn-search">
-            Search forms
-          </button>
+            </span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onFocus={() => setFocused(true)}
+              placeholder="Search a form — staff onboarding, AML, RAMS…"
+              spellCheck={false}
+              autoComplete="off"
+              aria-label="Search a form"
+              className="flex-1 bg-transparent text-kapture-black placeholder:text-kapture-mist text-base lg:text-[1.0625rem] py-4 pl-3.5 pr-3 focus:outline-none"
+            />
+            {q && (
+              <button
+                type="button"
+                onClick={() => {
+                  setQ("");
+                  inputRef.current?.focus();
+                }}
+                aria-label="Clear search"
+                className="mr-2 text-kapture-mist hover:text-kapture-black p-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            )}
+          </div>
           <button
-            type="button"
-            onClick={feelingRegulated}
-            className="btn-search"
+            type="submit"
+            className="bg-kapture-black text-white hover:bg-kapture-coal transition-all rounded-2xl px-6 lg:px-7 font-medium text-sm lg:text-base whitespace-nowrap inline-flex items-center gap-2"
           >
-            I&apos;m feeling regulated
+            Find my form
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
           </button>
         </div>
       </form>
 
       {/* POPULAR — only when input empty */}
       {!q && (
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs">
           <span className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mr-1">
-            Popular:
+            Try:
           </span>
           {POPULAR_QUERIES.map((p) => (
             <button
@@ -144,7 +155,7 @@ export function SearchHero() {
                 setQ(p);
                 inputRef.current?.focus();
               }}
-              className="px-3 py-1.5 rounded-full bg-kapture-paper text-kapture-smoke hover:bg-kapture-fog/40 hover:text-kapture-black border border-kapture-fog transition font-medium"
+              className="px-3 py-1.5 rounded-full bg-kapture-paper text-kapture-smoke hover:bg-white hover:text-kapture-black hover:shadow-sm border border-kapture-fog transition font-medium"
             >
               {p}
             </button>
@@ -154,32 +165,34 @@ export function SearchHero() {
 
       {/* DROPDOWN */}
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-[60px] bg-white text-kapture-black border border-kapture-fog rounded-2xl shadow-2xl overflow-hidden z-50">
+        <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] bg-white text-kapture-black border border-kapture-fog rounded-2xl shadow-2xl overflow-hidden z-50">
           {results.length === 0 ? (
             <div className="p-5">
               <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mb-2">
-                NO MATCHES
+                NOT YET ON THE ROADMAP
               </div>
               <p className="text-sm text-kapture-smoke leading-relaxed mb-3">
-                We don&apos;t have a pack for &ldquo;<strong>{q}</strong>&rdquo; yet. Tell us
-                what you need — we&apos;ll add it to the roadmap.
+                We don&apos;t have a pack for &ldquo;<strong>{q}</strong>&rdquo;. Tell us what
+                you need — we&apos;ll add it.
               </p>
               <a
                 href={`mailto:forms@thekapture.com?subject=${encodeURIComponent(
                   `Pack request · ${q}`
                 )}`}
-                className="btn-yellow text-xs"
+                className="inline-flex items-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber px-4 py-2 rounded-xl text-xs font-semibold transition"
               >
                 Request this form →
               </a>
             </div>
           ) : (
             <ul className="max-h-[26rem] overflow-y-auto divide-y divide-kapture-fog">
-              {results.slice(0, 8).map((r) => (
+              {results.slice(0, 8).map((r, i) => (
                 <li key={r.title}>
                   <Link
                     href={r.href}
-                    className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-kapture-paper transition"
+                    className={`flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-kapture-paper transition ${
+                      i === 0 ? "bg-kapture-paper/40" : ""
+                    }`}
                   >
                     <div className="min-w-0">
                       <div className="font-display font-semibold text-sm text-kapture-black truncate">
@@ -191,17 +204,27 @@ export function SearchHero() {
                       </div>
                     </div>
                     <span
-                      className={`shrink-0 chip text-[0.625rem] tracking-wider ${
-                        r.status === "live" ? "chip-yellow" : ""
+                      className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.625rem] font-mono font-semibold tracking-wider ${
+                        r.status === "live"
+                          ? "bg-kapture-yellow text-kapture-black"
+                          : "bg-kapture-paper text-kapture-smoke border border-kapture-fog"
                       }`}
                     >
-                      {r.status === "live" ? "LIVE · BUY" : "NOTIFY ME"}
+                      {r.status === "live" ? "BUY · £29" : "NOTIFY ME"}
                     </span>
                   </Link>
                 </li>
               ))}
             </ul>
           )}
+          <div className="border-t border-kapture-fog bg-kapture-paper/60 px-5 py-2.5 text-[0.625rem] font-mono uppercase tracking-widest text-kapture-mist flex items-center justify-between gap-3 flex-wrap">
+            <span>↵ ENTER for top result</span>
+            {topLive && q && (
+              <span className="text-kapture-black">
+                Top live: <span className="font-semibold">{topLive.title}</span>
+              </span>
+            )}
+          </div>
         </div>
       )}
     </div>
