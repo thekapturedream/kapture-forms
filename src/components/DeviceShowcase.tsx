@@ -86,10 +86,10 @@ export function DeviceShowcase({ product, accent, fontFamily, headline }: Device
 
 function Phone(props: DeviceShowcaseProps) {
   return (
-    <div className="relative w-[200px] sm:w-[230px] h-[420px] sm:h-[480px] rounded-[40px] bg-kapture-black dark:bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] p-[5px]">
-      <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-20 h-5 bg-kapture-black dark:bg-white rounded-full z-10" />
-      <div className="w-full h-full rounded-[35px] bg-white dark:bg-kapture-coal overflow-hidden">
-        <div className="pt-7 px-3.5 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
+    <div className="relative w-[210px] sm:w-[240px] h-[430px] sm:h-[490px] rounded-[44px] bg-kapture-black dark:bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] p-[6px]">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-kapture-black dark:bg-white rounded-full z-10" />
+      <div className="w-full h-full rounded-[38px] bg-white dark:bg-kapture-coal overflow-hidden">
+        <div className="pt-9 px-5 pb-5 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
           <FormPreview {...props} compact />
         </div>
       </div>
@@ -99,10 +99,10 @@ function Phone(props: DeviceShowcaseProps) {
 
 function Tablet(props: DeviceShowcaseProps) {
   return (
-    <div className="relative w-[340px] sm:w-[400px] h-[440px] sm:h-[500px] rounded-[28px] bg-kapture-black dark:bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] p-[7px]">
+    <div className="relative w-[360px] sm:w-[420px] h-[450px] sm:h-[520px] rounded-[32px] bg-kapture-black dark:bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] p-[8px]">
       <div className="absolute top-3 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-kapture-paper rounded-full z-10" />
-      <div className="w-full h-full rounded-[22px] bg-white dark:bg-kapture-coal overflow-hidden">
-        <div className="pt-6 px-6 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
+      <div className="w-full h-full rounded-[24px] bg-white dark:bg-kapture-coal overflow-hidden">
+        <div className="pt-9 px-9 pb-7 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
           <FormPreview {...props} />
         </div>
       </div>
@@ -112,12 +112,12 @@ function Tablet(props: DeviceShowcaseProps) {
 
 function Laptop(props: DeviceShowcaseProps) {
   return (
-    <div className="w-[400px] sm:w-[480px] shrink-0">
+    <div className="w-[420px] sm:w-[500px] shrink-0">
       {/* Screen */}
-      <div className="relative w-full h-[280px] sm:h-[320px] rounded-t-2xl bg-kapture-black dark:bg-white p-[7px] shadow-[0_-20px_40px_-30px_rgba(0,0,0,0.25)]">
+      <div className="relative w-full h-[290px] sm:h-[330px] rounded-t-2xl bg-kapture-black dark:bg-white p-[8px] shadow-[0_-20px_40px_-30px_rgba(0,0,0,0.25)]">
         <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-kapture-paper rounded-full z-10" />
         <div className="w-full h-full rounded-md bg-white dark:bg-kapture-coal overflow-hidden">
-          <div className="pt-4 px-6 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
+          <div className="pt-7 px-10 pb-6 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
             <FormPreview {...props} wide />
           </div>
         </div>
@@ -141,26 +141,27 @@ function FormPreview({
   wide,
 }: DeviceShowcaseProps & { compact?: boolean; wide?: boolean }) {
   const titleClass = compact
-    ? "text-[10px] leading-tight"
+    ? "text-[11px] leading-tight"
     : wide
-      ? "text-sm leading-tight"
-      : "text-xs leading-tight";
+      ? "text-[15px] leading-tight"
+      : "text-[13px] leading-tight";
   const kickerClass = compact ? "text-[7px]" : "text-[8px]";
-  const fieldHeight = compact ? "h-5" : "h-6";
-  const buttonClass = compact ? "text-[9px] py-1.5" : wide ? "text-xs py-2" : "text-[10px] py-1.5";
+  const fieldHeight = compact ? "h-5" : wide ? "h-7" : "h-6";
+  const buttonClass = compact ? "text-[10px] py-2" : wide ? "text-xs py-2.5" : "text-[11px] py-2";
+  const fields = compact ? ["Name", "Email", "DOB"] : wide ? ["Full legal name", "Email", "Date of birth"] : ["Full legal name", "Email", "Date of birth", "Mobile"];
 
   return (
     <div className="h-full flex flex-col">
-      <div className={`font-mono uppercase tracking-widest text-kapture-mist dark:text-white/40 ${kickerClass} mb-1.5`}>
+      <div className={`font-mono uppercase tracking-widest font-bold text-kapture-smoke dark:text-white/55 ${kickerClass} mb-2`}>
         {product.industry}
       </div>
-      <h4 className={`font-bold text-kapture-black dark:text-white ${titleClass} mb-3`}>
+      <h4 className={`font-bold text-kapture-black dark:text-white tracking-[-0.005em] ${titleClass} mb-4`}>
         {headline || product.title}
       </h4>
-      <div className="space-y-1.5 flex-1">
-        {(compact ? ["Name", "Email", "DOB"] : ["Full legal name", "Email", "Date of birth", "Mobile"]).map((l) => (
+      <div className={`flex-1 ${compact ? "space-y-2" : "space-y-2.5"}`}>
+        {fields.map((l) => (
           <div key={l}>
-            <div className={`font-mono uppercase tracking-widest text-kapture-mist dark:text-white/40 ${kickerClass} mb-0.5`}>
+            <div className={`font-mono uppercase tracking-widest font-bold text-kapture-smoke dark:text-white/55 ${kickerClass} mb-1`}>
               {l}
             </div>
             <div className={`${fieldHeight} bg-kapture-paper dark:bg-white/[0.05] rounded-md border border-kapture-fog dark:border-white/10`} />
@@ -169,13 +170,13 @@ function FormPreview({
       </div>
       <button
         type="button"
-        className={`mt-3 w-full font-semibold rounded-lg ${buttonClass}`}
+        className={`mt-4 w-full font-bold rounded-lg ${buttonClass}`}
         style={{
           backgroundColor: accent,
           color: parseInt(accent.slice(1), 16) > 0x888888 ? "#0A0A0A" : "#FFFFFF",
         }}
       >
-        Submit & sign
+        Submit &amp; sign
       </button>
     </div>
   );

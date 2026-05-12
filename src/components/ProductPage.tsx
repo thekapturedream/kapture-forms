@@ -61,7 +61,7 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
               <h1 className="font-semibold text-2xl sm:text-3xl lg:text-[2.25rem] leading-[1.1] tracking-[-0.02em] text-kapture-black dark:text-white">
                 {product.title}
               </h1>
-              <p className="mt-3 text-sm sm:text-base text-kapture-smoke dark:text-white/65 leading-relaxed">
+              <p className="mt-3 text-sm sm:text-base font-medium text-kapture-smoke dark:text-white/70 leading-relaxed">
                 {priceLine(product)}
               </p>
 
@@ -166,10 +166,10 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
             <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
               {product.features.slice(0, 3).map((f) => (
                 <div key={f.title} className="text-center">
-                  <h3 className="font-semibold text-lg text-kapture-black dark:text-white tracking-[-0.01em]">
+                  <h3 className="font-bold text-lg text-kapture-black dark:text-white tracking-[-0.01em]">
                     {f.title}
                   </h3>
-                  <p className="mt-2 text-sm text-kapture-smoke dark:text-white/65 leading-relaxed">
+                  <p className="mt-2 text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed">
                     {f.body}
                   </p>
                 </div>
@@ -186,9 +186,11 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
               {product.whatsIncluded.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-3 text-base text-kapture-smoke dark:text-white/75 leading-relaxed"
+                  className="flex items-start gap-3 text-base font-medium text-kapture-smoke dark:text-white/80 leading-relaxed"
                 >
-                  <Check size={18} strokeWidth={2.5} className="text-kapture-yellow shrink-0 mt-1" />
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-kapture-black dark:bg-kapture-yellow text-kapture-yellow dark:text-kapture-black shrink-0 mt-0.5">
+                    <Check size={14} strokeWidth={3} />
+                  </span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -203,8 +205,8 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
             <dl className="mt-8 divide-y divide-kapture-fog dark:divide-white/10 rounded-2xl border border-kapture-fog dark:border-white/10 bg-white dark:bg-white/[0.04]">
               {product.specs.map((s) => (
                 <div key={s.label} className="flex items-center justify-between px-5 py-3.5 text-sm">
-                  <dt className="text-kapture-smoke dark:text-white/65">{s.label}</dt>
-                  <dd className="font-semibold text-kapture-black dark:text-white text-right">{s.value}</dd>
+                  <dt className="font-medium text-kapture-smoke dark:text-white/70">{s.label}</dt>
+                  <dd className="font-bold text-kapture-black dark:text-white text-right">{s.value}</dd>
                 </div>
               ))}
             </dl>

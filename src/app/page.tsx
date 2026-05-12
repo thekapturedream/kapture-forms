@@ -37,7 +37,7 @@ export default function HomePage() {
           <div className="relative mx-auto w-full max-w-[1100px] px-5 sm:px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-20 pb-12 lg:pb-16 text-center">
             <MotionFade>
               <h1 className="font-semibold tracking-[-0.04em] text-[2.75rem] leading-[1.02] sm:text-[3.75rem] lg:text-[5rem] sm:leading-[0.96] text-kapture-black dark:text-white">
-                Smart forms for
+                Find forms for
                 <br />
                 everything.
               </h1>
@@ -345,12 +345,12 @@ function BundleCard({ bundle }: { bundle: (typeof BUNDLES)[number] }) {
           SAVE {moneyFromPence(bundle.rrpPence - bundle.bundlePence)}
         </span>
       </div>
-      <h3 className="font-semibold text-lg text-kapture-black dark:text-white tracking-[-0.01em]">{bundle.title}</h3>
-      <p className="mt-1.5 text-sm text-kapture-smoke dark:text-white/60 leading-relaxed">{bundle.hook}</p>
-      <ul className="mt-4 space-y-1 text-xs text-kapture-smoke dark:text-white/55">
+      <h3 className="font-bold text-lg text-kapture-black dark:text-white tracking-[-0.01em]">{bundle.title}</h3>
+      <p className="mt-1.5 text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed">{bundle.hook}</p>
+      <ul className="mt-4 space-y-1.5 text-xs font-medium text-kapture-smoke dark:text-white/70">
         {bundle.packs.map((p) => (
           <li key={p} className="flex items-center gap-2">
-            <span className="text-kapture-yellow">·</span>
+            <span className="text-kapture-black dark:text-white font-bold">·</span>
             {p}
           </li>
         ))}
@@ -359,11 +359,11 @@ function BundleCard({ bundle }: { bundle: (typeof BUNDLES)[number] }) {
         <span className="font-bold text-2xl text-kapture-black dark:text-white tracking-[-0.02em]">
           {moneyFromPence(bundle.bundlePence)}
         </span>
-        <span className="text-xs text-kapture-mist dark:text-white/45 font-mono line-through">
+        <span className="text-xs font-semibold text-kapture-mist dark:text-white/55 font-mono line-through">
           {moneyFromPence(bundle.rrpPence)}
         </span>
-        <span className="text-xs text-kapture-yellow font-mono font-semibold ml-auto">
-          {Math.round((save / bundle.rrpPence) * 100)}% off
+        <span className="ml-auto inline-flex items-center bg-kapture-black text-kapture-yellow text-[0.6875rem] font-mono font-bold tracking-wider px-2.5 py-1 rounded-full">
+          {Math.round((save / bundle.rrpPence) * 100)}% OFF
         </span>
       </div>
       <Link
@@ -407,3 +407,4 @@ function SiteFooter() {
     </footer>
   );
 }
+
