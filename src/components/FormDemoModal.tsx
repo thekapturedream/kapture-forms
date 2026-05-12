@@ -14,38 +14,32 @@ interface Props {
 }
 
 /**
- * The Test Form modal — full-fidelity demo of any PackSchema.
+ * Test Form modal — minimal, content-first.
  *
- *  - Pathway switcher chips at the top. Fields with a `pathways` array
- *    only render when the active pathway matches (conditional logic).
- *  - Section-by-section nav: progress bar + section list + Next/Back.
- *  - Every legacy FieldType is rendered with a real native input plus
- *    `.field-input` styling, including selects with the custom chevron.
- *  - Submit is non-destructive — values stay in component state. On
- *    success the modal shows "Looks good." with two CTAs: Add to cart
- *    (drops the buyer's primary option into the cart) and Buy now
- *    (POSTs straight to /api/buy and redirects to Stripe).
+ * Design rules (after Acie feedback "too busy, hard to know where the form
+ * starts"):
+ *  - One slim top strip only: tiny demo badge · pathway picker · close.
+ *  - One slim progress strip: hairline bar + 'Section X of Y'.
+ *  - Section title sits ABOVE the field stack as the clear visual anchor.
+ *  - Single-column field layout by default — easier to scan, no eye-darting.
+ *  - Sticky footer with Back / Next. No chip rail, no kicker, no meta line.
  *
- * The same renderer can later back the real hosted runner; this demo
- * is the same code path with `mode="demo"` (no submission write).
+ * The pathway dropdown only appears when the schema has more than one
+ * pathway. Conditional logic still fires — fields with a `pathways` array
+ * only render when the active pathway matches.
  */
 export function FormDemoModal({ open, onClose, schema, product }: Props) {
   const { addItem, openCart } = useCart();
 
-  // Active pathway — defaults to the first one.
   const [pathwayId, setPathwayId] = useState(schema.pathways[0]?.id ?? "default");
-  // Active section index.
   const [sectionIdx, setSectionIdx] = useState(0);
-  // Form state — keyed by field.id.
   const [values, setValues] = useState<Record<string, string | string[] | boolean>>({});
-  // Validation errors per field id.
   const [errors, setErrors] = useState<Record<string, string>>({});
-  // Finished state (submit clicked, validation passed).
   const [finished, setFinished] = useState(false);
   const [buyLoading, setBuyLoading] = useState(false);
   const [buyError, setBuyError] = useState<string | null>(null);
 
-  // Reset state when the modal closes so re-opening starts clean.
+  // Reset on close.
   useEffect(() => {
     if (!open) {
       setPathwayId(schema.pathways[0]?.id ?? "default");
@@ -57,7 +51,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
     }
   }, [open, schema.pathways]);
 
-  // Esc to close.
+  // Esc.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -66,18 +60,17 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // Body scroll lock.
+  // Body lock.
   useEffect(() => {
     if (!open) return;
-    const original = document.body.style.overflow;
+    const orig = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = original;
+      document.body.style.overflow = orig;
     };
   }, [open]);
 
-  // Sections filtered for the active pathway. A section is hidden if
-  // EVERY field in it is gated to a different pathway.
+  // Sections filtered for the active pathway.
   const visibleSections: Section[] = useMemo(() => {
     return schema.sections
       .map((s) => ({
@@ -87,7 +80,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
       .filter((s) => s.fields.length > 0);
   }, [schema, pathwayId]);
 
-  // Clamp section index if pathway change shrinks the section list.
+  // Clamp index when sections shrink.
   useEffect(() => {
     if (sectionIdx >= visibleSections.length) {
       setSectionIdx(Math.max(0, visibleSections.length - 1));
@@ -98,10 +91,8 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
 
   const current = visibleSections[sectionIdx];
   const isLast = sectionIdx === visibleSections.length - 1;
-  const totalRequired = visibleSections.flatMap((s) => s.fields).filter((f) => f.required).length;
-  const filledRequired = visibleSections
-    .flatMap((s) => s.fields)
-    .filter((f) => f.required && isFilled(values[f.id])).length;
+  const totalSections = visibleSections.length;
+  const progressPct = totalSections > 0 ? ((sectionIdx + 1) / totalSections) * 100 : 0;
 
   function setValue(id: string, v: string | string[] | boolean) {
     setValues((prev) => ({ ...prev, [id]: v }));
@@ -140,8 +131,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
   }
 
   function addToCart() {
-    const opt =
-      product.options.find((o) => o.primary) ?? product.options[0];
+    const opt = product.options.find((o) => o.primary) ?? product.options[0];
     if (!opt) return;
     const item: CartItem = {
       slug: product.slug,
@@ -161,8 +151,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
   }
 
   async function buyNow() {
-    const opt =
-      product.options.find((o) => o.primary) ?? product.options[0];
+    const opt = product.options.find((o) => o.primary) ?? product.options[0];
     if (!opt) return;
     setBuyLoading(true);
     setBuyError(null);
@@ -187,6 +176,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
 
   return (
     <div className="fixed inset-0 z-[70]" role="dialog" aria-modal="true" aria-label="Test form">
+      {/* Scrim */}
       <button
         type="button"
         onClick={onClose}
@@ -194,64 +184,52 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
         className="absolute inset-0 bg-black/55 backdrop-blur-sm"
       />
       <div className="absolute inset-x-0 top-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-6">
-        <div className="bg-white dark:bg-kapture-coal text-kapture-black dark:text-white w-full sm:max-w-[920px] h-full sm:h-auto sm:max-h-[92vh] sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="flex items-start justify-between gap-4 px-6 sm:px-8 py-5 border-b border-kapture-fog dark:border-white/10">
-            <div className="min-w-0">
-              <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-yellow font-bold mb-1.5">
-                TEST FORM · LIVE PREVIEW
-              </div>
-              <h2 className="font-bold text-xl sm:text-2xl tracking-[-0.015em] truncate">
-                {schema.title}
-              </h2>
-              <p className="mt-1.5 text-sm font-medium text-kapture-smoke dark:text-white/65">
-                {visibleSections.length} {visibleSections.length === 1 ? "section" : "sections"} · {totalRequired} required fields · conditional logic on
-              </p>
-            </div>
+        <div className="bg-white dark:bg-kapture-coal text-kapture-black dark:text-white w-full sm:max-w-[640px] h-full sm:h-auto sm:max-h-[92vh] sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+          {/* TOP STRIP — demo badge + pathway selector + close */}
+          <div className="flex items-center gap-3 px-6 sm:px-10 h-14 border-b border-kapture-fog dark:border-white/10">
+            <span className="inline-flex items-center bg-kapture-paper dark:bg-white/[0.06] text-kapture-smoke dark:text-white/65 font-mono text-[0.625rem] font-bold tracking-widest px-2 py-1 rounded">
+              DEMO
+            </span>
+            <span className="hidden sm:inline text-xs font-bold tracking-[-0.005em] truncate text-kapture-smoke dark:text-white/65">
+              {schema.title}
+            </span>
+            <div className="flex-1" />
+            {schema.pathways.length > 1 && !finished && (
+              <select
+                value={pathwayId}
+                onChange={(e) => {
+                  setPathwayId(e.target.value);
+                  setSectionIdx(0);
+                  setErrors({});
+                  setFinished(false);
+                }}
+                aria-label="Pathway"
+                className="appearance-none bg-transparent border border-kapture-fog dark:border-white/15 hover:border-kapture-black dark:hover:border-white/40 text-xs font-bold pl-3 pr-7 py-1.5 rounded-lg cursor-pointer focus:outline-none focus:border-kapture-black dark:focus:border-white/40"
+                style={{
+                  backgroundImage:
+                    "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a7a7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 0.5rem center",
+                }}
+              >
+                {schema.pathways.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            )}
             <button
               type="button"
               onClick={onClose}
-              className="shrink-0 rounded-full w-9 h-9 flex items-center justify-center hover:bg-kapture-paper dark:hover:bg-white/[0.06]"
+              className="rounded-full w-8 h-8 flex items-center justify-center hover:bg-kapture-paper dark:hover:bg-white/[0.06]"
               aria-label="Close"
             >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
                 <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>
-          </header>
-
-          {/* Pathway switcher */}
-          {schema.pathways.length > 1 && (
-            <div className="px-6 sm:px-8 py-4 border-b border-kapture-fog dark:border-white/10 bg-kapture-paper/50 dark:bg-white/[0.02]">
-              <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-smoke dark:text-white/55 font-bold mb-2">
-                PATHWAY · CONDITIONAL FIELDS HIDE PER CHOICE
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {schema.pathways.map((p) => {
-                  const active = p.id === pathwayId;
-                  return (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => {
-                        setPathwayId(p.id);
-                        setSectionIdx(0);
-                        setErrors({});
-                        setFinished(false);
-                      }}
-                      className={`px-3.5 py-2 rounded-full text-xs font-bold transition border ${
-                        active
-                          ? "bg-kapture-black dark:bg-white text-white dark:text-kapture-black border-kapture-black dark:border-white"
-                          : "bg-white dark:bg-white/[0.04] text-kapture-black dark:text-white border-kapture-fog dark:border-white/15 hover:border-kapture-black dark:hover:border-white/40"
-                      }`}
-                    >
-                      {p.name}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          </div>
 
           {finished ? (
             <FinishedState
@@ -260,107 +238,69 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
               onBuyNow={buyNow}
               buyLoading={buyLoading}
               buyError={buyError}
-              filled={filledRequired}
-              required={totalRequired}
             />
           ) : (
             <>
-              {/* Progress + section list */}
-              <div className="px-6 sm:px-8 pt-5 pb-3 border-b border-kapture-fog dark:border-white/10">
-                <div className="flex items-center justify-between mb-2.5">
-                  <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] font-bold text-kapture-smoke dark:text-white/55">
-                    SECTION {sectionIdx + 1} OF {visibleSections.length}
-                  </div>
-                  <div className="font-mono text-[0.625rem] font-medium text-kapture-smoke dark:text-white/55">
-                    {filledRequired} / {totalRequired} required
-                  </div>
-                </div>
-                <div className="h-1 w-full bg-kapture-fog dark:bg-white/10 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-kapture-yellow transition-all"
-                    style={{
-                      width: `${
-                        ((sectionIdx + 1) / Math.max(1, visibleSections.length)) * 100
-                      }%`,
-                    }}
-                  />
-                </div>
-                <nav className="mt-3 flex flex-wrap gap-1.5">
-                  {visibleSections.map((s, i) => {
-                    const active = i === sectionIdx;
-                    return (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => setSectionIdx(i)}
-                        className={`px-2.5 py-1 rounded-md text-[0.6875rem] font-bold tracking-tight transition ${
-                          active
-                            ? "bg-kapture-black dark:bg-white text-white dark:text-kapture-black"
-                            : "text-kapture-smoke dark:text-white/55 hover:text-kapture-black dark:hover:text-white hover:bg-kapture-paper dark:hover:bg-white/[0.06]"
-                        }`}
-                      >
-                        {s.name}
-                      </button>
-                    );
-                  })}
-                </nav>
+              {/* PROGRESS — single thin bar */}
+              <div className="h-0.5 w-full bg-kapture-fog dark:bg-white/10">
+                <div
+                  className="h-full bg-kapture-yellow transition-all duration-300"
+                  style={{ width: `${progressPct}%` }}
+                />
               </div>
 
-              {/* Form body */}
-              <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-6">
-                {current ? (
-                  <>
-                    <h3 className="font-bold text-lg tracking-[-0.01em] mb-1">
-                      {current.name}
-                    </h3>
-                    {current.intro && (
-                      <p className="text-sm font-medium text-kapture-smoke dark:text-white/65 leading-relaxed mb-5">
-                        {current.intro}
-                      </p>
-                    )}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {current.fields.map((f) => (
-                        <div
-                          key={f.id}
-                          className={
-                            f.type === "textarea" || f.type === "signature" || f.type === "checkbox"
-                              ? "md:col-span-2"
-                              : ""
-                          }
-                        >
+              {/* MAIN — form */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="max-w-[480px] mx-auto px-6 sm:px-10 py-8 sm:py-12">
+                  {current ? (
+                    <>
+                      <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] font-bold text-kapture-mist dark:text-white/45 mb-3">
+                        Section {sectionIdx + 1} of {totalSections}
+                      </div>
+                      <h2 className="font-bold text-2xl sm:text-[1.75rem] leading-[1.15] tracking-[-0.02em] mb-3">
+                        {current.name}
+                      </h2>
+                      {current.intro && (
+                        <p className="text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed mb-8">
+                          {current.intro}
+                        </p>
+                      )}
+                      <div className="space-y-5">
+                        {current.fields.map((f) => (
                           <FieldRenderer
+                            key={f.id}
                             field={f}
                             value={values[f.id]}
                             error={errors[f.id]}
                             onChange={(v) => setValue(f.id, v)}
                           />
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-sm font-medium text-kapture-smoke dark:text-white/65">
-                    No fields render for this pathway. Switch pathway above.
-                  </p>
-                )}
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm font-medium text-kapture-smoke dark:text-white/65 text-center py-12">
+                      No fields render for this pathway. Switch pathway above.
+                    </p>
+                  )}
+                </div>
               </div>
 
-              {/* Footer nav */}
-              <footer className="flex items-center justify-between gap-3 px-6 sm:px-8 py-4 border-t border-kapture-fog dark:border-white/10 bg-kapture-paper/40 dark:bg-white/[0.02]">
+              {/* STICKY FOOTER NAV */}
+              <footer className="flex items-center justify-between gap-3 px-6 sm:px-10 py-3.5 border-t border-kapture-fog dark:border-white/10 bg-white dark:bg-kapture-coal">
                 <button
                   type="button"
                   onClick={goBack}
                   disabled={sectionIdx === 0}
-                  className="px-4 py-2.5 rounded-xl text-sm font-bold text-kapture-black dark:text-white hover:bg-white dark:hover:bg-white/[0.06] disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="px-3 py-2 rounded-lg text-sm font-bold text-kapture-smoke dark:text-white/65 hover:text-kapture-black dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   ← Back
                 </button>
                 <button
                   type="button"
                   onClick={goNext}
-                  className="inline-flex items-center gap-2 bg-kapture-black dark:bg-white text-white dark:text-kapture-black hover:opacity-90 px-5 py-3 rounded-xl font-bold text-sm transition active:scale-[0.99]"
+                  className="inline-flex items-center gap-2 bg-kapture-black dark:bg-white text-white dark:text-kapture-black hover:opacity-90 px-5 py-2.5 rounded-xl font-bold text-sm transition active:scale-[0.99]"
                 >
-                  {isLast ? "Review & finish →" : "Next section →"}
+                  {isLast ? "Finish →" : "Next →"}
                 </button>
               </footer>
             </>
@@ -371,7 +311,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
   );
 }
 
-/* ─────────── pieces ─────────── */
+/* ─────────── finished ─────────── */
 
 function FinishedState({
   product,
@@ -379,39 +319,32 @@ function FinishedState({
   onBuyNow,
   buyLoading,
   buyError,
-  filled,
-  required,
 }: {
   product: StoreProduct;
   onAddToCart: () => void;
   onBuyNow: () => void;
   buyLoading: boolean;
   buyError: string | null;
-  filled: number;
-  required: number;
 }) {
   const primary =
     product.options.find((o) => o.primary) ?? product.options[0];
   return (
-    <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-10">
-      <div className="max-w-[560px] mx-auto text-center">
-        <div className="w-14 h-14 rounded-full bg-kapture-yellow text-kapture-black mx-auto mb-5 flex items-center justify-center font-bold text-2xl">
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-[440px] mx-auto px-6 sm:px-10 py-12 sm:py-16 text-center">
+        <div className="w-12 h-12 rounded-full bg-kapture-yellow text-kapture-black mx-auto mb-6 flex items-center justify-center font-bold text-xl">
           ✓
         </div>
-        <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-smoke dark:text-white/55 font-bold mb-2">
-          DEMO COMPLETE · NOTHING WAS SUBMITTED
-        </div>
-        <h3 className="font-bold text-2xl sm:text-3xl tracking-[-0.02em] mb-3">
-          Looks good. You filled {filled} of {required} required fields.
+        <h3 className="font-bold text-2xl sm:text-[1.75rem] tracking-[-0.02em] leading-[1.15] mb-3">
+          You reached the end.
         </h3>
-        <p className="text-sm font-medium text-kapture-smoke dark:text-white/65 leading-relaxed mb-7">
-          This was a test pass on the live form. To make it real — collect submissions, get the audit hash, download CSV — add it to your cart or check out now.
+        <p className="text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed mb-8">
+          Nothing was submitted — this was a test pass. To make it real, add the pack to your cart or check out now.
         </p>
-        <div className="flex flex-col sm:flex-row items-stretch gap-3 max-w-[420px] mx-auto">
+        <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
           <button
             type="button"
             onClick={onAddToCart}
-            className="flex-1 inline-flex items-center justify-center gap-2 bg-white dark:bg-white/[0.06] text-kapture-black dark:text-white border-2 border-kapture-black dark:border-white hover:bg-kapture-paper dark:hover:bg-white/[0.12] px-5 py-3.5 rounded-2xl font-bold text-sm transition"
+            className="flex-1 inline-flex items-center justify-center bg-white dark:bg-white/[0.06] text-kapture-black dark:text-white border-2 border-kapture-black dark:border-white hover:bg-kapture-paper dark:hover:bg-white/[0.12] px-5 py-3 rounded-xl font-bold text-sm transition"
           >
             Add to cart
           </button>
@@ -419,7 +352,7 @@ function FinishedState({
             type="button"
             onClick={onBuyNow}
             disabled={buyLoading}
-            className="flex-1 inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 px-5 py-3.5 rounded-2xl font-bold text-sm transition active:scale-[0.99]"
+            className="flex-1 inline-flex items-center justify-center bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 px-5 py-3 rounded-xl font-bold text-sm transition active:scale-[0.99]"
           >
             {buyLoading
               ? "Opening Stripe…"
@@ -427,19 +360,23 @@ function FinishedState({
                 ? "Reserve →"
                 : primary?.mode === "pass"
                   ? "Start pass →"
-                  : "Buy now →"}
+                  : primary?.mode === "subscription"
+                    ? "Subscribe →"
+                    : "Buy now →"}
           </button>
         </div>
         {buyError && (
           <p className="mt-4 text-xs font-mono text-status-critical">{buyError}</p>
         )}
-        <p className="mt-5 text-xs font-medium text-kapture-smoke dark:text-white/55">
-          {money(primary?.pricePence ?? 2900)} {primary?.mode === "subscription" || primary?.mode === "pass" ? "/ mo" : "· Stripe checkout · UK VAT auto-applied"}
+        <p className="mt-5 text-xs font-medium text-kapture-mist dark:text-white/45">
+          Stripe checkout · UK VAT auto-applied
         </p>
       </div>
     </div>
   );
 }
+
+/* ─────────── field renderer ─────────── */
 
 function FieldRenderer({
   field,
@@ -453,15 +390,10 @@ function FieldRenderer({
   onChange: (v: string | string[] | boolean) => void;
 }) {
   const id = `demo-${field.id}`;
-  const baseLabel = (
-    <label htmlFor={id} className="block font-mono text-[0.6875rem] uppercase tracking-[0.08em] font-bold text-kapture-smoke dark:text-white/70 mb-1.5">
+  const labelEl = (
+    <label htmlFor={id} className="block font-mono text-[0.625rem] uppercase tracking-[0.12em] font-bold text-kapture-smoke dark:text-white/65 mb-1.5">
       {field.label}
       {field.required && <span className="text-status-critical ml-1">*</span>}
-      {field.regulator && (
-        <span className="ml-2 inline-flex items-center bg-kapture-paper dark:bg-white/[0.06] border border-kapture-fog dark:border-white/15 text-[0.5625rem] font-mono font-bold tracking-wider px-1.5 py-0.5 rounded">
-          {field.regulator}
-        </span>
-      )}
     </label>
   );
   const helper = field.help ? (
@@ -477,7 +409,7 @@ function FieldRenderer({
     case "textarea":
       return (
         <div>
-          {baseLabel}
+          {labelEl}
           <textarea
             id={id}
             className="field-input"
@@ -493,7 +425,7 @@ function FieldRenderer({
     case "select":
       return (
         <div>
-          {baseLabel}
+          {labelEl}
           <select
             id={id}
             className="field-select"
@@ -516,7 +448,7 @@ function FieldRenderer({
     case "multi-select":
       return (
         <div>
-          {baseLabel}
+          {labelEl}
           <div className="flex flex-wrap gap-2">
             {(field.options ?? []).map((opt) => {
               const arr = Array.isArray(value) ? value : [];
@@ -531,7 +463,7 @@ function FieldRenderer({
                   className={`px-3 py-1.5 rounded-full text-xs font-bold border transition ${
                     active
                       ? "bg-kapture-black dark:bg-white text-white dark:text-kapture-black border-kapture-black dark:border-white"
-                      : "bg-white dark:bg-white/[0.04] text-kapture-black dark:text-white border-kapture-fog dark:border-white/15 hover:border-kapture-black"
+                      : "bg-white dark:bg-white/[0.04] text-kapture-black dark:text-white border-kapture-fog dark:border-white/15 hover:border-kapture-black dark:hover:border-white/40"
                   }`}
                 >
                   {opt}
@@ -556,11 +488,6 @@ function FieldRenderer({
           <span>
             {field.label}
             {field.required && <span className="text-status-critical ml-1">*</span>}
-            {field.regulator && (
-              <span className="ml-2 inline-flex items-center bg-kapture-paper dark:bg-white/[0.06] border border-kapture-fog dark:border-white/15 text-[0.5625rem] font-mono font-bold tracking-wider px-1.5 py-0.5 rounded align-middle">
-                {field.regulator}
-              </span>
-            )}
             {error && <span className="block mt-1 text-xs font-mono font-bold text-status-critical">{error}</span>}
             {field.help && <span className="block mt-1 text-[0.6875rem] font-medium text-kapture-smoke dark:text-white/55 leading-relaxed">{field.help}</span>}
           </span>
@@ -569,7 +496,7 @@ function FieldRenderer({
     case "signature":
       return (
         <div>
-          {baseLabel}
+          {labelEl}
           <div
             className={`field-input flex items-center justify-center text-center cursor-pointer min-h-[88px] ${
               value ? "bg-kapture-paper/60 dark:bg-white/[0.06]" : ""
@@ -600,7 +527,7 @@ function FieldRenderer({
     default:
       return (
         <div>
-          {baseLabel}
+          {labelEl}
           <input
             id={id}
             type={field.type}
@@ -616,6 +543,8 @@ function FieldRenderer({
   }
 }
 
+/* ─────────── helpers ─────────── */
+
 function fieldVisible(field: Field, pathwayId: string): boolean {
   if (!field.pathways || field.pathways.length === 0) return true;
   return field.pathways.includes(pathwayId);
@@ -627,9 +556,4 @@ function isFilled(v: string | string[] | boolean | undefined): boolean {
   if (typeof v === "boolean") return v === true;
   if (Array.isArray(v)) return v.length > 0;
   return false;
-}
-
-function money(pence: number): string {
-  const isClean = pence % 100 === 0;
-  return `£${(pence / 100).toFixed(isClean ? 0 : 2)}`;
 }
