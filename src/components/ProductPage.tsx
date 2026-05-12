@@ -10,22 +10,22 @@ import { DeviceShowcase } from "@components/DeviceShowcase";
 import { FormDemoModal } from "@components/FormDemoModal";
 import { CartButton } from "@components/cart/CartButton";
 import { type StoreProduct, relatedProducts } from "@lib/store-product";
-import { ACCENTS, FONTS, type FontChoice } from "@lib/customization";
+import { ACCENTS } from "@lib/customization";
 import { getContrastTextClass } from "@lib/contrast";
 import { getSchema } from "@lib/schemas";
 
-const FONT_FAMILY: Record<FontChoice, string> = {
+const FONT_FAMILY = {
   manrope: "'Manrope', system-ui, sans-serif",
-  inter: "'Inter', system-ui, sans-serif",
-  "space-grotesk": "'Space Grotesk', system-ui, sans-serif",
-};
+} as const;
 
 /**
  * Apple-shop-pattern product page.
  *
- *   • 100vh hero: device showcase left · plan + customise quick swatches right
+ *   • Hero pinned to 100svh-header on lg so the device demo + right rail
+ *     both fit above the fold with 40px breathing
+ *   • Inline accent swatches re-tint the demo without a full customise panel
  *   • Below: features, what's-in, specs, related, footer
- *   • Mobile: stacks cleanly, device shrinks to 60vh
+ *   • Mobile: hero releases its height cap, stacks cleanly and scrolls
  */
 export function ProductPageContent({ product }: { product: StoreProduct }) {
   const related = relatedProducts(product.slug);
@@ -33,9 +33,9 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
   const isBundle = product.status === "bundle";
   const isPreorder = product.status === "soon";
 
-  // Customise quick controls — apply to the device preview in real time.
+  // Accent stays in state so the inline swatch row can re-tint the device preview
+  // in real time, without bloating the hero with a full customise block.
   const [accent, setAccent] = useState<string>("#FFD400");
-  const [font, setFont] = useState<FontChoice>("manrope");
 
   // Test Form modal — only available when a schema is registered for this product.
   const schema = getSchema(product.id);
@@ -46,49 +46,47 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
       <SiteHeader />
 
       <main className="flex-1">
-        {/* HERO — 100vh */}
-        <section className="min-h-[calc(100vh-3.5rem)] flex items-center bg-white dark:bg-kapture-black">
-          <div className="kap-shell py-10 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
-            {/* LEFT — device showcase */}
-            <div className="lg:col-span-7 order-2 lg:order-1">
-              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03]">
+        {/* HERO — pinned to viewport on lg so the device demo always fits */}
+        <section className="bg-white dark:bg-kapture-black lg:h-[calc(100svh-3.5rem)] lg:flex lg:items-center">
+          <div className="kap-shell py-8 sm:py-10 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
+            {/* LEFT — device showcase. h-full on lg so the frame scales into available height. */}
+            <div className="lg:col-span-7 order-2 lg:order-1 lg:h-full lg:min-h-0">
+              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-auto lg:h-full flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03] p-4 sm:p-6">
                 <DeviceShowcase
                   product={product}
                   accent={accent}
-                  fontFamily={FONT_FAMILY[font]}
+                  fontFamily={FONT_FAMILY.manrope}
                 />
               </div>
             </div>
 
-            {/* RIGHT — content */}
+            {/* RIGHT — content sized to fit alongside the demo on lg. */}
             <div className="lg:col-span-5 order-1 lg:order-2">
-              <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-smoke dark:text-white/55 mb-3">
+              <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] font-bold text-kapture-smoke dark:text-white/55 mb-2.5">
                 {isPass ? "DESIGNER PASS" : isBundle ? "BUNDLE" : isPreorder ? `PRE-ORDER · ${product.release ?? "SOON"}` : product.industry}
                 {product.subcategory && ` · ${product.subcategory}`}
               </div>
-              <h1 className="font-semibold text-2xl sm:text-3xl lg:text-[2.25rem] leading-[1.1] tracking-[-0.02em] text-kapture-black dark:text-white">
+              <h1 className="font-bold text-2xl sm:text-[1.75rem] lg:text-[2rem] xl:text-[2.25rem] leading-[1.1] tracking-[-0.02em] text-kapture-black dark:text-white">
                 {product.title}
               </h1>
-              <p className="mt-3 text-sm sm:text-base font-medium text-kapture-smoke dark:text-white/70 leading-relaxed">
+              <p className="mt-2.5 text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed">
                 {priceLine(product)}
               </p>
 
-              {/* Plan section */}
-              <div className="mt-7">
-                <h2 className="font-semibold text-base tracking-[-0.01em]">
+              {/* Plan + CTAs */}
+              <div className="mt-5">
+                <h2 className="font-bold text-sm tracking-[-0.005em] mb-2.5">
                   <span className="text-kapture-black dark:text-white">Plan.</span>
                   <span className="text-kapture-mist dark:text-white/40"> Which suits you?</span>
                 </h2>
-                <div className="mt-3">
-                  <BuyControls product={product} />
-                </div>
+                <BuyControls product={product} />
                 {schema && (
                   <button
                     type="button"
                     onClick={() => setDemoOpen(true)}
-                    className="mt-3 w-full inline-flex items-center justify-center gap-2 bg-white dark:bg-white/[0.06] text-kapture-black dark:text-white border-2 border-kapture-black dark:border-white hover:bg-kapture-paper dark:hover:bg-white/[0.12] px-5 py-3.5 rounded-2xl font-bold text-sm transition active:scale-[0.99]"
+                    className="mt-2.5 w-full inline-flex items-center justify-center gap-2 bg-white dark:bg-white/[0.06] text-kapture-black dark:text-white border-2 border-kapture-black dark:border-white hover:bg-kapture-paper dark:hover:bg-white/[0.12] px-5 py-3 rounded-2xl font-bold text-sm transition active:scale-[0.99]"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                       <polygon points="5 3 19 12 5 21 5 3" />
                     </svg>
                     Test the form · {schema.sections.length} sections · live preview
@@ -96,84 +94,40 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
                 )}
               </div>
 
-              {/* Customise quick swatches */}
-              <div className="mt-7 pt-7 border-t border-kapture-fog dark:border-white/10">
-                <h2 className="font-semibold text-base tracking-[-0.01em]">
-                  <span className="text-kapture-black dark:text-white">Customise.</span>
-                  <span className="text-kapture-mist dark:text-white/40"> Preview your style.</span>
-                </h2>
-
-                {/* Accent swatches */}
-                <div className="mt-3">
-                  <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist dark:text-white/40 mb-2">
-                    Accent
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {ACCENTS.map((a) => {
-                      const active = accent.toUpperCase() === a.hex.toUpperCase();
-                      return (
-                        <button
-                          key={a.hex}
-                          type="button"
-                          onClick={() => setAccent(a.hex)}
-                          aria-label={a.label}
-                          title={a.label}
-                          className={`relative w-7 h-7 rounded-full border-2 transition ${
-                            active
-                              ? "border-kapture-black dark:border-white"
-                              : "border-transparent hover:border-kapture-fog dark:hover:border-white/30"
-                          }`}
-                          style={{ backgroundColor: a.hex }}
-                        >
-                          {active && (
-                            <span className="absolute inset-0 flex items-center justify-center">
-                              <Check
-                                size={12}
-                                strokeWidth={3}
-                                className={getContrastTextClass(a.hex)}
-                              />
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Font picker */}
-                <div className="mt-4">
-                  <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist dark:text-white/40 mb-2">
-                    Font
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {FONTS.map((f) => {
-                      const active = font === f.id;
-                      return (
-                        <button
-                          key={f.id}
-                          type="button"
-                          onClick={() => setFont(f.id)}
-                          className={`rounded-lg border py-2 transition ${
-                            active
-                              ? "border-kapture-black dark:border-kapture-yellow"
-                              : "border-kapture-fog dark:border-white/15 hover:border-kapture-mist dark:hover:border-white/30"
-                          }`}
-                        >
-                          <span
-                            className="block text-xs font-medium text-kapture-black dark:text-white"
-                            style={{ fontFamily: FONT_FAMILY[f.id] }}
-                          >
-                            {f.label}
+              {/* Accent strip — single inline row, no headlines, no body. Live-tints the demo. */}
+              <div className="mt-5 flex items-center gap-3 flex-wrap">
+                <span className="font-mono text-[0.625rem] uppercase tracking-widest font-bold text-kapture-mist dark:text-white/45 shrink-0">
+                  Accent
+                </span>
+                <div className="flex items-center gap-1.5">
+                  {ACCENTS.map((a) => {
+                    const active = accent.toUpperCase() === a.hex.toUpperCase();
+                    return (
+                      <button
+                        key={a.hex}
+                        type="button"
+                        onClick={() => setAccent(a.hex)}
+                        aria-label={a.label}
+                        title={a.label}
+                        className={`relative w-6 h-6 rounded-full border-2 transition ${
+                          active
+                            ? "border-kapture-black dark:border-white"
+                            : "border-transparent hover:border-kapture-fog dark:hover:border-white/30"
+                        }`}
+                        style={{ backgroundColor: a.hex }}
+                      >
+                        {active && (
+                          <span className="absolute inset-0 flex items-center justify-center">
+                            <Check size={10} strokeWidth={3} className={getContrastTextClass(a.hex)} />
                           </span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
-
-                <p className="mt-4 text-[0.6875rem] text-kapture-mist dark:text-white/45">
-                  Full customisation — headline, button shape, card corners — opens in your dashboard after purchase.
-                </p>
+                <span className="text-[0.6875rem] font-medium text-kapture-mist dark:text-white/45 ml-auto">
+                  Full theming after purchase →
+                </span>
               </div>
             </div>
           </div>
