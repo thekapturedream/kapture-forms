@@ -43,7 +43,7 @@ export default function HomePage() {
           <div className="relative mx-auto w-full max-w-[1100px] px-5 sm:px-6 lg:px-10 pt-14 sm:pt-20 lg:pt-28 pb-14 lg:pb-20 text-center">
             <MotionFade>
               <h1 className="font-semibold tracking-[-0.04em] text-[2.75rem] leading-[1.02] sm:text-[3.75rem] lg:text-[5rem] sm:leading-[0.98]">
-                Forms for everything.
+                Get forms for everything.
               </h1>
             </MotionFade>
             <MotionFade delay={0.08}>
