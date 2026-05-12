@@ -199,29 +199,41 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
             </span>
             <div className="flex-1" />
             {schema.pathways.length > 1 && !finished && (
-              <select
-                value={pathwayId}
-                onChange={(e) => {
-                  setPathwayId(e.target.value);
-                  setSectionIdx(0);
-                  setErrors({});
-                  setFinished(false);
-                }}
-                aria-label="Pathway"
-                className="appearance-none bg-white dark:bg-white/[0.06] border border-kapture-fog dark:border-white/15 hover:border-kapture-black dark:hover:border-white/40 text-xs font-bold text-kapture-black dark:text-white pl-3 pr-8 py-2 rounded-lg cursor-pointer focus:outline-none focus:border-kapture-black dark:focus:border-white/40 shrink-0"
-                style={{
-                  backgroundImage:
-                    "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a7a7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "right 0.625rem center",
-                }}
-              >
-                {schema.pathways.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative shrink-0">
+                <select
+                  value={pathwayId}
+                  onChange={(e) => {
+                    setPathwayId(e.target.value);
+                    setSectionIdx(0);
+                    setErrors({});
+                    setFinished(false);
+                  }}
+                  aria-label="Pathway"
+                  className="appearance-none bg-kapture-black dark:bg-white text-white dark:text-kapture-black text-xs font-bold pl-3.5 pr-9 py-2.5 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-kapture-yellow"
+                >
+                  {schema.pathways.map((p) => (
+                    <option key={p.id} value={p.id} className="bg-white text-kapture-black">
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+                <svg
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  fill="none"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white dark:text-kapture-black"
+                  aria-hidden
+                >
+                  <path
+                    d="M1 1l4 4 4-4"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
             )}
             <button
               type="button"
@@ -268,8 +280,11 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
                 </div>
               </div>
 
-              {/* ── FORM BODY ── */}
-              <div id="kap-demo-main" className="flex-1 overflow-y-auto">
+              {/* ── FORM BODY ── soft grey so the white field inputs pop */}
+              <div
+                id="kap-demo-main"
+                className="flex-1 overflow-y-auto bg-kapture-paper/70 dark:bg-white/[0.02]"
+              >
                 <div className="px-5 sm:px-10 py-7 sm:py-9">
                   {current ? (
                     <>
