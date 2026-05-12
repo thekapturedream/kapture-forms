@@ -1,9 +1,11 @@
 /**
- * Flat search index — derived from src/lib/taxonomy.ts so adding a new
- * form in the taxonomy automatically surfaces it in /store search.
+ * Flat search index — derived from src/lib/taxonomy.ts.
+ * Each entry's `href` points at the e-commerce product page (`/products/<slug>`)
+ * so searches always land on a real page with Buy / Pre-order controls.
  */
 
 import { flatForms, type SearchIndustry } from "./taxonomy";
+import { slugify } from "./store-product";
 
 export interface SearchEntry {
   title: string;
@@ -15,18 +17,13 @@ export interface SearchEntry {
   keywords: string[];
 }
 
-const NOTIFY = (label: string) =>
-  `mailto:forms@thekapture.com?subject=${encodeURIComponent(`Notify me · ${label}`)}&body=${encodeURIComponent(
-    `Please email me when "${label}" goes live on Kapture Forms.`
-  )}`;
-
 export const SEARCH_CATALOG: SearchEntry[] = flatForms().map((f) => ({
   title: f.title,
   industry: f.industry,
   subcategory: f.subcategory,
   status: f.status,
   release: f.release,
-  href: f.status === "live" && f.href ? f.href : NOTIFY(f.title),
+  href: `/products/${slugify(f.title)}`,
   keywords: [...f.keywords, f.subcategory.toLowerCase()],
 }));
 
@@ -52,7 +49,6 @@ export function searchCatalog(query: string): SearchEntry[] {
     .map((x) => x.e);
 }
 
-/** For the landing page typing placeholder. Short, varied. */
 export const PLACEHOLDER_PHRASES: string[] = [
   "Affidavit",
   "Tenant referencing",

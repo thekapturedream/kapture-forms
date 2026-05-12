@@ -174,12 +174,12 @@ export default function HomePage() {
                       <span className="text-white/55 text-sm font-mono uppercase tracking-wider">/ mo</span>
                     </div>
                     <div className="text-white/55 text-xs font-mono">First 30 days, then £49</div>
-                    <a
-                      href="mailto:forms@thekapture.com?subject=Designer%20Pass%20signup"
+                    <Link
+                      href="/designer-pass"
                       className="mt-6 inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber px-5 py-3 rounded-xl font-semibold text-sm transition"
                     >
                       Start designer pass →
-                    </a>
+                    </Link>
                     <Link
                       href="/store"
                       className="mt-3 text-center text-xs text-white/55 hover:text-white"
@@ -367,11 +367,11 @@ function BundleCard({ bundle }: { bundle: (typeof BUNDLES)[number] }) {
         </span>
       </div>
       <a
-        href={`mailto:forms@thekapture.com?subject=${encodeURIComponent(`Pre-order bundle · ${bundle.title}`)}`}
+        href={`/products/${bundle.slug}`}
         className="mt-4 inline-flex items-center justify-center gap-1.5 bg-kapture-black text-white dark:bg-white dark:text-kapture-black hover:opacity-90 px-4 py-2.5 rounded-xl font-semibold text-sm transition"
       >
-        Pre-order →
-      </a>
+        View bundle →
+      </Link>
     </div>
   );
 }
