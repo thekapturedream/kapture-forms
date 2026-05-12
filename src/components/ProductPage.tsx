@@ -1,124 +1,169 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Check, Plus, FileText } from "lucide-react";
+import { ArrowUpRight, Check, FileText } from "lucide-react";
 import { Logo } from "@components/Logo";
 import { ThemeToggle } from "@components/ThemeToggle";
-import { IndustryIcon } from "@components/IndustryIcon";
 import { BuyControls } from "@components/BuyControls";
+import { DeviceShowcase } from "@components/DeviceShowcase";
 import { type StoreProduct, relatedProducts } from "@lib/store-product";
+import { ACCENTS, FONTS, type FontChoice } from "@lib/customization";
+
+const FONT_FAMILY: Record<FontChoice, string> = {
+  manrope: "'Manrope', system-ui, sans-serif",
+  inter: "'Inter', system-ui, sans-serif",
+  "space-grotesk": "'Space Grotesk', system-ui, sans-serif",
+};
 
 /**
- * Apple-style product page.
+ * Apple-shop-pattern product page.
  *
- * Layout follows apple.com/shop:
- *   - Top bar: small title left, "from £X" right
- *   - Below that: shipping / pickup row
- *   - Two-column body:
- *       LEFT  · big visual (form preview placeholder)
- *       RIGHT · section headings ("Plan. Which is best for you?"),
- *               selection cards, helper, customise teaser, single Buy CTA
- *   - Below the fold: features, what's-in-the-pack, related row
- *
- * Typography: titles 1.5–2rem (not 4.5rem!), bold but compact.
- * Section headings two-tone — "Plan. Which is best for you?"
+ *   • 100vh hero: device showcase left · plan + customise quick swatches right
+ *   • Below: features, what's-in, specs, related, footer
+ *   • Mobile: stacks cleanly, device shrinks to 60vh
  */
 export function ProductPageContent({ product }: { product: StoreProduct }) {
   const related = relatedProducts(product.slug);
-  const fromOption =
-    product.options.find((o) => o.primary) ?? product.options[0];
   const isPass = product.status === "pass";
   const isBundle = product.status === "bundle";
   const isPreorder = product.status === "soon";
-  const isLive = product.status === "live";
+
+  // Customise quick controls — apply to the device preview in real time.
+  const [accent, setAccent] = useState<string>("#FFD400");
+  const [font, setFont] = useState<FontChoice>("manrope");
 
   return (
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
 
       <main className="flex-1">
-        {/* TOP BAR — Apple's "iPhone 17 Pro · From $1099" pattern */}
-        <section className="border-b border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 py-6 sm:py-7 flex items-end justify-between gap-4 flex-wrap">
-            <div>
-              <h1 className="font-semibold text-xl sm:text-2xl tracking-[-0.015em] text-kapture-black dark:text-white">
-                {isBundle ? "Bundle" : isPass ? "Subscribe to" : "Buy"}{" "}
-                <span>{product.title}</span>
+        {/* HERO — 100vh */}
+        <section className="min-h-[calc(100vh-3.5rem)] flex items-center bg-white dark:bg-kapture-black">
+          <div className="mx-auto w-full max-w-[1200px] px-6 sm:px-8 lg:px-12 py-10 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+            {/* LEFT — device showcase */}
+            <div className="lg:col-span-7 order-2 lg:order-1">
+              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03]">
+                <DeviceShowcase
+                  product={product}
+                  accent={accent}
+                  fontFamily={FONT_FAMILY[font]}
+                />
+              </div>
+            </div>
+
+            {/* RIGHT — content */}
+            <div className="lg:col-span-5 order-1 lg:order-2">
+              <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-smoke dark:text-white/55 mb-3">
+                {isPass ? "DESIGNER PASS" : isBundle ? "BUNDLE" : isPreorder ? `PRE-ORDER · ${product.release ?? "SOON"}` : product.industry}
+                {product.subcategory && ` · ${product.subcategory}`}
+              </div>
+              <h1 className="font-semibold text-2xl sm:text-3xl lg:text-[2.25rem] leading-[1.1] tracking-[-0.02em] text-kapture-black dark:text-white">
+                {product.title}
               </h1>
-              <p className="mt-1 text-sm sm:text-base text-kapture-smoke dark:text-white/65">
+              <p className="mt-3 text-sm sm:text-base text-kapture-smoke dark:text-white/65 leading-relaxed">
                 {priceLine(product)}
               </p>
-            </div>
-            <div className="hidden sm:flex items-center gap-3 text-xs font-medium text-kapture-smoke dark:text-white/65">
-              <span className="inline-flex items-center gap-1.5">
-                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-kapture-paper dark:bg-white/[0.06]">
-                  <FileText size={12} strokeWidth={2} />
-                </span>
-                Instant delivery
-              </span>
-              <span className="w-px h-4 bg-kapture-fog dark:bg-white/15" />
-              <span className="inline-flex items-center gap-1.5">
-                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-kapture-paper dark:bg-white/[0.06]">
-                  <Check size={12} strokeWidth={2.5} />
-                </span>
-                Audit-hashed
-              </span>
-            </div>
-          </div>
-        </section>
 
-        {/* TWO-COLUMN BODY */}
-        <section>
-          <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 py-8 sm:py-10 lg:py-14 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* LEFT — visual placeholder */}
-            <div>
-              <div className="aspect-[4/5] rounded-[28px] bg-kapture-paper dark:bg-white/[0.04] border border-kapture-fog dark:border-white/10 flex items-center justify-center p-10 sm:p-14">
-                <FormPreview product={product} />
-              </div>
-              {/* Tiny indicator row (Apple's pagination dots) */}
-              <div className="mt-4 flex items-center justify-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-kapture-black dark:bg-white" />
-                <span className="w-1.5 h-1.5 rounded-full bg-kapture-fog dark:bg-white/25" />
-                <span className="w-1.5 h-1.5 rounded-full bg-kapture-fog dark:bg-white/25" />
-              </div>
-            </div>
-
-            {/* RIGHT — selection */}
-            <div className="space-y-10 lg:space-y-12">
               {/* Plan section */}
-              <div>
-                <SectionTitle pre={planTitle(product)} post="Which suits you?" />
-                <div className="mt-5 space-y-3">
+              <div className="mt-7">
+                <h2 className="font-semibold text-base tracking-[-0.01em]">
+                  <span className="text-kapture-black dark:text-white">Plan.</span>
+                  <span className="text-kapture-mist dark:text-white/40"> Which suits you?</span>
+                </h2>
+                <div className="mt-3">
                   <BuyControls product={product} />
                 </div>
               </div>
 
-              {/* Customise teaser */}
-              {isLive || isBundle ? (
-                <div>
-                  <SectionTitle pre="Customise." post="After purchase." />
-                  <div className="mt-5 rounded-2xl border border-kapture-fog dark:border-white/15 bg-kapture-paper dark:bg-white/[0.04] p-5">
-                    <div className="flex items-start gap-3">
-                      <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white dark:bg-white/[0.06] border border-kapture-fog dark:border-white/15 shrink-0">
-                        <Plus size={16} strokeWidth={2} className="text-kapture-black dark:text-white" />
-                      </span>
-                      <div className="text-sm text-kapture-smoke dark:text-white/70 leading-relaxed">
-                        Change the headline, swap the font, set your accent
-                        colour, round the buttons. Brand the hosted runner.
-                        Available the moment your purchase clears — from your
-                        dashboard.
-                      </div>
-                    </div>
+              {/* Customise quick swatches */}
+              <div className="mt-7 pt-7 border-t border-kapture-fog dark:border-white/10">
+                <h2 className="font-semibold text-base tracking-[-0.01em]">
+                  <span className="text-kapture-black dark:text-white">Customise.</span>
+                  <span className="text-kapture-mist dark:text-white/40"> Preview your style.</span>
+                </h2>
+
+                {/* Accent swatches */}
+                <div className="mt-3">
+                  <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist dark:text-white/40 mb-2">
+                    Accent
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {ACCENTS.map((a) => {
+                      const active = accent.toUpperCase() === a.hex.toUpperCase();
+                      return (
+                        <button
+                          key={a.hex}
+                          type="button"
+                          onClick={() => setAccent(a.hex)}
+                          aria-label={a.label}
+                          title={a.label}
+                          className={`relative w-7 h-7 rounded-full border-2 transition ${
+                            active
+                              ? "border-kapture-black dark:border-white"
+                              : "border-transparent hover:border-kapture-fog dark:hover:border-white/30"
+                          }`}
+                          style={{ backgroundColor: a.hex }}
+                        >
+                          {active && (
+                            <span className="absolute inset-0 flex items-center justify-center">
+                              <Check
+                                size={12}
+                                strokeWidth={3}
+                                className={parseInt(a.hex.slice(1), 16) > 0x888888 ? "text-kapture-black" : "text-white"}
+                              />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-              ) : null}
+
+                {/* Font picker */}
+                <div className="mt-4">
+                  <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist dark:text-white/40 mb-2">
+                    Font
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {FONTS.map((f) => {
+                      const active = font === f.id;
+                      return (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() => setFont(f.id)}
+                          className={`rounded-lg border py-2 transition ${
+                            active
+                              ? "border-kapture-black dark:border-kapture-yellow"
+                              : "border-kapture-fog dark:border-white/15 hover:border-kapture-mist dark:hover:border-white/30"
+                          }`}
+                        >
+                          <span
+                            className="block text-xs font-medium text-kapture-black dark:text-white"
+                            style={{ fontFamily: FONT_FAMILY[f.id] }}
+                          >
+                            {f.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <p className="mt-4 text-[0.6875rem] text-kapture-mist dark:text-white/45">
+                  Full customisation — headline, button shape, card corners — opens in your dashboard after purchase.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Features */}
+        {/* FEATURES */}
         <section className="border-t border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 py-14 sm:py-20 lg:py-24">
+          <div className="mx-auto max-w-[1200px] px-6 sm:px-8 lg:px-12 py-16 sm:py-24">
             <SectionTitle pre="What makes it different." post="Three reasons." center />
-            <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
               {product.features.slice(0, 3).map((f) => (
                 <div key={f.title} className="text-center">
                   <h3 className="font-semibold text-lg text-kapture-black dark:text-white tracking-[-0.01em]">
@@ -133,9 +178,9 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
           </div>
         </section>
 
-        {/* In the pack */}
+        {/* IN THE PACK */}
         <section className="border-t border-kapture-fog dark:border-white/5 bg-kapture-paper/40 dark:bg-white/[0.02]">
-          <div className="mx-auto max-w-[800px] px-5 sm:px-6 lg:px-10 py-14 sm:py-20">
+          <div className="mx-auto max-w-[800px] px-6 sm:px-8 lg:px-12 py-16 sm:py-20">
             <SectionTitle pre="In the pack." post="What you get." center />
             <ul className="mt-8 space-y-3.5">
               {product.whatsIncluded.map((item) => (
@@ -151,9 +196,9 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
           </div>
         </section>
 
-        {/* Specs */}
+        {/* SPECS */}
         <section className="border-t border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[640px] px-5 sm:px-6 lg:px-10 py-14 sm:py-20">
+          <div className="mx-auto max-w-[640px] px-6 sm:px-8 lg:px-12 py-16 sm:py-20">
             <SectionTitle pre="Specs." post="At a glance." center />
             <dl className="mt-8 divide-y divide-kapture-fog dark:divide-white/10 rounded-2xl border border-kapture-fog dark:border-white/10 bg-white dark:bg-white/[0.04]">
               {product.specs.map((s) => (
@@ -166,10 +211,10 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
           </div>
         </section>
 
-        {/* Related */}
+        {/* RELATED */}
         {related.length > 0 && (
           <section className="border-t border-kapture-fog dark:border-white/5 bg-kapture-paper/40 dark:bg-white/[0.02]">
-            <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 py-14 sm:py-20">
+            <div className="mx-auto max-w-[1200px] px-6 sm:px-8 lg:px-12 py-16 sm:py-20">
               <SectionTitle
                 pre={`More in ${product.subcategory ?? product.industry}.`}
                 post="You might also like."
@@ -233,9 +278,7 @@ function SectionTitle({
 }) {
   return (
     <h2
-      className={`font-semibold text-xl sm:text-2xl tracking-[-0.015em] ${
-        center ? "text-center" : ""
-      }`}
+      className={`font-semibold text-xl sm:text-2xl tracking-[-0.015em] ${center ? "text-center" : ""}`}
     >
       <span className="text-kapture-black dark:text-white">{pre}</span>
       {post && <span className="text-kapture-mist dark:text-white/40"> {post}</span>}
@@ -243,59 +286,25 @@ function SectionTitle({
   );
 }
 
-function FormPreview({ product }: { product: StoreProduct }) {
-  return (
-    <div className="text-center">
-      <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white dark:bg-white/[0.06] border border-kapture-fog dark:border-white/10 mb-6">
-        <IndustryIcon name={product.industry} size={36} className="text-kapture-black dark:text-white" />
-      </div>
-      <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-smoke dark:text-white/55 mb-2">
-        {product.industry}
-        {product.subcategory && ` · ${product.subcategory}`}
-      </div>
-      <div className="font-semibold text-base sm:text-lg text-kapture-black dark:text-white tracking-[-0.01em] max-w-[18rem] mx-auto">
-        {product.title}
-      </div>
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5">
-        {product.formats.map((f) => (
-          <span
-            key={f}
-            className="inline-flex items-center px-1.5 py-0.5 rounded text-[0.625rem] font-mono font-bold tracking-wider bg-white dark:bg-white/[0.06] border border-kapture-fog dark:border-white/10 text-kapture-smoke dark:text-white/65 uppercase"
-          >
-            {f === "web" ? "Hosted" : f === "gforms" ? "GForms" : f}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function priceLine(product: StoreProduct): string {
   const opt = product.options.find((o) => o.primary) ?? product.options[0];
   if (!opt) return "";
   if (opt.mode === "preorder") {
-    return `From £${(opt.pricePence / 100).toFixed(2)} to reserve · £${((opt.rrpPence ?? 2900) / 100).toFixed(0)} at launch.`;
+    return `From £${(opt.pricePence / 100).toFixed(2)} to reserve. £${((opt.rrpPence ?? 2900) / 100).toFixed(0)} at launch.`;
   }
   if (opt.mode === "subscription" || opt.mode === "pass") {
     return `£${(opt.pricePence / 100).toFixed(0)} / month. Cancel anytime.`;
   }
   if (opt.mode === "bundle") {
-    return `Bundle: £${(opt.pricePence / 100).toFixed(0)} · save vs individual packs.`;
+    return `From £${(opt.pricePence / 100).toFixed(0)}. Save vs individual packs.`;
   }
   return `From £${(opt.pricePence / 100).toFixed(0)}. Lifetime updates.`;
-}
-
-function planTitle(product: StoreProduct): string {
-  if (product.status === "soon") return "Pre-order.";
-  if (product.status === "pass") return "Plan.";
-  if (product.status === "bundle") return "Bundle.";
-  return "Plan.";
 }
 
 function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white/85 dark:bg-kapture-black/85 backdrop-blur-md border-b border-kapture-fog dark:border-white/5">
-      <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 h-14 flex items-center justify-between gap-3">
+      <div className="mx-auto max-w-[1200px] px-6 sm:px-8 lg:px-12 h-14 flex items-center justify-between gap-3">
         <Logo />
         <nav className="hidden md:flex items-center gap-1 text-sm">
           <Link href="/" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-semibold">Home</Link>
@@ -312,7 +321,7 @@ function SiteHeader() {
 function SiteFooter() {
   return (
     <footer className="border-t border-kapture-fog dark:border-white/5">
-      <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="mx-auto max-w-[1200px] px-6 sm:px-8 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="font-mono uppercase tracking-widest text-[0.625rem] text-kapture-smoke dark:text-white/40">
           © {new Date().getFullYear()} Kapture · UK
         </div>

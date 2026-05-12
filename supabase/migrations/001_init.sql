@@ -31,6 +31,7 @@ create table if not exists public.products (
 
 alter table public.products enable row level security;
 
+drop policy if exists "products: public read" on public.products;
 create policy "products: public read" on public.products
   for select using (true);
 
@@ -49,9 +50,11 @@ create table if not exists public.customers (
 
 alter table public.customers enable row level security;
 
+drop policy if exists "customers: read own" on public.customers;
 create policy "customers: read own" on public.customers
   for select using (auth.uid() = user_id);
 
+drop policy if exists "customers: insert own" on public.customers;
 create policy "customers: insert own" on public.customers
   for insert with check (auth.uid() = user_id);
 
@@ -76,6 +79,7 @@ create table if not exists public.orders (
 
 alter table public.orders enable row level security;
 
+drop policy if exists "orders: read own" on public.orders;
 create policy "orders: read own" on public.orders
   for select using (
     customer_id in (select id from public.customers where user_id = auth.uid())
@@ -100,6 +104,7 @@ create table if not exists public.licenses (
 
 alter table public.licenses enable row level security;
 
+drop policy if exists "licenses: read own" on public.licenses;
 create policy "licenses: read own" on public.licenses
   for select using (
     customer_id in (select id from public.customers where user_id = auth.uid())
@@ -126,6 +131,7 @@ create table if not exists public.submissions (
 
 alter table public.submissions enable row level security;
 
+drop policy if exists "submissions: licensee read" on public.submissions;
 create policy "submissions: licensee read" on public.submissions
   for select using (
     license_id in (
@@ -154,6 +160,7 @@ create table if not exists public.submission_events (
 
 alter table public.submission_events enable row level security;
 
+drop policy if exists "submission_events: licensee read" on public.submission_events;
 create policy "submission_events: licensee read" on public.submission_events
   for select using (
     submission_id in (
