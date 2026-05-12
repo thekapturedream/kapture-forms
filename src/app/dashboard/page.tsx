@@ -182,6 +182,12 @@ export default async function DashboardPage() {
                           >
                             Open form →
                           </Link>
+                          <Link
+                            href={`/dashboard/customize/${lic.slug}`}
+                            className="btn-secondary text-xs"
+                          >
+                            Customise
+                          </Link>
                           <Link href="/how-to/hosted" className="btn-secondary text-xs">
                             How-to
                           </Link>
