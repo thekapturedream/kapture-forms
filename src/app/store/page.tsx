@@ -3,6 +3,7 @@ import { StoreClient } from "./StoreClient";
 import { SEARCH_CATALOG } from "@lib/search-catalog";
 import { Logo } from "@components/Logo";
 import { ThemeToggle } from "@components/ThemeToggle";
+import { CartButton } from "@components/cart/CartButton";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -29,7 +30,8 @@ export default function StorePage({ searchParams }: { searchParams: { industry?:
             <Link href="/how-to" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-medium">How-to</Link>
             <Link href="/dashboard" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-medium">Dashboard</Link>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <CartButton size={34} />
             <ThemeToggle size={34} />
           </div>
         </div>

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import type { StoreProduct } from "@lib/store-product";
+import { useCart } from "@components/cart/CartProvider";
+import type { CartItem } from "@lib/cart/types";
 
 interface BuyControlsProps {
   product: StoreProduct;
@@ -21,8 +23,26 @@ export function BuyControls({ product }: BuyControlsProps) {
   const [selectedId, setSelectedId] = useState<string>(initial ?? "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addItem } = useCart();
 
   const selected = product.options.find((o) => o.id === selectedId) ?? product.options[0];
+
+  function addToCart() {
+    if (!selected) return;
+    const item: CartItem = {
+      slug: product.slug,
+      optionId: selected.id,
+      qty: 1,
+      snapshot: {
+        title: product.title,
+        optionLabel: selected.label,
+        pricePence: selected.pricePence,
+        rrpPence: selected.rrpPence,
+        mode: selected.mode,
+      },
+    };
+    addItem(item);
+  }
 
   async function buy() {
     if (!selected) return;
@@ -108,23 +128,42 @@ export function BuyControls({ product }: BuyControlsProps) {
         </div>
       </div>
 
-      {/* CTA */}
-      <button
-        type="button"
-        onClick={buy}
-        disabled={loading}
-        className="w-full inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 px-5 py-3.5 rounded-2xl font-bold text-sm transition active:scale-[0.99]"
-      >
-        {loading
-          ? "Opening Stripe…"
-          : selected?.mode === "preorder"
-            ? "Reserve →"
-            : selected?.mode === "pass"
-              ? "Start pass →"
-              : selected?.mode === "subscription"
-                ? "Subscribe →"
-                : "Buy now →"}
-      </button>
+      {/* CTAs */}
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
+        <button
+          type="button"
+          onClick={buy}
+          disabled={loading}
+          className="w-full inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 px-5 py-3.5 rounded-2xl font-bold text-sm transition active:scale-[0.99]"
+        >
+          {loading
+            ? "Opening Stripe…"
+            : selected?.mode === "preorder"
+              ? "Reserve now →"
+              : selected?.mode === "pass"
+                ? "Start pass →"
+                : selected?.mode === "subscription"
+                  ? "Subscribe →"
+                  : "Buy now →"}
+        </button>
+        {selected?.mode !== "subscription" && selected?.mode !== "pass" && (
+          <button
+            type="button"
+            onClick={addToCart}
+            disabled={loading}
+            aria-label="Add to cart"
+            className="inline-flex items-center justify-center gap-2 bg-white dark:bg-white/[0.06] text-kapture-black dark:text-white border-2 border-kapture-black dark:border-white hover:bg-kapture-paper dark:hover:bg-white/[0.12] disabled:opacity-60 px-5 py-3.5 rounded-2xl font-bold text-sm transition active:scale-[0.99] whitespace-nowrap"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+            </svg>
+            <span className="hidden sm:inline">Add to cart</span>
+            <span className="sm:hidden">Add to cart</span>
+          </button>
+        )}
+      </div>
 
       {error && <p className="text-xs text-status-critical font-mono text-center">{error}</p>}
 

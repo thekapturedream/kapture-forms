@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { getStripe } from "@lib/stripe";
 import { createSupabaseAdminClient } from "@lib/supabase/server";
 import { getProduct } from "@lib/products";
+import { getSchema } from "@lib/schemas";
 import { randomBytes } from "crypto";
 
 export const runtime = "nodejs";
@@ -119,12 +120,29 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     .select("id")
     .single();
 
-  // 3. Insert license.
+  // 3. Insert license. When a schema is registered for this product we also
+  //    persist its shape — the dashboard CSV export route uses this to seed
+  //    the column list, and the future per-license table provisioning step
+  //    (Supabase migration `licenses_submission_tables`) reads from it.
   if (customerId && order) {
     const slug = `${product.slug}-${randomBytes(4).toString("hex")}`;
     const baseUrl =
       process.env.NEXT_PUBLIC_SITE_URL ?? "https://kapture-forms.com";
-    await supabase.from("licenses").insert({
+    const schema = getSchema(productId);
+    const schemaShape = schema
+      ? {
+          schema_title: schema.title,
+          schema_section_count: schema.sections.length,
+          schema_field_count: schema.sections.reduce(
+            (n, s) => n + s.fields.length,
+            0,
+          ),
+          schema_pathways: schema.pathways.map((p) => p.id),
+          submission_table: `submissions_${slug.replace(/[^a-z0-9_]/gi, "_")}`,
+        }
+      : null;
+
+    const licenseRow: Record<string, unknown> = {
       customer_id: customerId,
       product_id: productId,
       order_id: order.id,
@@ -136,7 +154,16 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         mode === "subscription"
           ? new Date(Date.now() + 31 * 24 * 60 * 60 * 1000).toISOString()
           : null,
-    });
+    };
+    // Conditional: only attach the shape if the licenses table exposes a
+    // `customization` jsonb column. Older deployments without that column
+    // simply ignore this key. The same column already stores buyer theme
+    // overrides, so we merge under a `__schema` sub-key to keep concerns
+    // separated.
+    if (schemaShape) {
+      licenseRow.customization = { __schema: schemaShape };
+    }
+    await supabase.from("licenses").insert(licenseRow);
   }
 
   // 4. Send magic link so the buyer can claim their dashboard.

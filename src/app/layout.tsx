@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@components/ThemeProvider";
+import { CartProvider } from "@components/cart/CartProvider";
+import { CartDrawer } from "@components/cart/CartDrawer";
 import "./globals.css";
 
 const fontSans = localFont({
@@ -66,7 +68,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${fontSans.variable} ${fontMono.variable}`} suppressHydrationWarning>
       <body className="bg-white text-kapture-black dark:bg-kapture-black dark:text-white antialiased transition-colors duration-300">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <CartProvider>
+            {children}
+            <CartDrawer />
+          </CartProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

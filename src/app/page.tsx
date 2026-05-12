@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@components/Logo";
 import { ThemeToggle } from "@components/ThemeToggle";
+import { CartButton } from "@components/cart/CartButton";
 import { SearchHero } from "@components/SearchHero";
 import { MotionFade } from "@components/MotionFade";
 import { CategoryGrid } from "@components/CategoryGrid";
@@ -269,11 +270,12 @@ function SiteHeader() {
           <Link href="/how-to" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-medium">How-to</Link>
           <Link href="/dashboard" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-medium">Dashboard</Link>
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <CartButton size={34} />
           <ThemeToggle size={34} />
           <Link
             href="/store"
-            className="inline-flex items-center gap-1.5 bg-kapture-black text-white dark:bg-white dark:text-kapture-black hover:opacity-90 px-3.5 py-1.5 rounded-full text-sm font-semibold transition"
+            className="inline-flex items-center gap-1.5 bg-kapture-black text-white dark:bg-white dark:text-kapture-black hover:opacity-90 px-3.5 py-1.5 rounded-full text-sm font-semibold transition ml-1"
           >
             Shop
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

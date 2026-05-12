@@ -372,7 +372,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Personal agreements",
         tagline: "Affidavits, statutory declarations, wills, POA.",
         forms: [
-          soon("Affidavit · general purpose", "Q4 2026", ["affidavit","sworn"]),
+          live("Affidavit · general purpose", "/products/affidavit-general-purpose", ["affidavit","sworn"]),
           soon("Statutory declaration", "Q4 2026", ["statutory","declaration"]),
           soon("Witness statement", "Q4 2026", ["witness","statement"]),
           soon("Power of attorney · LPA health", "Q1 2027", ["LPA","health","attorney"]),
@@ -388,7 +388,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Business contracts",
         tagline: "NDAs, services, partnerships, MoUs.",
         forms: [
-          soon("Mutual NDA", "Q4 2026", ["NDA","mutual","confidentiality"]),
+          live("Mutual NDA", "/products/mutual-nda", ["NDA","mutual","confidentiality"]),
           soon("One-way NDA", "Q4 2026", ["NDA","one-way"]),
           soon("Service agreement (B2B)", "Q4 2026", ["service","B2B","contract"]),
           soon("Consultancy agreement", "Q4 2026", ["consultancy","freelance"]),
@@ -455,7 +455,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Data & privacy",
         tagline: "GDPR, DSAR, breach notifications.",
         forms: [
-          soon("GDPR · DSAR (subject access)", "Q1 2027", ["DSAR","GDPR","ICO"]),
+          live("GDPR · DSAR (subject access)", "/products/gdpr-dsar-subject-access", ["DSAR","GDPR","ICO"]),
           soon("GDPR · breach notification", "Q1 2027", ["breach","GDPR"]),
           soon("Privacy impact assessment (DPIA)", "Q1 2027", ["DPIA","privacy"]),
           soon("Right to be forgotten request", "Q1 2027", ["RTBF","erasure"]),
@@ -489,7 +489,7 @@ export const TAXONOMY: IndustryNode[] = [
         tagline: "Trip, photo, media, transport.",
         forms: [
           soon("Parental consent · school", "Q1 2027", ["parent","consent"]),
-          soon("Photography & media consent", "Q1 2027", ["photo","media"]),
+          live("Photography & media consent", "/products/photography-media-consent", ["photo","media"]),
           soon("Educational visit consent", "Q1 2027", ["trip","visit"]),
           soon("School transport request", "Q1 2027", ["transport","bus"]),
           soon("Medication-in-school form", "Q1 2027", ["medication","school"]),
@@ -584,7 +584,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Lettings",
         tagline: "From offer to deposit.",
         forms: [
-          soon("Tenant referencing", "Q2 2027", ["tenant","reference"]),
+          live("Tenant referencing", "/products/tenant-referencing", ["tenant","reference"]),
           soon("Right-to-rent check", "Q2 2027", ["RtR","right to rent"]),
           soon("AST · assured shorthold tenancy", "Q2 2027", ["AST"]),
           soon("Inventory · check-in", "Q2 2027", ["inventory","check-in"]),

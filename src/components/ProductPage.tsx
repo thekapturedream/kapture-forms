@@ -7,9 +7,12 @@ import { Logo } from "@components/Logo";
 import { ThemeToggle } from "@components/ThemeToggle";
 import { BuyControls } from "@components/BuyControls";
 import { DeviceShowcase } from "@components/DeviceShowcase";
+import { FormDemoModal } from "@components/FormDemoModal";
+import { CartButton } from "@components/cart/CartButton";
 import { type StoreProduct, relatedProducts } from "@lib/store-product";
 import { ACCENTS, FONTS, type FontChoice } from "@lib/customization";
 import { getContrastTextClass } from "@lib/contrast";
+import { getSchema } from "@lib/schemas";
 
 const FONT_FAMILY: Record<FontChoice, string> = {
   manrope: "'Manrope', system-ui, sans-serif",
@@ -33,6 +36,10 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
   // Customise quick controls — apply to the device preview in real time.
   const [accent, setAccent] = useState<string>("#FFD400");
   const [font, setFont] = useState<FontChoice>("manrope");
+
+  // Test Form modal — only available when a schema is registered for this product.
+  const schema = getSchema(product.id);
+  const [demoOpen, setDemoOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -75,6 +82,18 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
                 <div className="mt-3">
                   <BuyControls product={product} />
                 </div>
+                {schema && (
+                  <button
+                    type="button"
+                    onClick={() => setDemoOpen(true)}
+                    className="mt-3 w-full inline-flex items-center justify-center gap-2 bg-white dark:bg-white/[0.06] text-kapture-black dark:text-white border-2 border-kapture-black dark:border-white hover:bg-kapture-paper dark:hover:bg-white/[0.12] px-5 py-3.5 rounded-2xl font-bold text-sm transition active:scale-[0.99]"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                    Test the form · {schema.sections.length} sections · live preview
+                  </button>
+                )}
               </div>
 
               {/* Customise quick swatches */}
@@ -264,6 +283,15 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
       </main>
 
       <SiteFooter />
+
+      {schema && (
+        <FormDemoModal
+          open={demoOpen}
+          onClose={() => setDemoOpen(false)}
+          schema={schema}
+          product={product}
+        />
+      )}
     </div>
   );
 }
@@ -315,7 +343,10 @@ function SiteHeader() {
           <Link href="/how-to" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-semibold">How-to</Link>
           <Link href="/dashboard" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-semibold">Dashboard</Link>
         </nav>
-        <ThemeToggle size={32} />
+        <div className="flex items-center gap-1">
+          <CartButton size={32} />
+          <ThemeToggle size={32} />
+        </div>
       </div>
     </header>
   );
