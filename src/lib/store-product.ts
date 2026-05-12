@@ -363,7 +363,7 @@ function designerPass(): StoreProduct {
         mode: "pass",
         label: "Designer Pass · monthly",
         pricePence: DESIGNER_PASS_PENCE,
-        subtitle: "First 30 days, then £49 / mo",
+        subtitle: "Billed monthly · cancel any time",
         note: "Cancel anytime.",
         primary: true,
       },

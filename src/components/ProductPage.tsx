@@ -41,7 +41,7 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
       <main className="flex-1">
         {/* HERO — 100vh */}
         <section className="min-h-[calc(100vh-3.5rem)] flex items-center bg-white dark:bg-kapture-black">
-          <div className="mx-auto w-full max-w-[1200px] px-6 sm:px-8 lg:px-12 py-10 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+          <div className="kap-shell py-10 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
             {/* LEFT — device showcase */}
             <div className="lg:col-span-7 order-2 lg:order-1">
               <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03]">
@@ -162,7 +162,7 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
 
         {/* FEATURES */}
         <section className="border-t border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[1200px] px-6 sm:px-8 lg:px-12 py-16 sm:py-24">
+          <div className="kap-shell py-16 sm:py-24">
             <SectionTitle pre="What makes it different." post="Three reasons." center />
             <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
               {product.features.slice(0, 3).map((f) => (
@@ -217,7 +217,7 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
         {/* RELATED */}
         {related.length > 0 && (
           <section className="border-t border-kapture-fog dark:border-white/5 bg-kapture-paper/40 dark:bg-white/[0.02]">
-            <div className="mx-auto max-w-[1200px] px-6 sm:px-8 lg:px-12 py-16 sm:py-20">
+            <div className="kap-shell py-16 sm:py-20">
               <SectionTitle
                 pre={`More in ${product.subcategory ?? product.industry}.`}
                 post="You might also like."
@@ -307,7 +307,7 @@ function priceLine(product: StoreProduct): string {
 function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white/85 dark:bg-kapture-black/85 backdrop-blur-md border-b border-kapture-fog dark:border-white/5">
-      <div className="mx-auto max-w-[1200px] px-6 sm:px-8 lg:px-12 h-14 flex items-center justify-between gap-3">
+      <div className="kap-shell h-14 flex items-center justify-between gap-3">
         <Logo />
         <nav className="hidden md:flex items-center gap-1 text-sm">
           <Link href="/" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-semibold">Home</Link>
@@ -324,7 +324,7 @@ function SiteHeader() {
 function SiteFooter() {
   return (
     <footer className="border-t border-kapture-fog dark:border-white/5">
-      <div className="mx-auto max-w-[1200px] px-6 sm:px-8 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="kap-shell py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="font-mono uppercase tracking-widest text-[0.625rem] text-kapture-smoke dark:text-white/40">
           © {new Date().getFullYear()} Kapture · UK
         </div>

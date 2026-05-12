@@ -40,7 +40,7 @@ export default function IndustryPage({ params }: PageProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-40 bg-white/85 dark:bg-kapture-black/85 backdrop-blur-md border-b border-kapture-fog dark:border-white/5">
-        <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
+        <div className="kap-shell h-16 flex items-center justify-between gap-3">
           <Logo />
           <nav className="hidden md:flex items-center gap-1 text-sm">
             <Link href="/" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-medium">Home</Link>
@@ -57,7 +57,7 @@ export default function IndustryPage({ params }: PageProps) {
       <main className="flex-1">
         {/* Industry hero */}
         <section className="border-b border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-10 sm:py-14">
+          <div className="kap-shell py-10 sm:py-14">
             <Link
               href="/store"
               className="inline-flex items-center gap-1.5 font-mono text-[0.625rem] uppercase tracking-widest text-kapture-smoke dark:text-white/55 hover:text-kapture-black dark:hover:text-white mb-5"
@@ -107,7 +107,7 @@ export default function IndustryPage({ params }: PageProps) {
             id={sub.id}
             className="border-b border-kapture-fog dark:border-white/5 scroll-mt-20"
           >
-            <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-10 sm:py-14">
+            <div className="kap-shell py-10 sm:py-14">
               <div className="mb-6 sm:mb-8 flex items-end justify-between gap-4 flex-wrap">
                 <div>
                   <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-smoke dark:text-white/40 mb-1.5">
@@ -168,7 +168,7 @@ export default function IndustryPage({ params }: PageProps) {
       </main>
 
       <footer className="border-t border-kapture-fog dark:border-white/5">
-        <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="kap-shell py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="font-mono uppercase tracking-widest text-[0.625rem] text-kapture-smoke dark:text-white/40">
             © {new Date().getFullYear()} Kapture · UK
           </div>

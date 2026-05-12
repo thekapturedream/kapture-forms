@@ -19,6 +19,8 @@
 }
 
 @layer components {
+  /* Legacy container — kept for /run and /success which use container-c
+     directly. New code uses .kap-shell instead. */
   .container-c {
     max-width: 1280px;
     margin-left: auto;
@@ -31,6 +33,22 @@
   }
   @media (min-width: 1024px) {
     .container-c { padding-left: 2rem; padding-right: 2rem; }
+  }
+
+  /* Kapture page shell — full-bleed, no max-width cap, generous side padding.
+     Mobile 20px, sm 24px, desktop locked at 40px. Use this for every
+     top-level page wrapper. Inner content blocks may still constrain their
+     prose width (max-w-2xl, max-w-3xl etc.) for readability. */
+  .kap-shell {
+    width: 100%;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .kap-shell { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+  @media (min-width: 1024px) {
+    .kap-shell { padding-left: 2.5rem; padding-right: 2.5rem; }
   }
 
   /* Editorial kicker — yellow 24x2px bar + JetBrains Mono caps */
@@ -365,13 +383,14 @@
   }
   .field-input {
     width: 100%;
-    padding: 0.625rem 0.75rem;
+    padding: 0.875rem 1.125rem;
     border: 1px solid #d4d4d4;
     border-radius: 10px;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     background: #fff;
     color: #0a0a0a;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    line-height: 1.4;
   }
   .field-input:focus {
     outline: none;
@@ -379,5 +398,33 @@
     box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.25);
   }
   .field-input[type='textarea'],
-  textarea.field-input { min-height: 96px; resize: vertical; }
+  textarea.field-input { min-height: 112px; resize: vertical; padding-top: 0.875rem; padding-bottom: 0.875rem; }
+
+  /* Native <select> styling — same fat padding as inputs, custom arrow so it
+     doesn't look like a 1996 dropdown on any browser. Apply via class
+     .field-select alongside .field-input. */
+  select.field-input,
+  .field-select {
+    width: 100%;
+    padding: 0.875rem 2.5rem 0.875rem 1.125rem;
+    border: 1px solid #d4d4d4;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    background: #fff
+      url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%230A0A0A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      no-repeat right 1rem center;
+    color: #0a0a0a;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+  select.field-input:focus,
+  .field-select:focus {
+    outline: none;
+    border-color: #0a0a0a;
+    box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.25);
+  }
 }

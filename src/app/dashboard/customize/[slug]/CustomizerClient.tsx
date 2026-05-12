@@ -65,7 +65,7 @@ export function CustomizerClient({ slug, productId, initial }: Props) {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-40 bg-white/85 dark:bg-kapture-black/85 backdrop-blur-md border-b border-kapture-fog dark:border-white/5">
-        <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 h-14 flex items-center justify-between gap-3">
+        <div className="kap-shell h-14 flex items-center justify-between gap-3">
           <Logo />
           <div className="flex items-center gap-2">
             <ThemeToggle size={32} />
@@ -74,7 +74,7 @@ export function CustomizerClient({ slug, productId, initial }: Props) {
       </header>
 
       <main className="flex-1">
-        <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 pt-6">
+        <div className="kap-shell pt-6">
           <Link
             href="/dashboard"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-kapture-smoke dark:text-white/55 hover:text-kapture-black dark:hover:text-white"
@@ -84,7 +84,7 @@ export function CustomizerClient({ slug, productId, initial }: Props) {
           </Link>
         </div>
 
-        <div className="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-10 pt-6 pb-12 sm:pb-16">
+        <div className="kap-shell pt-6 pb-12 sm:pb-16">
           <h1 className="font-semibold text-xl sm:text-2xl tracking-[-0.015em] text-kapture-black dark:text-white">
             Customise.{" "}
             <span className="text-kapture-mist dark:text-white/40">

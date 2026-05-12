@@ -49,7 +49,7 @@ export default async function AdminPage() {
   return (
     <div className="min-h-screen bg-white text-kapture-black dark:bg-kapture-black dark:text-white">
       <header className="sticky top-0 z-40 border-b border-kapture-fog dark:border-white/5 bg-white/85 dark:bg-kapture-black/85 backdrop-blur-md">
-        <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 h-14 flex items-center justify-between">
+        <div className="kap-shell h-14 flex items-center justify-between">
           <div className="font-mono text-xs uppercase tracking-widest text-kapture-mist dark:text-white/40">
             Kapture Forms · Admin
           </div>
@@ -64,7 +64,7 @@ export default async function AdminPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-8 space-y-10">
+      <main className="kap-shell py-8 space-y-10">
         <StatRow
           stats={[
             { label: "CUSTOMERS", value: String(customers?.length ?? 0) },

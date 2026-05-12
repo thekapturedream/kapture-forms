@@ -14,7 +14,7 @@ export default function StorePage({ searchParams }: { searchParams: { industry?:
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-40 bg-white/85 dark:bg-kapture-black/85 backdrop-blur-md border-b border-kapture-fog dark:border-white/5">
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
+        <div className="kap-shell h-16 flex items-center justify-between gap-3">
           <div className="flex items-center gap-4">
             <Logo />
             <span className="hidden sm:inline-flex items-center gap-2 text-xs font-mono text-kapture-smoke dark:text-white/55">
@@ -43,7 +43,7 @@ export default function StorePage({ searchParams }: { searchParams: { industry?:
       </main>
 
       <footer className="border-t border-kapture-fog dark:border-white/5">
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-6 lg:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="kap-shell py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="font-mono uppercase tracking-widest text-[0.625rem] text-kapture-smoke dark:text-white/40">
             © {new Date().getFullYear()} Kapture · UK
           </div>

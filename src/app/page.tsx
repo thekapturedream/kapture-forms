@@ -34,7 +34,7 @@ export default function HomePage() {
             aria-hidden
             className="absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(ellipse_at_top,_rgba(255,212,0,0.10),_transparent_60%)] pointer-events-none"
           />
-          <div className="relative mx-auto w-full max-w-[1100px] px-5 sm:px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-20 pb-12 lg:pb-16 text-center">
+          <div className="relative kap-shell pt-12 sm:pt-16 lg:pt-20 pb-12 lg:pb-16 text-center">
             <MotionFade>
               <h1 className="font-semibold tracking-[-0.04em] text-[2.75rem] leading-[1.02] sm:text-[3.75rem] lg:text-[5rem] sm:leading-[0.96] text-kapture-black dark:text-white">
                 Find forms for
@@ -52,7 +52,7 @@ export default function HomePage() {
 
         {/* CATEGORIES — right after hero */}
         <section id="categories" className="border-t border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-12 sm:py-14">
+          <div className="kap-shell py-12 sm:py-14">
             <MotionFade>
               <div className="mb-6 sm:mb-8 flex items-end justify-between gap-4">
                 <div>
@@ -79,7 +79,7 @@ export default function HomePage() {
 
         {/* FEATURED PACKS */}
         <section id="featured" className="border-t border-kapture-fog dark:border-white/5 bg-kapture-paper/40 dark:bg-white/[0.02]">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-12 sm:py-16">
+          <div className="kap-shell py-12 sm:py-16">
             <MotionFade>
               <div className="mb-6 sm:mb-8 flex items-end justify-between gap-4">
                 <div>
@@ -113,7 +113,7 @@ export default function HomePage() {
 
         {/* BUNDLES */}
         <section id="bundles" className="border-t border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-12 sm:py-16">
+          <div className="kap-shell py-12 sm:py-16">
             <MotionFade>
               <div className="mb-6 sm:mb-8">
                 <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-smoke dark:text-white/40 mb-2">
@@ -140,7 +140,7 @@ export default function HomePage() {
 
         {/* DESIGNER PASS */}
         <section id="designer" className="border-t border-kapture-fog dark:border-white/5 bg-kapture-paper/40 dark:bg-white/[0.02]">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-12 sm:py-16">
+          <div className="kap-shell py-12 sm:py-16">
             <div className="rounded-3xl border border-kapture-black dark:border-white/20 bg-kapture-black dark:bg-white/[0.04] text-white dark:text-white overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
                 <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10">
@@ -173,10 +173,10 @@ export default function HomePage() {
                       <span className="font-bold text-5xl tracking-[-0.03em]">£49</span>
                       <span className="text-white/55 text-sm font-mono uppercase tracking-wider">/ mo</span>
                     </div>
-                    <div className="text-white/55 text-xs font-mono">First 30 days, then £49</div>
+                    <div className="text-white/65 text-xs font-mono font-medium">Billed monthly · no setup fee</div>
                     <Link
                       href="/designer-pass"
-                      className="mt-6 inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber px-5 py-3 rounded-xl font-semibold text-sm transition"
+                      className="mt-7 inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber px-7 py-4 rounded-xl font-bold text-sm transition"
                     >
                       Start designer pass →
                     </Link>
@@ -195,7 +195,7 @@ export default function HomePage() {
 
         {/* FORMATS — sub-feature row */}
         <section id="formats" className="border-t border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-12 sm:py-16">
+          <div className="kap-shell py-12 sm:py-16">
             <MotionFade>
               <div className="mb-6 sm:mb-8">
                 <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-smoke dark:text-white/40 mb-2">
@@ -224,7 +224,7 @@ export default function HomePage() {
 
         {/* FINAL CTA */}
         <section className="border-t border-kapture-fog dark:border-white/5 bg-kapture-paper/40 dark:bg-white/[0.02]">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-12 sm:py-16 text-center">
+          <div className="kap-shell py-12 sm:py-16 text-center">
             <MotionFade>
               <h2 className="font-semibold text-3xl sm:text-4xl lg:text-5xl tracking-[-0.03em] text-kapture-black dark:text-white">
                 Browse the store. Pick a pack.
@@ -260,7 +260,7 @@ export default function HomePage() {
 function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white/85 dark:bg-kapture-black/85 backdrop-blur-md border-b border-kapture-fog dark:border-white/5">
-      <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
+      <div className="kap-shell h-16 flex items-center justify-between gap-3">
         <Logo />
         <nav className="hidden md:flex items-center gap-1 text-sm">
           <Link href="/store" className="px-3 py-1.5 text-kapture-smoke dark:text-white/70 hover:text-kapture-black dark:hover:text-white rounded-md font-medium">Store</Link>
@@ -390,7 +390,7 @@ function PassPoint({ children }: { children: React.ReactNode }) {
 function SiteFooter() {
   return (
     <footer className="border-t border-kapture-fog dark:border-white/5">
-      <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="kap-shell py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="font-mono uppercase tracking-widest text-[0.625rem] text-kapture-smoke dark:text-white/40">
           © {new Date().getFullYear()} Kapture · UK
         </div>

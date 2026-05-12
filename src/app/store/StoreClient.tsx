@@ -71,7 +71,7 @@ export function StoreClient({ initialIndustry, allEntries }: StoreClientProps) {
   const liveCount = allEntries.filter((e) => e.status === "live").length;
 
   return (
-    <div className="mx-auto max-w-[1280px] px-5 sm:px-6 lg:px-10 py-6 sm:py-8 lg:py-10">
+    <div className="kap-shell py-6 sm:py-8 lg:py-10">
       <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 lg:gap-8">
         {/* SIDEBAR — desktop */}
         <aside className="hidden lg:block">
