@@ -352,28 +352,35 @@ function PackTile({ entry }: { entry: SearchEntry }) {
       className="group rounded-2xl border border-kapture-fog dark:border-white/10 bg-white dark:bg-white/[0.02] p-5 transition hover:border-kapture-black dark:hover:border-white/30 hover:shadow-[0_4px_24px_rgba(0,0,0,0.05)] flex flex-col"
     >
       <div className="flex items-center justify-between mb-3">
-        <span className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-smoke dark:text-white/55">
+        <span className="font-mono text-[0.625rem] uppercase tracking-widest font-semibold text-kapture-smoke dark:text-white/55">
           {entry.industry}
         </span>
         <span
           className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.625rem] font-mono font-bold tracking-wider ${
             isLive
               ? "bg-kapture-yellow text-kapture-black"
-              : "bg-kapture-paper dark:bg-white/10 text-kapture-smoke dark:text-white/65 border border-kapture-fog dark:border-white/10"
+              : "bg-kapture-black text-kapture-yellow"
           }`}
         >
-          {isLive ? "LIVE" : entry.release ?? "SOON"}
+          {isLive ? "LIVE" : `PRE-ORDER · ${entry.release ?? "SOON"}`}
         </span>
       </div>
-      <h3 className="font-semibold text-base text-kapture-black dark:text-white tracking-[-0.01em] flex-1">
+      <h3 className="font-bold text-base text-kapture-black dark:text-white tracking-[-0.01em] flex-1">
         {entry.title}
       </h3>
-      <div className="mt-4 flex items-center justify-between">
-        <span className="font-bold text-lg text-kapture-black dark:text-white tracking-[-0.01em]">
-          {isLive ? "£29" : "Notify"}
-        </span>
-        <span className="text-sm font-medium text-kapture-black dark:text-white group-hover:translate-x-0.5 transition">
-          {isLive ? "Buy →" : "→"}
+      <div className="mt-4 flex items-end justify-between gap-2">
+        <div className="min-w-0">
+          <span className="font-bold text-lg text-kapture-black dark:text-white tracking-[-0.01em] leading-none block">
+            {isLive ? "£29" : "£14.50"}
+          </span>
+          {!isLive && (
+            <span className="mt-1 inline-block text-[0.6875rem] font-mono font-semibold text-kapture-mist dark:text-white/55">
+              <span className="line-through">£29</span> reserve · 50% off
+            </span>
+          )}
+        </div>
+        <span className="text-sm font-bold text-kapture-black dark:text-white group-hover:translate-x-0.5 transition shrink-0">
+          {isLive ? "Buy →" : "Reserve →"}
         </span>
       </div>
     </Link>

@@ -6,6 +6,7 @@ import { Logo } from "@components/Logo";
 import { ThemeToggle } from "@components/ThemeToggle";
 import { IndustryIcon } from "@components/IndustryIcon";
 import { getIndustryBySlug, TAXONOMY } from "@lib/taxonomy";
+import { slugify, PREORDER_PENCE, LAUNCH_PENCE } from "@lib/store-product";
 
 interface PageProps {
   params: { industry: string };
@@ -25,8 +26,15 @@ export function generateMetadata({ params }: PageProps): Metadata {
   };
 }
 
-const NOTIFY = (label: string) =>
-  `mailto:forms@thekapture.com?subject=${encodeURIComponent(`Notify me · ${label}`)}`;
+/**
+ * Every taxonomy form — live or soon — resolves to a real product page at
+ * /products/<slug>. Soon products surface as pre-orders there; live ones go
+ * straight to checkout. No dead clicks anywhere.
+ */
+const productHref = (title: string) => `/products/${slugify(title)}`;
+
+const moneyShort = (pence: number) =>
+  `£${(pence / 100).toFixed(pence % 100 === 0 ? 0 : 2)}`;
 
 export default function IndustryPage({ params }: PageProps) {
   const ind = getIndustryBySlug(params.industry);
@@ -128,7 +136,7 @@ export default function IndustryPage({ params }: PageProps) {
                   return (
                     <Link
                       key={f.id}
-                      href={isLive && f.href ? f.href : NOTIFY(f.title)}
+                      href={productHref(f.title)}
                       className="group rounded-2xl border border-kapture-fog dark:border-white/15 bg-white dark:bg-white/[0.04] p-5 transition hover:border-kapture-black dark:hover:border-white/40 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] flex flex-col"
                     >
                       <div className="flex items-center justify-between mb-3">
@@ -136,10 +144,10 @@ export default function IndustryPage({ params }: PageProps) {
                           className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.625rem] font-mono font-bold tracking-wider ${
                             isLive
                               ? "bg-kapture-yellow text-kapture-black"
-                              : "bg-kapture-paper dark:bg-white/10 text-kapture-smoke dark:text-white/65 border border-kapture-fog dark:border-white/15"
+                              : "bg-kapture-black text-kapture-yellow"
                           }`}
                         >
-                          {isLive ? "LIVE" : f.release ?? "SOON"}
+                          {isLive ? "LIVE" : `PRE-ORDER · ${f.release ?? "SOON"}`}
                         </span>
                         <ArrowUpRight
                           size={14}
@@ -147,15 +155,22 @@ export default function IndustryPage({ params }: PageProps) {
                           className="text-kapture-mist group-hover:text-kapture-black dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition"
                         />
                       </div>
-                      <h3 className="font-semibold text-[15px] text-kapture-black dark:text-white tracking-[-0.01em] flex-1">
+                      <h3 className="font-bold text-[15px] text-kapture-black dark:text-white tracking-[-0.01em] flex-1">
                         {f.title}
                       </h3>
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="font-bold text-lg text-kapture-black dark:text-white tracking-[-0.01em]">
-                          {isLive ? "£29" : "Notify"}
-                        </span>
-                        <span className="text-xs font-medium text-kapture-black dark:text-white">
-                          {isLive ? "Buy →" : "Email me →"}
+                      <div className="mt-4 flex items-end justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="font-bold text-lg text-kapture-black dark:text-white tracking-[-0.01em] leading-none">
+                            {isLive ? moneyShort(LAUNCH_PENCE) : moneyShort(PREORDER_PENCE)}
+                          </div>
+                          {!isLive && (
+                            <div className="mt-1 text-[0.6875rem] font-mono font-semibold text-kapture-mist dark:text-white/55">
+                              <span className="line-through">{moneyShort(LAUNCH_PENCE)}</span> reserve fee · 50% off
+                            </div>
+                          )}
+                        </div>
+                        <span className="text-xs font-bold text-kapture-black dark:text-white shrink-0">
+                          {isLive ? "Buy →" : "Reserve →"}
                         </span>
                       </div>
                     </Link>

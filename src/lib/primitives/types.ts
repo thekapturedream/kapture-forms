@@ -204,6 +204,12 @@ export interface FieldInstance {
   help?: string;
   /** Author-supplied placeholder. */
   placeholder?: string;
+  /**
+   * Author-friendly shortcut for `validation.required`. The bridge merges this
+   * into the resolved validation spec so authors don't have to reach into the
+   * nested object for the most common override.
+   */
+  required?: boolean;
   /** Author-supplied validation overrides. */
   validation?: Partial<ValidationSpec>;
   /** Author-supplied options (select / radio / checkbox). */

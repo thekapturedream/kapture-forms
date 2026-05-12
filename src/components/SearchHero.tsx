@@ -122,13 +122,13 @@ export function SearchHero() {
                       </div>
                     </div>
                     <span
-                      className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.625rem] font-mono font-semibold tracking-wider ${
+                      className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.625rem] font-mono font-bold tracking-wider ${
                         r.status === "live"
                           ? "bg-kapture-yellow text-kapture-black"
-                          : "bg-kapture-paper text-kapture-smoke border border-kapture-fog"
+                          : "bg-kapture-black text-kapture-yellow"
                       }`}
                     >
-                      {r.status === "live" ? "BUY · £29" : "NOTIFY"}
+                      {r.status === "live" ? "BUY · £29" : "PRE-ORDER · £14.50"}
                     </span>
                   </Link>
                 </li>
