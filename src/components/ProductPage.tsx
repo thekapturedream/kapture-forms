@@ -8,6 +8,7 @@ import { ThemeToggle } from "@components/ThemeToggle";
 import { BuyControls } from "@components/BuyControls";
 import { DeviceShowcase } from "@components/DeviceShowcase";
 import { FormDemoModal } from "@components/FormDemoModal";
+import { ProductHighlights } from "@components/ProductHighlights";
 import { CartButton } from "@components/cart/CartButton";
 import { type StoreProduct, relatedProducts } from "@lib/store-product";
 import { ACCENTS } from "@lib/customization";
@@ -46,12 +47,15 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
       <SiteHeader />
 
       <main className="flex-1">
-        {/* HERO — uniform top/bottom padding, viewport-min so demo + rail always have breathing room */}
-        <section className="bg-white dark:bg-kapture-black lg:min-h-[calc(100svh-3.5rem)] lg:flex lg:items-center">
-          <div className="kap-shell py-10 sm:py-12 lg:py-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
+        {/* HERO — pinned to 100vh on desktop with uniform padding. The device
+            card uses a calc-based height (viewport − header − section padding)
+            so the whole template demo always fits above the fold. Mobile and
+            tablet keep aspect ratios for natural stacking. */}
+        <section className="bg-white dark:bg-kapture-black lg:h-[calc(100svh-3.5rem)] lg:overflow-hidden lg:flex lg:items-center">
+          <div className="kap-shell py-10 sm:py-12 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
             {/* LEFT — device showcase */}
             <div className="lg:col-span-7 order-2 lg:order-1">
-              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03] p-4 sm:p-6 lg:p-8">
+              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-auto lg:h-[calc(100svh-3.5rem-5rem)] flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03] p-4 sm:p-6 lg:p-6">
                 <DeviceShowcase
                   product={product}
                   accent={accent}
@@ -152,40 +156,10 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
           </div>
         </section>
 
-        {/* IN THE PACK */}
-        <section className="border-t border-kapture-fog dark:border-white/5 bg-kapture-paper/40 dark:bg-white/[0.02]">
-          <div className="mx-auto max-w-[800px] px-6 sm:px-8 lg:px-12 py-16 sm:py-20">
-            <SectionTitle pre="In the pack." post="What you get." center />
-            <ul className="mt-8 space-y-3.5">
-              {product.whatsIncluded.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-3 text-base font-medium text-kapture-smoke dark:text-white/80 leading-relaxed"
-                >
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-kapture-black dark:bg-kapture-yellow text-kapture-yellow dark:text-kapture-black shrink-0 mt-0.5">
-                    <Check size={14} strokeWidth={3} />
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* SPECS */}
-        <section className="border-t border-kapture-fog dark:border-white/5">
-          <div className="mx-auto max-w-[640px] px-6 sm:px-8 lg:px-12 py-16 sm:py-20">
-            <SectionTitle pre="Specs." post="At a glance." center />
-            <dl className="mt-8 divide-y divide-kapture-fog dark:divide-white/10 rounded-2xl border border-kapture-fog dark:border-white/10 bg-white dark:bg-white/[0.04]">
-              {product.specs.map((s) => (
-                <div key={s.label} className="flex items-center justify-between px-5 py-3.5 text-sm">
-                  <dt className="font-medium text-kapture-smoke dark:text-white/70">{s.label}</dt>
-                  <dd className="font-bold text-kapture-black dark:text-white text-right">{s.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
+        {/* IN THE PACK · animated stat counters + feature card grid (replaces
+            the old single-column 'In the pack' list AND the 'Specs · At a
+            glance' table — both were carrying the same data). */}
+        <ProductHighlights product={product} />
 
         {/* RELATED */}
         {related.length > 0 && (
