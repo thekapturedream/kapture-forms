@@ -9,10 +9,11 @@ import {
 } from "@lib/search-catalog";
 
 /**
- * Conversion-tuned search hero.
- * One input + one primary yellow CTA in the same row. Live dropdown of
- * matches as the buyer types. Popular chips below. ENTER opens the top
- * result — same as clicking the button.
+ * Responsive search hero.
+ *
+ * One input. Yellow circular arrow button embedded on the right —
+ * mobile-safe, no overflow. ENTER opens the top result. Live results show
+ * BUY · £29, soon results show NOTIFY ME. Popular chips below.
  */
 export function SearchHero() {
   const [q, setQ] = useState("");
@@ -21,10 +22,7 @@ export function SearchHero() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const results: SearchEntry[] = useMemo(() => searchCatalog(q), [q]);
-  const topLive = useMemo(
-    () => results.find((r) => r.status === "live") ?? null,
-    [results]
-  );
+  const topLive = useMemo(() => results.find((r) => r.status === "live") ?? null, [results]);
   const showDropdown = focused && q.length > 0;
 
   useEffect(() => {
@@ -36,98 +34,77 @@ export function SearchHero() {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
-  function go(href: string) {
-    window.location.href = href;
-  }
-
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const top = results[0];
-    if (top) go(top.href);
-    else go("/products/staff-onboarding-uk-care");
+    if (top) window.location.href = top.href;
+    else window.location.href = "/products/staff-onboarding-uk-care";
   }
 
   return (
-    <div ref={containerRef} className="w-full max-w-[640px] mx-auto relative">
+    <div ref={containerRef} className="w-full max-w-[600px] mx-auto relative">
       <form onSubmit={onSubmit}>
-        {/* SEARCH ROW — input + primary CTA inline */}
         <div
-          className={`flex items-stretch gap-2 transition-all ${
-            focused ? "" : ""
+          className={`relative flex items-center bg-white rounded-2xl border transition ${
+            focused
+              ? "border-kapture-black shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
+              : "border-kapture-fog hover:border-kapture-mist"
           }`}
         >
-          <div
-            className={`flex-1 flex items-center bg-white rounded-2xl border transition-all ${
-              focused
-                ? "border-kapture-black shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
-                : "border-kapture-fog hover:border-kapture-mist hover:shadow-[0_2px_12px_rgba(0,0,0,0.05)]"
-            }`}
-          >
-            <span className="pl-5 text-kapture-mist pointer-events-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="20"
-                height="20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              onFocus={() => setFocused(true)}
-              placeholder="Search a form — staff onboarding, AML, RAMS…"
-              spellCheck={false}
-              autoComplete="off"
-              aria-label="Search a form"
-              className="flex-1 bg-transparent text-kapture-black placeholder:text-kapture-mist text-base lg:text-[1.0625rem] py-4 pl-3.5 pr-3 focus:outline-none"
-            />
-            {q && (
-              <button
-                type="button"
-                onClick={() => {
-                  setQ("");
-                  inputRef.current?.focus();
-                }}
-                aria-label="Clear search"
-                className="mr-2 text-kapture-mist hover:text-kapture-black p-2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="bg-kapture-black text-white hover:bg-kapture-coal transition-all rounded-2xl px-6 lg:px-7 font-medium text-sm lg:text-base whitespace-nowrap inline-flex items-center gap-2"
-          >
-            Find my form
+          <span className="pl-4 sm:pl-5 text-kapture-mist pointer-events-none">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              width="16"
-              height="16"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            onFocus={() => setFocused(true)}
+            placeholder="Search a form…"
+            spellCheck={false}
+            autoComplete="off"
+            aria-label="Search a form"
+            className="flex-1 min-w-0 bg-transparent text-kapture-black placeholder:text-kapture-mist text-[15px] sm:text-base py-3.5 pl-3 pr-2 focus:outline-none"
+          />
+          {q && (
+            <button
+              type="button"
+              onClick={() => {
+                setQ("");
+                inputRef.current?.focus();
+              }}
+              aria-label="Clear search"
+              className="text-kapture-mist hover:text-kapture-black p-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
+          <button
+            type="submit"
+            aria-label="Find my form"
+            className="m-1.5 shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-kapture-black text-white hover:bg-kapture-coal active:scale-[0.97] transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
               fill="none"
               stroke="currentColor"
               strokeWidth="2.5"
@@ -143,11 +120,8 @@ export function SearchHero() {
 
       {/* POPULAR — only when input empty */}
       {!q && (
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs">
-          <span className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mr-1">
-            Try:
-          </span>
-          {POPULAR_QUERIES.map((p) => (
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-1.5 text-xs">
+          {POPULAR_QUERIES.slice(0, 4).map((p) => (
             <button
               key={p}
               type="button"
@@ -155,7 +129,7 @@ export function SearchHero() {
                 setQ(p);
                 inputRef.current?.focus();
               }}
-              className="px-3 py-1.5 rounded-full bg-kapture-paper text-kapture-smoke hover:bg-white hover:text-kapture-black hover:shadow-sm border border-kapture-fog transition font-medium"
+              className="px-3 py-1.5 rounded-full bg-kapture-paper text-kapture-smoke hover:bg-white hover:text-kapture-black hover:border-kapture-mist border border-kapture-fog transition font-medium"
             >
               {p}
             </button>
@@ -169,35 +143,31 @@ export function SearchHero() {
           {results.length === 0 ? (
             <div className="p-5">
               <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mb-2">
-                NOT YET ON THE ROADMAP
+                NOT ON THE ROADMAP YET
               </div>
               <p className="text-sm text-kapture-smoke leading-relaxed mb-3">
                 We don&apos;t have a pack for &ldquo;<strong>{q}</strong>&rdquo;. Tell us what
-                you need — we&apos;ll add it.
+                you need.
               </p>
               <a
-                href={`mailto:forms@thekapture.com?subject=${encodeURIComponent(
-                  `Pack request · ${q}`
-                )}`}
+                href={`mailto:forms@thekapture.com?subject=${encodeURIComponent(`Pack request · ${q}`)}`}
                 className="inline-flex items-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber px-4 py-2 rounded-xl text-xs font-semibold transition"
               >
                 Request this form →
               </a>
             </div>
           ) : (
-            <ul className="max-h-[26rem] overflow-y-auto divide-y divide-kapture-fog">
+            <ul className="max-h-[60vh] overflow-y-auto divide-y divide-kapture-fog">
               {results.slice(0, 8).map((r, i) => (
                 <li key={r.title}>
                   <Link
                     href={r.href}
-                    className={`flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-kapture-paper transition ${
+                    className={`flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 hover:bg-kapture-paper transition ${
                       i === 0 ? "bg-kapture-paper/40" : ""
                     }`}
                   >
                     <div className="min-w-0">
-                      <div className="font-display font-semibold text-sm text-kapture-black truncate">
-                        {r.title}
-                      </div>
+                      <div className="font-semibold text-sm text-kapture-black truncate">{r.title}</div>
                       <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mt-0.5">
                         {r.industry}
                         {r.status === "soon" && r.release && ` · ${r.release}`}
@@ -210,21 +180,23 @@ export function SearchHero() {
                           : "bg-kapture-paper text-kapture-smoke border border-kapture-fog"
                       }`}
                     >
-                      {r.status === "live" ? "BUY · £29" : "NOTIFY ME"}
+                      {r.status === "live" ? "BUY · £29" : "NOTIFY"}
                     </span>
                   </Link>
                 </li>
               ))}
             </ul>
           )}
-          <div className="border-t border-kapture-fog bg-kapture-paper/60 px-5 py-2.5 text-[0.625rem] font-mono uppercase tracking-widest text-kapture-mist flex items-center justify-between gap-3 flex-wrap">
-            <span>↵ ENTER for top result</span>
-            {topLive && q && (
-              <span className="text-kapture-black">
-                Top live: <span className="font-semibold">{topLive.title}</span>
-              </span>
-            )}
-          </div>
+          {results.length > 0 && (
+            <div className="border-t border-kapture-fog bg-kapture-paper/60 px-4 sm:px-5 py-2.5 text-[0.625rem] font-mono uppercase tracking-widest text-kapture-mist flex items-center justify-between gap-3">
+              <span>↵ for top result</span>
+              {topLive && (
+                <span className="text-kapture-black truncate">
+                  Live: <span className="font-semibold">{topLive.title}</span>
+                </span>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

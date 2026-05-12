@@ -59,10 +59,12 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "Space Grotesk", "system-ui", "sans-serif"],
-        sans: ["var(--font-sans)", "Inter", "system-ui", "sans-serif"],
+        // Manrope is the locked brand typeface for Kapture Forms — used for
+        // both display and body. JetBrains Mono for numbers and tags.
+        display: ["var(--font-sans)", "Manrope", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "Manrope", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "JetBrains Mono", "ui-monospace", "monospace"],
-        serif: ["var(--font-serif)", "Source Serif 4", "ui-serif", "Georgia", "serif"],
+        serif: ["var(--font-sans)", "Manrope", "ui-serif", "Georgia", "serif"],
       },
       fontSize: {
         "hero-xl": ["clamp(2.5rem, 6vw, 5.5rem)", { lineHeight: "0.95", letterSpacing: "-0.04em", fontWeight: "700" }],

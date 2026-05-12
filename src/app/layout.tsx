@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
+import localFont from "next/font/local";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const fontSans = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const fontSans = localFont({
+  src: "./fonts/Manrope-VariableFont_wght.ttf",
   variable: "--font-sans",
   display: "swap",
-});
-
-const fontDisplay = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
-  display: "swap",
+  weight: "200 800",
 });
 
 const fontMono = JetBrains_Mono({
@@ -23,15 +17,7 @@ const fontMono = JetBrains_Mono({
   display: "swap",
 });
 
-const fontSerif = Source_Serif_4({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
-  display: "swap",
-});
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kapture-forms.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://forms.thekapture.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -69,12 +55,15 @@ export const metadata: Metadata = {
   icons: { icon: "/kapture-sun.svg" },
 };
 
+export const viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable} ${fontSerif.variable}`}
-    >
+    <html lang="en" className={`${fontSans.variable} ${fontMono.variable}`}>
       <body className="bg-white text-kapture-black antialiased">{children}</body>
     </html>
   );
