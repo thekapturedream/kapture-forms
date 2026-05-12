@@ -134,5 +134,3 @@ export function BuyControls({ product }: BuyControlsProps) {
     </div>
   );
 }
-;
-}
