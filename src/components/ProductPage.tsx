@@ -9,6 +9,7 @@ import { BuyControls } from "@components/BuyControls";
 import { DeviceShowcase } from "@components/DeviceShowcase";
 import { type StoreProduct, relatedProducts } from "@lib/store-product";
 import { ACCENTS, FONTS, type FontChoice } from "@lib/customization";
+import { getContrastTextClass } from "@lib/contrast";
 
 const FONT_FAMILY: Record<FontChoice, string> = {
   manrope: "'Manrope', system-ui, sans-serif",
@@ -110,7 +111,7 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
                               <Check
                                 size={12}
                                 strokeWidth={3}
-                                className={parseInt(a.hex.slice(1), 16) > 0x888888 ? "text-kapture-black" : "text-white"}
+                                className={getContrastTextClass(a.hex)}
                               />
                             </span>
                           )}

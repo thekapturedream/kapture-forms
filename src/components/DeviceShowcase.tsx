@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { StoreProduct } from "@lib/store-product";
+import { getContrastText } from "@lib/contrast";
 
 type DeviceId = "phone" | "tablet" | "laptop";
 
@@ -173,7 +174,7 @@ function FormPreview({
         className={`mt-4 w-full font-bold rounded-lg ${buttonClass}`}
         style={{
           backgroundColor: accent,
-          color: parseInt(accent.slice(1), 16) > 0x888888 ? "#0A0A0A" : "#FFFFFF",
+          color: getContrastText(accent),
         }}
       >
         Submit &amp; sign

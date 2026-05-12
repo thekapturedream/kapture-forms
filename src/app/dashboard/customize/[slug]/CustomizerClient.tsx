@@ -13,6 +13,7 @@ import {
   type ShapeChoice,
   type FontChoice,
 } from "@lib/customization";
+import { getContrastText, getContrastTextClass } from "@lib/contrast";
 
 interface Props {
   slug: string;
@@ -165,7 +166,7 @@ export function CustomizerClient({ slug, productId, initial }: Props) {
                             <Check
                               size={14}
                               strokeWidth={3}
-                              className={parseInt(a.hex.slice(1), 16) > 0x888888 ? "text-kapture-black" : "text-white"}
+                              className={getContrastTextClass(a.hex)}
                             />
                           </span>
                         )}
@@ -262,7 +263,7 @@ export function CustomizerClient({ slug, productId, initial }: Props) {
                     className="mt-5 w-full inline-flex items-center justify-center px-5 py-3 font-semibold text-sm transition active:scale-[0.99]"
                     style={{
                       backgroundColor: draft.accent ?? "#FFD400",
-                      color: parseInt((draft.accent ?? "#FFD400").slice(1), 16) > 0x888888 ? "#0A0A0A" : "#FFFFFF",
+                      color: getContrastText(draft.accent ?? "#FFD400"),
                       borderRadius: RADIUS[(draft.buttonShape as ShapeChoice) ?? "rounded"],
                     }}
                   >
