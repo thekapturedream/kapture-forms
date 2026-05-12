@@ -2,44 +2,28 @@ import Link from "next/link";
 
 interface LogoProps {
   href?: string;
-  /** Dark surface (light wordmark) or light surface (dark wordmark) */
-  on?: "dark" | "light";
   size?: number;
 }
 
 /**
- * Kapture · forms — the locked sub-brand wordmark.
- * Mirror of the kapture · logistics treatment: lowercase, middle-dot
- * separator, sun mark on the left.
+ * Kapture · forms wordmark. Theme-aware via Tailwind's `dark:` modifier —
+ * renders dark text on light surface, white text on dark surface.
  */
-export function Logo({ href = "/", on = "dark", size = 28 }: LogoProps) {
-  const isDark = on === "dark";
+export function Logo({ href = "/", size = 26 }: LogoProps) {
   return (
-    <Link
-      href={href}
-      className="flex items-center gap-2.5 shrink-0"
-      aria-label="Kapture Forms"
-    >
-      <span className={isDark ? "text-white" : "text-kapture-black"}>
+    <Link href={href} className="flex items-center gap-2.5 shrink-0" aria-label="Kapture Forms">
+      <span className="text-kapture-black dark:text-white">
         <KaptureSun size={size} />
       </span>
       <span className="lowercase tracking-[-0.005em] text-[15px] sm:text-base">
-        <span className={`font-semibold ${isDark ? "text-white" : "text-kapture-black"}`}>
-          kapture
-        </span>
-        <span className={`mx-1.5 ${isDark ? "text-white/35" : "text-kapture-mist"}`}>·</span>
-        <span className={`font-medium ${isDark ? "text-white/65" : "text-kapture-smoke"}`}>
-          forms
-        </span>
+        <span className="font-semibold text-kapture-black dark:text-white">kapture</span>
+        <span className="mx-1.5 text-kapture-mist dark:text-white/40">·</span>
+        <span className="font-medium text-kapture-smoke dark:text-white/65">forms</span>
       </span>
     </Link>
   );
 }
 
-/**
- * The Kapture sun — central disc + 8-dot mandala with NE intercardinal
- * in #FFCC00. Body inherits text colour via currentColor.
- */
 export function KaptureSun({
   size = 28,
   className,
@@ -69,36 +53,4 @@ export function KaptureSun({
       />
     </svg>
   );
-}
-
-/**
- * Yellow disc with the Kapture sun in it — the iconic header utility
- * used on kapture · logistics. Decorative; doubles as a hover affordance.
- */
-export function KaptureSunDisc({
-  size = 40,
-  href,
-  ariaLabel = "Kapture",
-}: {
-  size?: number;
-  href?: string;
-  ariaLabel?: string;
-}) {
-  const inner = (
-    <span
-      className="inline-flex items-center justify-center rounded-full bg-kapture-yellow text-kapture-black shrink-0"
-      style={{ width: size, height: size }}
-      aria-label={ariaLabel}
-    >
-      <KaptureSun size={Math.round(size * 0.55)} />
-    </span>
-  );
-  if (href) {
-    return (
-      <Link href={href} className="inline-flex" aria-label={ariaLabel}>
-        {inner}
-      </Link>
-    );
-  }
-  return inner;
 }
