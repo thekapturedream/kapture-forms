@@ -1,49 +1,44 @@
 import Link from "next/link";
 
 interface LogoProps {
-  variant?: "light" | "dark";
   href?: string;
-  showWordmark?: boolean;
+  /** Dark surface (light wordmark) or light surface (dark wordmark) */
+  on?: "dark" | "light";
   size?: number;
 }
 
 /**
- * Kapture sun + Kapture Forms wordmark.
- *
- * The sun is the official Kapture brand mark — central disc + 8-dot
- * mandala with the NE intercardinal in #FFCC00 (the brand-locked yellow).
- * `currentColor` flows through the body of the mark, so pass any text
- * colour via Tailwind class.
+ * Kapture · forms — the locked sub-brand wordmark.
+ * Mirror of the kapture · logistics treatment: lowercase, middle-dot
+ * separator, sun mark on the left.
  */
-export function Logo({
-  variant = "light",
-  href = "/",
-  showWordmark = true,
-  size = 28,
-}: LogoProps) {
-  const isDark = variant === "dark";
+export function Logo({ href = "/", on = "dark", size = 28 }: LogoProps) {
+  const isDark = on === "dark";
   return (
-    <Link href={href} className="flex items-center gap-2.5 shrink-0 group">
-      <KaptureSun size={size} />
-      {showWordmark && (
-        <span
-          className={`font-display tracking-[-0.01em] ${
-            isDark ? "text-kapture-black" : "text-kapture-black"
-          }`}
-        >
-          <span className="font-semibold text-[1.0625rem]">Kapture</span>
-          <span className="font-medium text-[1.0625rem] ml-1.5 text-kapture-smoke">
-            Forms
-          </span>
+    <Link
+      href={href}
+      className="flex items-center gap-2.5 shrink-0"
+      aria-label="Kapture Forms"
+    >
+      <span className={isDark ? "text-white" : "text-kapture-black"}>
+        <KaptureSun size={size} />
+      </span>
+      <span className="lowercase tracking-[-0.005em] text-[15px] sm:text-base">
+        <span className={`font-semibold ${isDark ? "text-white" : "text-kapture-black"}`}>
+          kapture
         </span>
-      )}
+        <span className={`mx-1.5 ${isDark ? "text-white/35" : "text-kapture-mist"}`}>·</span>
+        <span className={`font-medium ${isDark ? "text-white/65" : "text-kapture-smoke"}`}>
+          forms
+        </span>
+      </span>
     </Link>
   );
 }
 
 /**
- * The Kapture sun. Inherits text colour for the body; the NE accent dot
- * is brand-locked at #FFCC00.
+ * The Kapture sun — central disc + 8-dot mandala with NE intercardinal
+ * in #FFCC00. Body inherits text colour via currentColor.
  */
 export function KaptureSun({
   size = 28,
@@ -74,4 +69,36 @@ export function KaptureSun({
       />
     </svg>
   );
+}
+
+/**
+ * Yellow disc with the Kapture sun in it — the iconic header utility
+ * used on kapture · logistics. Decorative; doubles as a hover affordance.
+ */
+export function KaptureSunDisc({
+  size = 40,
+  href,
+  ariaLabel = "Kapture",
+}: {
+  size?: number;
+  href?: string;
+  ariaLabel?: string;
+}) {
+  const inner = (
+    <span
+      className="inline-flex items-center justify-center rounded-full bg-kapture-yellow text-kapture-black shrink-0"
+      style={{ width: size, height: size }}
+      aria-label={ariaLabel}
+    >
+      <KaptureSun size={Math.round(size * 0.55)} />
+    </span>
+  );
+  if (href) {
+    return (
+      <Link href={href} className="inline-flex" aria-label={ariaLabel}>
+        {inner}
+      </Link>
+    );
+  }
+  return inner;
 }

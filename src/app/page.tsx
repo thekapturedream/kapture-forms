@@ -1,13 +1,16 @@
 import Link from "next/link";
-import { KaptureSun } from "@components/Logo";
+import { KaptureSunDisc, Logo } from "@components/Logo";
 import { SearchHero } from "@components/SearchHero";
 
 /**
- * Conversion-tuned landing. Mobile-first. Manrope-led.
+ * Dark-canvas landing. Visually consistent with kapture · logistics.
+ * Big translucent hero headline with a yellow underline accent under
+ * one word. Search-first below. Yellow Kapture sun disc + Contact pill
+ * top right. Lowercase wordmark top left.
  */
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-white text-kapture-black">
+    <div className="min-h-screen flex flex-col bg-kapture-black text-white">
       <SiteHeader />
 
       <main className="flex-1">
@@ -15,42 +18,43 @@ export default function HomePage() {
         <section className="relative">
           <div
             aria-hidden
-            className="absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(ellipse_at_top,_rgba(255,212,0,0.10),_transparent_55%)] pointer-events-none"
+            className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(ellipse_at_top,_rgba(255,212,0,0.08),_transparent_60%)] pointer-events-none"
           />
-          <div className="relative mx-auto w-full max-w-[680px] px-5 sm:px-6 pt-10 sm:pt-14 lg:pt-20 pb-12 lg:pb-16 text-center">
-            <Link
-              href="/products/staff-onboarding-uk-care"
-              className="inline-flex items-center gap-2 rounded-full border border-kapture-fog bg-white pl-1.5 pr-3 py-1 text-xs font-medium text-kapture-smoke hover:border-kapture-black hover:shadow-sm transition max-w-full"
-            >
-              <span className="inline-flex items-center gap-1.5 bg-kapture-yellow text-kapture-black rounded-full px-2 py-0.5 text-[0.625rem] font-mono font-bold uppercase tracking-wider shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-kapture-black animate-pulse" />
-                Live
-              </span>
-              <span className="text-kapture-black font-semibold truncate">Staff onboarding</span>
-              <span className="text-kapture-mist hidden sm:inline">·</span>
-              <span className="hidden sm:inline">UK care</span>
-              <span className="text-kapture-mist">→</span>
-            </Link>
-
-            <h1 className="mt-6 sm:mt-7 font-semibold text-[2.25rem] leading-[1.02] tracking-[-0.035em] sm:text-[3rem] lg:text-[3.75rem] sm:leading-[0.98]">
-              <span className="text-kapture-black">Compliance forms</span>
-              <br />
-              <span className="text-kapture-mist">for every industry.</span>
+          <div className="relative mx-auto w-full max-w-[1100px] px-5 sm:px-6 lg:px-10 pt-14 sm:pt-20 lg:pt-28 pb-14 lg:pb-20">
+            {/* HEADLINE — big, translucent, yellow underline on key word */}
+            <h1 className="font-semibold tracking-[-0.04em] text-[3rem] leading-[0.96] sm:text-[4.25rem] lg:text-[5.5rem] text-center text-white/35">
+              <span className="inline-block relative">
+                <span className="relative text-white">Find</span>
+                <span
+                  aria-hidden
+                  className="absolute left-0 right-0 -bottom-1 h-[6px] sm:h-[8px] lg:h-[10px] bg-kapture-yellow/85"
+                  style={{ borderRadius: 2 }}
+                />
+              </span>{" "}
+              a form today.
             </h1>
 
-            <p className="mt-5 sm:mt-6 text-[15px] sm:text-base text-kapture-smoke max-w-md mx-auto leading-relaxed">
-              Pre-built. Audit-hashed. Five formats. <strong className="text-kapture-black font-semibold">£29 a pack.</strong>
+            <p className="mt-6 sm:mt-8 text-center text-base sm:text-lg text-white/55 max-w-xl mx-auto leading-relaxed">
+              Pre-built. Audit-hashed. Five formats. <span className="text-white">£29</span> a pack.
             </p>
 
-            <div className="mt-8 sm:mt-9">
+            <div className="mt-10 sm:mt-12">
               <SearchHero />
             </div>
           </div>
         </section>
 
         {/* TIER CARDS */}
-        <section className="bg-kapture-paper/40 border-t border-kapture-fog/70">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 py-12 sm:py-14 lg:py-16">
+        <section className="border-t border-white/5">
+          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-14 lg:py-16">
+            <div className="mb-8 sm:mb-10 flex items-end justify-between gap-4">
+              <h2 className="font-semibold text-2xl sm:text-3xl tracking-[-0.02em]">
+                Three ways in.
+              </h2>
+              <Link href="/how-to" className="text-sm text-white/55 hover:text-white">
+                How-to →
+              </Link>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
               <TierCard
                 kicker="01 · DOWNLOAD"
@@ -74,7 +78,7 @@ export default function HomePage() {
                 title="List your pack."
                 price="70 / 30"
                 priceFoot="publisher / platform"
-                body="Compliance officer, HR consultant, sector specialist? List your form. Earn 70% on every sale."
+                body="Compliance officer, HR consultant, sector specialist? List your form. Earn 70%."
                 cta={{
                   label: "Apply",
                   href: "mailto:forms@thekapture.com?subject=Publisher%20application",
@@ -86,21 +90,21 @@ export default function HomePage() {
         </section>
 
         {/* STAT ROW */}
-        <section className="border-t border-kapture-fog/70">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 py-10 sm:py-12 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center sm:text-left">
+        <section className="border-t border-white/5 bg-white/[0.02]">
+          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-10 sm:py-12 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
             <Stat label="LIVE NOW" value="1 pack" caption="Staff onboarding · UK care" />
-            <Stat label="ROADMAP" value="30+" caption="Across 10 industries · 2026–27" />
+            <Stat label="ROADMAP" value="30+" caption="10 industries · 2026–27" />
             <Stat label="SECURITY" value="SHA-256" caption="Audit hash on every submission" />
           </div>
         </section>
 
-        {/* REGULATOR TRUST */}
-        <section className="border-t border-kapture-fog/70 bg-kapture-paper/40">
-          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 py-8 sm:py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-mist text-center sm:text-left shrink-0">
+        {/* REGULATOR STRIP */}
+        <section className="border-t border-white/5">
+          <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-8 sm:py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-white/40 text-center sm:text-left shrink-0">
               Mapped to
             </div>
-            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-3 gap-y-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-kapture-smoke">
+            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-2 gap-y-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white/55">
               {[
                 "CQC SAF",
                 "NMC",
@@ -110,7 +114,10 @@ export default function HomePage() {
                 "DBS",
                 "Care Certificate",
               ].map((reg) => (
-                <span key={reg} className="px-2 py-1 rounded bg-white border border-kapture-fog">
+                <span
+                  key={reg}
+                  className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10"
+                >
                   {reg}
                 </span>
               ))}
@@ -128,44 +135,49 @@ export default function HomePage() {
 
 function SiteHeader() {
   return (
-    <header className="border-b border-kapture-fog/60 bg-white/85 backdrop-blur-sm sticky top-0 z-40">
-      <div className="mx-auto max-w-[1100px] px-5 sm:px-6 h-14 flex items-center justify-between gap-3">
-        <Link href="/" className="flex items-center gap-2 shrink-0 group" aria-label="Kapture Forms">
-          <span className="text-kapture-black">
-            <KaptureSun size={24} />
-          </span>
-          <span className="tracking-[-0.01em] text-[15px] sm:text-base">
-            <span className="font-bold text-kapture-black">Kapture</span>
-            <span className="font-medium text-kapture-smoke ml-1.5">Forms</span>
-          </span>
-        </Link>
-        <nav className="flex items-center gap-1 text-sm">
-          <Link
-            href="/how-to"
-            className="hidden sm:inline-flex px-2.5 py-1.5 text-kapture-smoke hover:text-kapture-black rounded-md font-medium"
-          >
+    <header className="sticky top-0 z-40 bg-kapture-black/90 backdrop-blur-md border-b border-white/5">
+      <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-4">
+        <Logo on="dark" />
+        <nav className="hidden md:flex items-center gap-1 text-sm">
+          <Link href="/products/staff-onboarding-uk-care" className="px-3 py-1.5 text-white/70 hover:text-white rounded-md font-medium">
+            Live pack
+          </Link>
+          <Link href="/how-to" className="px-3 py-1.5 text-white/70 hover:text-white rounded-md font-medium">
             How-to
           </Link>
           <Link
-            href="/dashboard"
-            className="hidden md:inline-flex px-2.5 py-1.5 text-kapture-smoke hover:text-kapture-black rounded-md font-medium"
+            href="mailto:forms@thekapture.com?subject=Publisher%20application"
+            className="px-3 py-1.5 text-white/70 hover:text-white rounded-md font-medium"
           >
+            Publishers
+          </Link>
+          <Link href="/dashboard" className="px-3 py-1.5 text-white/70 hover:text-white rounded-md font-medium">
             Dashboard
           </Link>
-          <Link
-            href="/auth/login"
-            className="hidden sm:inline-flex px-2.5 py-1.5 text-kapture-smoke hover:text-kapture-black rounded-md font-medium"
-          >
-            Sign in
-          </Link>
+        </nav>
+        <div className="flex items-center gap-2">
+          <KaptureSunDisc size={36} href="/" ariaLabel="Home" />
           <Link
             href="/products/staff-onboarding-uk-care#buy"
-            className="inline-flex items-center gap-1.5 bg-kapture-black text-white hover:bg-kapture-coal px-3.5 py-1.5 rounded-full text-sm font-semibold transition"
+            className="inline-flex items-center gap-1.5 bg-white text-kapture-black hover:bg-kapture-paper px-3.5 py-1.5 rounded-full text-sm font-semibold transition"
           >
             Buy
-            <span className="font-mono text-[0.625rem] tracking-wider text-kapture-yellow">£29</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg>
           </Link>
-        </nav>
+        </div>
       </div>
     </header>
   );
@@ -186,10 +198,10 @@ interface CardProps {
 function TierCard({ kicker, title, price, priceFoot, body, cta, highlight }: CardProps) {
   return (
     <div
-      className={`relative bg-white rounded-2xl border p-5 sm:p-6 flex flex-col transition ${
+      className={`relative rounded-2xl border p-5 sm:p-6 flex flex-col transition ${
         highlight
-          ? "border-kapture-black shadow-[0_2px_18px_rgba(0,0,0,0.08)]"
-          : "border-kapture-fog hover:border-kapture-mist"
+          ? "border-kapture-yellow/60 bg-white/[0.03] shadow-[0_8px_40px_rgba(255,212,0,0.08)]"
+          : "border-white/10 bg-white/[0.02] hover:border-white/20"
       }`}
     >
       {highlight && (
@@ -197,19 +209,19 @@ function TierCard({ kicker, title, price, priceFoot, body, cta, highlight }: Car
           MOST POPULAR
         </span>
       )}
-      <div className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-kapture-mist">{kicker}</div>
-      <h3 className="mt-2 font-bold text-xl tracking-[-0.015em] text-kapture-black">{title}</h3>
+      <div className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-white/40">{kicker}</div>
+      <h3 className="mt-2 font-bold text-xl tracking-[-0.015em]">{title}</h3>
       <div className="mt-3 flex items-baseline gap-2 flex-wrap">
-        <span className="font-bold text-[1.75rem] tracking-[-0.025em] text-kapture-black leading-none">{price}</span>
-        <span className="text-xs text-kapture-mist font-mono uppercase tracking-wider">{priceFoot}</span>
+        <span className="font-bold text-[1.75rem] tracking-[-0.025em] leading-none">{price}</span>
+        <span className="text-xs text-white/45 font-mono uppercase tracking-wider">{priceFoot}</span>
       </div>
-      <p className="mt-3 text-sm text-kapture-smoke leading-relaxed flex-1">{body}</p>
+      <p className="mt-3 text-sm text-white/65 leading-relaxed flex-1">{body}</p>
       <Link
         href={cta.href}
         className={`mt-5 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl font-semibold text-sm transition ${
           cta.primary
             ? "bg-kapture-yellow text-kapture-black hover:bg-kapture-amber"
-            : "bg-kapture-black text-white hover:bg-kapture-coal"
+            : "bg-white text-kapture-black hover:bg-kapture-paper"
         }`}
       >
         {cta.label} →
@@ -223,9 +235,9 @@ function TierCard({ kicker, title, price, priceFoot, body, cta, highlight }: Car
 function Stat({ label, value, caption }: { label: string; value: string; caption: string }) {
   return (
     <div>
-      <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-kapture-mist mb-1.5">{label}</div>
-      <div className="font-bold text-2xl tracking-[-0.02em] text-kapture-black leading-none">{value}</div>
-      <div className="text-sm text-kapture-smoke mt-1.5">{caption}</div>
+      <div className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-white/40 mb-1.5">{label}</div>
+      <div className="font-bold text-2xl tracking-[-0.02em] text-white leading-none">{value}</div>
+      <div className="text-sm text-white/55 mt-1.5">{caption}</div>
     </div>
   );
 }
@@ -234,25 +246,28 @@ function Stat({ label, value, caption }: { label: string; value: string; caption
 
 function SiteFooter() {
   return (
-    <footer className="border-t border-kapture-fog text-sm text-kapture-smoke">
-      <div className="mx-auto max-w-[1100px] px-5 sm:px-6 py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+    <footer className="border-t border-white/5">
+      <div className="mx-auto max-w-[1100px] px-5 sm:px-6 lg:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-xs">
-          <KaptureSun size={14} />
-          <span className="font-mono uppercase tracking-widest text-kapture-mist">
+          <span className="text-white/40">
+            <KaptureSunDisc size={20} />
+          </span>
+          <span className="font-mono uppercase tracking-widest text-white/40">
             © {new Date().getFullYear()} Kapture · UK
           </span>
         </div>
-        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-4 gap-y-1 text-xs">
-          <Link href="/how-to" className="hover:text-kapture-black">How-to</Link>
-          <Link href="/how-to/audit-hash" className="hover:text-kapture-black">Audit hash</Link>
-          <Link href="/how-to/regulators" className="hover:text-kapture-black">Regulators</Link>
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-4 gap-y-1 text-xs text-white/55">
+          <Link href="/how-to" className="hover:text-white">How-to</Link>
+          <Link href="/how-to/audit-hash" className="hover:text-white">Audit hash</Link>
+          <Link href="/how-to/regulators" className="hover:text-white">Regulators</Link>
           <Link
             href="mailto:forms@thekapture.com?subject=Publisher%20application"
-            className="hover:text-kapture-black"
+            className="hover:text-white"
           >
             Publishers
           </Link>
-          <a href="mailto:forms@thekapture.com" className="hover:text-kapture-black">Contact</a>
+          <a href="mailto:forms@thekapture.com" className="hover:text-white">Contact</a>
+          <Link href="https://thekapture.com" className="hover:text-white">thekapture.com</Link>
         </div>
       </div>
     </footer>

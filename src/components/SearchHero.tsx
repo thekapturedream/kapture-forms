@@ -9,11 +9,9 @@ import {
 } from "@lib/search-catalog";
 
 /**
- * Responsive search hero.
- *
- * One input. Yellow circular arrow button embedded on the right —
- * mobile-safe, no overflow. ENTER opens the top result. Live results show
- * BUY · £29, soon results show NOTIFY ME. Popular chips below.
+ * Dark-canvas, mobile-safe search hero. Matches kapture · logistics
+ * black surface treatment. The input itself sits white-on-black with a
+ * yellow embedded submit button on the right.
  */
 export function SearchHero() {
   const [q, setQ] = useState("");
@@ -42,16 +40,16 @@ export function SearchHero() {
   }
 
   return (
-    <div ref={containerRef} className="w-full max-w-[600px] mx-auto relative">
+    <div ref={containerRef} className="w-full max-w-[620px] mx-auto relative">
       <form onSubmit={onSubmit}>
         <div
-          className={`relative flex items-center bg-white rounded-2xl border transition ${
+          className={`relative flex items-center bg-white rounded-full border transition ${
             focused
-              ? "border-kapture-black shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
-              : "border-kapture-fog hover:border-kapture-mist"
+              ? "border-white shadow-[0_8px_40px_rgba(255,212,0,0.16)]"
+              : "border-white/10 hover:border-white/30"
           }`}
         >
-          <span className="pl-4 sm:pl-5 text-kapture-mist pointer-events-none">
+          <span className="pl-5 text-kapture-mist pointer-events-none">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -98,7 +96,7 @@ export function SearchHero() {
           <button
             type="submit"
             aria-label="Find my form"
-            className="m-1.5 shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-kapture-black text-white hover:bg-kapture-coal active:scale-[0.97] transition"
+            className="m-1.5 shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-kapture-yellow text-kapture-black hover:bg-kapture-amber active:scale-[0.97] transition"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +127,7 @@ export function SearchHero() {
                 setQ(p);
                 inputRef.current?.focus();
               }}
-              className="px-3 py-1.5 rounded-full bg-kapture-paper text-kapture-smoke hover:bg-white hover:text-kapture-black hover:border-kapture-mist border border-kapture-fog transition font-medium"
+              className="px-3 py-1.5 rounded-full bg-white/5 text-white/65 hover:bg-white/10 hover:text-white border border-white/10 transition font-medium"
             >
               {p}
             </button>
