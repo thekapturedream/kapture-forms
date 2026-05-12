@@ -366,7 +366,7 @@ function BundleCard({ bundle }: { bundle: (typeof BUNDLES)[number] }) {
           {Math.round((save / bundle.rrpPence) * 100)}% off
         </span>
       </div>
-      <a
+      <Link
         href={`/products/${bundle.slug}`}
         className="mt-4 inline-flex items-center justify-center gap-1.5 bg-kapture-black text-white dark:bg-white dark:text-kapture-black hover:opacity-90 px-4 py-2.5 rounded-xl font-semibold text-sm transition"
       >
