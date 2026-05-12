@@ -36,16 +36,13 @@ export default function HomePage() {
           />
           <div className="relative mx-auto w-full max-w-[1100px] px-5 sm:px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-20 pb-12 lg:pb-16 text-center">
             <MotionFade>
-              <h1 className="font-semibold tracking-[-0.04em] text-[2.5rem] leading-[1.02] sm:text-[3.5rem] lg:text-[4.5rem] sm:leading-[0.98] text-kapture-black dark:text-white">
-                Smart forms for everything.
+              <h1 className="font-semibold tracking-[-0.04em] text-[2.75rem] leading-[1.02] sm:text-[3.75rem] lg:text-[5rem] sm:leading-[0.96] text-kapture-black dark:text-white">
+                Smart forms for
+                <br />
+                everything.
               </h1>
             </MotionFade>
-            <MotionFade delay={0.06}>
-              <p className="mt-5 sm:mt-6 text-[15px] sm:text-base lg:text-lg text-kapture-smoke dark:text-white/60 max-w-xl mx-auto leading-relaxed">
-                Pre-built, audit-hashed compliance packs. Five export formats. £29 a pack.
-              </p>
-            </MotionFade>
-            <MotionFade delay={0.12}>
+            <MotionFade delay={0.1}>
               <div className="mt-8 sm:mt-10">
                 <SearchHero />
               </div>

@@ -1,33 +1,63 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
-import { KaptureSun } from "./Logo";
+import { useState } from "react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
 
 /**
- * Yellow Kapture-sun disc → flips light/dark theme.
- * The exact UI affordance from kapture · logistics. Hydration-safe.
+ * Sun / moon theme toggle with a satisfying cross-rotate animation.
+ * Sun is visible in light mode (click → go dark). Moon is visible in
+ * dark mode (click → go light). The press is rewarded with a brief
+ * scale-down + 180° spin.
  */
 export function ThemeToggle({ size = 36 }: { size?: number }) {
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const [spinning, setSpinning] = useState(false);
 
-  useEffect(() => setMounted(true), []);
-
-  function toggle() {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  function handleClick() {
+    setSpinning(true);
+    toggleTheme();
+    window.setTimeout(() => setSpinning(false), 450);
   }
+
+  const isDark = theme === "dark";
+  const iconSize = Math.round(size * 0.5);
 
   return (
     <button
       type="button"
-      onClick={toggle}
-      aria-label={`Switch to ${mounted && resolvedTheme === "dark" ? "light" : "dark"} mode`}
-      title="Toggle theme"
-      className="inline-flex items-center justify-center rounded-full bg-kapture-yellow text-kapture-black hover:bg-kapture-amber active:scale-[0.97] transition shrink-0"
+      onClick={handleClick}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className="relative inline-flex items-center justify-center rounded-full border border-kapture-fog dark:border-white/15 bg-white dark:bg-white/[0.06] hover:border-kapture-black dark:hover:border-white/40 active:scale-90 transition-all duration-300 overflow-hidden"
       style={{ width: size, height: size }}
     >
-      <KaptureSun size={Math.round(size * 0.55)} />
+      <span
+        className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          spinning ? "rotate-180" : "rotate-0"
+        }`}
+      >
+        {/* Sun — visible in light */}
+        <Sun
+          size={iconSize}
+          strokeWidth={2}
+          className={`absolute text-kapture-black transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isDark
+              ? "opacity-0 -rotate-90 scale-50"
+              : "opacity-100 rotate-0 scale-100"
+          }`}
+        />
+        {/* Moon — visible in dark */}
+        <Moon
+          size={iconSize}
+          strokeWidth={2}
+          className={`absolute text-white transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isDark
+              ? "opacity-100 rotate-0 scale-100"
+              : "opacity-0 rotate-90 scale-50"
+          }`}
+        />
+      </span>
     </button>
   );
 }

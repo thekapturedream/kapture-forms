@@ -2,20 +2,24 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { Search, X, ArrowRight } from "lucide-react";
 import {
+  PLACEHOLDER_PHRASES,
   searchCatalog,
   type SearchEntry,
 } from "@lib/search-catalog";
 
 /**
- * Mobile-safe theme-aware search hero. White input on dark, white input
- * on light too (with hairline border). Embedded yellow submit button.
+ * Animated typing placeholder + live dropdown.
+ * Mobile-safe — submit button is INSIDE the input.
  */
 export function SearchHero() {
   const [q, setQ] = useState("");
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const placeholder = useTypingPlaceholder(PLACEHOLDER_PHRASES, q.length > 0 || focused);
 
   const results: SearchEntry[] = useMemo(() => searchCatalog(q), [q]);
   const topLive = useMemo(() => results.find((r) => r.status === "live") ?? null, [results]);
@@ -34,24 +38,21 @@ export function SearchHero() {
     e.preventDefault();
     const top = results[0];
     if (top) window.location.href = top.href;
-    else window.location.href = "/products/staff-onboarding-uk-care";
+    else window.location.href = "/store";
   }
 
   return (
     <div ref={containerRef} className="w-full max-w-[620px] mx-auto relative">
       <form onSubmit={onSubmit}>
         <div
-          className={`relative flex items-center bg-white rounded-full border transition ${
+          className={`relative flex items-center bg-white dark:bg-white rounded-full border transition ${
             focused
-              ? "border-kapture-black dark:border-white shadow-[0_8px_40px_rgba(255,212,0,0.18)]"
-              : "border-kapture-fog dark:border-white/10 hover:border-kapture-mist dark:hover:border-white/30"
+              ? "border-kapture-black shadow-[0_8px_40px_rgba(0,0,0,0.10)] dark:shadow-[0_8px_40px_rgba(255,212,0,0.18)]"
+              : "border-kapture-fog hover:border-kapture-mist"
           }`}
         >
           <span className="pl-5 text-kapture-mist pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            <Search size={18} strokeWidth={2} />
           </span>
           <input
             ref={inputRef}
@@ -59,7 +60,7 @@ export function SearchHero() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onFocus={() => setFocused(true)}
-            placeholder="Search a form…"
+            placeholder={placeholder}
             spellCheck={false}
             autoComplete="off"
             aria-label="Search a form"
@@ -72,10 +73,7 @@ export function SearchHero() {
               aria-label="Clear search"
               className="text-kapture-mist hover:text-kapture-black p-2"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+              <X size={14} strokeWidth={2.5} />
             </button>
           )}
           <button
@@ -83,10 +81,7 @@ export function SearchHero() {
             aria-label="Find my form"
             className="m-1.5 shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-kapture-yellow text-kapture-black hover:bg-kapture-amber active:scale-[0.97] transition"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
+            <ArrowRight size={18} strokeWidth={2.5} />
           </button>
         </div>
       </form>
@@ -111,8 +106,8 @@ export function SearchHero() {
             </div>
           ) : (
             <ul className="max-h-[60vh] overflow-y-auto divide-y divide-kapture-fog">
-              {results.slice(0, 8).map((r, i) => (
-                <li key={r.title}>
+              {results.slice(0, 10).map((r, i) => (
+                <li key={`${r.industry}-${r.title}`}>
                   <Link
                     href={r.href}
                     className={`flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 hover:bg-kapture-paper transition ${
@@ -121,8 +116,8 @@ export function SearchHero() {
                   >
                     <div className="min-w-0">
                       <div className="font-semibold text-sm text-kapture-black truncate">{r.title}</div>
-                      <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mt-0.5">
-                        {r.industry}
+                      <div className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist mt-0.5 truncate">
+                        {r.industry} · {r.subcategory}
                         {r.status === "soon" && r.release && ` · ${r.release}`}
                       </div>
                     </div>
@@ -154,4 +149,50 @@ export function SearchHero() {
       )}
     </div>
   );
+}
+
+/**
+ * Cycles through phrases — types each character with a small delay, holds
+ * for ~1.6s, deletes, moves to the next. Pauses while the input is active.
+ */
+function useTypingPlaceholder(phrases: string[], paused: boolean): string {
+  const [text, setText] = useState("");
+  const idxRef = useRef(0);
+  const charRef = useRef(0);
+  const deletingRef = useRef(false);
+
+  useEffect(() => {
+    if (paused) return;
+    let timeout: number;
+    function tick() {
+      const phrase = phrases[idxRef.current % phrases.length];
+      const deleting = deletingRef.current;
+      if (!deleting) {
+        charRef.current += 1;
+        setText(phrase.slice(0, charRef.current));
+        if (charRef.current >= phrase.length) {
+          timeout = window.setTimeout(() => {
+            deletingRef.current = true;
+            tick();
+          }, 1600);
+          return;
+        }
+        timeout = window.setTimeout(tick, 55);
+      } else {
+        charRef.current -= 1;
+        setText(phrase.slice(0, Math.max(0, charRef.current)));
+        if (charRef.current <= 0) {
+          deletingRef.current = false;
+          idxRef.current += 1;
+          timeout = window.setTimeout(tick, 220);
+          return;
+        }
+        timeout = window.setTimeout(tick, 28);
+      }
+    }
+    timeout = window.setTimeout(tick, 220);
+    return () => window.clearTimeout(timeout);
+  }, [phrases, paused]);
+
+  return `Search a form — ${text || phrases[0]}`;
 }
