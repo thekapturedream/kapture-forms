@@ -3,15 +3,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  POPULAR_QUERIES,
   searchCatalog,
   type SearchEntry,
 } from "@lib/search-catalog";
 
 /**
- * Dark-canvas, mobile-safe search hero. Matches kapture · logistics
- * black surface treatment. The input itself sits white-on-black with a
- * yellow embedded submit button on the right.
+ * Mobile-safe theme-aware search hero. White input on dark, white input
+ * on light too (with hairline border). Embedded yellow submit button.
  */
 export function SearchHero() {
   const [q, setQ] = useState("");
@@ -45,22 +43,12 @@ export function SearchHero() {
         <div
           className={`relative flex items-center bg-white rounded-full border transition ${
             focused
-              ? "border-white shadow-[0_8px_40px_rgba(255,212,0,0.16)]"
-              : "border-white/10 hover:border-white/30"
+              ? "border-kapture-black dark:border-white shadow-[0_8px_40px_rgba(255,212,0,0.18)]"
+              : "border-kapture-fog dark:border-white/10 hover:border-kapture-mist dark:hover:border-white/30"
           }`}
         >
           <span className="pl-5 text-kapture-mist pointer-events-none">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="18"
-              height="18"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="7" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
@@ -80,10 +68,7 @@ export function SearchHero() {
           {q && (
             <button
               type="button"
-              onClick={() => {
-                setQ("");
-                inputRef.current?.focus();
-              }}
+              onClick={() => { setQ(""); inputRef.current?.focus(); }}
               aria-label="Clear search"
               className="text-kapture-mist hover:text-kapture-black p-2"
             >
@@ -98,17 +83,7 @@ export function SearchHero() {
             aria-label="Find my form"
             className="m-1.5 shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-kapture-yellow text-kapture-black hover:bg-kapture-amber active:scale-[0.97] transition"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="18"
-              height="18"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
@@ -116,26 +91,6 @@ export function SearchHero() {
         </div>
       </form>
 
-      {/* POPULAR — only when input empty */}
-      {!q && (
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-1.5 text-xs">
-          {POPULAR_QUERIES.slice(0, 4).map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => {
-                setQ(p);
-                inputRef.current?.focus();
-              }}
-              className="px-3 py-1.5 rounded-full bg-white/5 text-white/65 hover:bg-white/10 hover:text-white border border-white/10 transition font-medium"
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* DROPDOWN */}
       {showDropdown && (
         <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] bg-white text-kapture-black border border-kapture-fog rounded-2xl shadow-2xl overflow-hidden z-50">
           {results.length === 0 ? (

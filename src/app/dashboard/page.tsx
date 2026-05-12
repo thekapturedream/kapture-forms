@@ -5,6 +5,7 @@ import { Footer } from "@components/Footer";
 import { FormatBadge } from "@components/FormatBadge";
 import { createSupabaseServerClient } from "@lib/supabase/server";
 import { getProduct, type ExportFormat } from "@lib/products";
+import { isAdmin } from "@lib/admin";
 
 export const metadata = { title: "Dashboard" };
 export const dynamic = "force-dynamic";
@@ -99,7 +100,15 @@ export default async function DashboardPage() {
                 <span className="font-mono text-sm text-kapture-black">{user!.email}</span>.
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              {isAdmin(user!.email) && (
+                <Link
+                  href="/admin"
+                  className="inline-flex items-center gap-1.5 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber px-3.5 py-1.5 rounded-full text-sm font-semibold transition"
+                >
+                  Admin →
+                </Link>
+              )}
               <Link href="/how-to" className="btn-secondary text-sm">
                 How-to guides
               </Link>
