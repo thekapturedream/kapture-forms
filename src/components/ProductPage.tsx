@@ -46,12 +46,12 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
       <SiteHeader />
 
       <main className="flex-1">
-        {/* HERO — pinned to viewport on lg so the device demo always fits */}
-        <section className="bg-white dark:bg-kapture-black lg:h-[calc(100svh-3.5rem)] lg:flex lg:items-center">
-          <div className="kap-shell py-8 sm:py-10 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
-            {/* LEFT — device showcase. h-full on lg so the frame scales into available height. */}
-            <div className="lg:col-span-7 order-2 lg:order-1 lg:h-full lg:min-h-0">
-              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-auto lg:h-full flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03] p-4 sm:p-6">
+        {/* HERO — uniform top/bottom padding, viewport-min so demo + rail always have breathing room */}
+        <section className="bg-white dark:bg-kapture-black lg:min-h-[calc(100svh-3.5rem)] lg:flex lg:items-center">
+          <div className="kap-shell py-10 sm:py-12 lg:py-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
+            {/* LEFT — device showcase */}
+            <div className="lg:col-span-7 order-2 lg:order-1">
+              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03] p-4 sm:p-6 lg:p-8">
                 <DeviceShowcase
                   product={product}
                   accent={accent}
@@ -89,7 +89,7 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                       <polygon points="5 3 19 12 5 21 5 3" />
                     </svg>
-                    Test the form · {schema.sections.length} sections · live preview
+                    Test form →
                   </button>
                 )}
               </div>
