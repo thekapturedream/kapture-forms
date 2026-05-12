@@ -2,28 +2,27 @@
 
 import { useState } from "react";
 import type { StoreProduct } from "@lib/store-product";
-import { Check } from "lucide-react";
 
 interface BuyControlsProps {
   product: StoreProduct;
 }
 
 /**
- * Amazon-style buy controls.
+ * Apple-style minimal buy controls.
  *
- * - Pricing options as radio cards (one-off / hosted / pre-order / bundle / pass)
- * - Email capture (pre-fills Stripe Checkout)
- * - Two CTAs: Add to cart (queues + go to checkout) and Buy now (direct)
- * - Trust line + instant-delivery footer
+ *   - Segmented plan picker (only renders when there are 2+ options)
+ *   - One single big yellow Buy button
+ *   - A single quiet trust line below
+ *   - No email field (Stripe collects it)
  */
 export function BuyControls({ product }: BuyControlsProps) {
   const initial = product.options.find((o) => o.primary)?.id ?? product.options[0]?.id;
   const [selectedId, setSelectedId] = useState<string>(initial ?? "");
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const selected = product.options.find((o) => o.id === selectedId) ?? product.options[0];
+  const hasMultiple = product.options.length > 1;
 
   async function buy() {
     if (!selected) return;
@@ -33,7 +32,7 @@ export function BuyControls({ product }: BuyControlsProps) {
       const res = await fetch(`/api/buy/${product.slug}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: selected.mode, email: email || undefined }),
+        body: JSON.stringify({ mode: selected.mode }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Checkout failed");
@@ -48,147 +47,89 @@ export function BuyControls({ product }: BuyControlsProps) {
     }
   }
 
+  const ctaLabel = (() => {
+    if (loading) return "Opening Stripe…";
+    if (selected?.mode === "preorder") return "Reserve";
+    if (selected?.mode === "pass") return "Start pass";
+    if (selected?.mode === "subscription") return "Subscribe";
+    return "Buy";
+  })();
+
   return (
-    <div className="rounded-2xl border border-kapture-fog dark:border-white/15 bg-white dark:bg-white/[0.04] p-5 sm:p-6">
-      {/* Pricing options */}
-      <div className="space-y-2 mb-5" role="radiogroup" aria-label="Choose a plan">
-        {product.options.map((opt) => {
-          const active = opt.id === selectedId;
-          return (
-            <button
-              key={opt.id}
-              type="button"
-              role="radio"
-              aria-checked={active}
-              onClick={() => setSelectedId(opt.id)}
-              className={`w-full text-left rounded-xl border p-3.5 transition ${
-                active
-                  ? "border-kapture-black dark:border-kapture-yellow bg-kapture-paper dark:bg-white/[0.06]"
-                  : "border-kapture-fog dark:border-white/10 bg-white dark:bg-transparent hover:border-kapture-mist dark:hover:border-white/25"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <span
-                  className={`mt-1 inline-flex items-center justify-center w-4 h-4 rounded-full border-2 shrink-0 transition ${
-                    active
-                      ? "border-kapture-black dark:border-kapture-yellow"
-                      : "border-kapture-fog dark:border-white/25"
-                  }`}
-                >
-                  {active && <span className="w-1.5 h-1.5 rounded-full bg-kapture-black dark:bg-kapture-yellow" />}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline justify-between gap-3 flex-wrap">
-                    <div className="font-semibold text-sm text-kapture-black dark:text-white">
-                      {opt.label}
-                    </div>
-                    <div className="flex items-baseline gap-1.5">
-                      {opt.rrpPence && (
-                        <span className="font-mono text-xs text-kapture-mist dark:text-white/40 line-through">
-                          £{(opt.rrpPence / 100).toFixed(0)}
-                        </span>
-                      )}
-                      <span className="font-bold text-base text-kapture-black dark:text-white tracking-[-0.01em]">
-                        £{(opt.pricePence / 100).toFixed(opt.pricePence % 100 === 0 ? 0 : 2)}
-                      </span>
-                      {(opt.mode === "subscription" || opt.mode === "pass") && (
-                        <span className="text-xs text-kapture-mist dark:text-white/55 font-mono">/mo</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-xs text-kapture-smoke dark:text-white/60 mt-0.5">{opt.subtitle}</div>
-                  {opt.note && (
-                    <div className="text-[0.6875rem] text-kapture-mist dark:text-white/45 mt-1.5">{opt.note}</div>
-                  )}
-                </div>
-              </div>
-            </button>
-          );
-        })}
+    <div className="w-full max-w-md mx-auto">
+      {/* Price line */}
+      <div className="flex items-baseline justify-center gap-2 mb-6">
+        {selected?.rrpPence && (
+          <span className="font-mono text-base text-kapture-mist dark:text-white/40 line-through">
+            £{(selected.rrpPence / 100).toFixed(0)}
+          </span>
+        )}
+        <span className="font-bold text-4xl sm:text-5xl tracking-[-0.03em] text-kapture-black dark:text-white leading-none">
+          £{selected ? (selected.pricePence / 100).toFixed(selected.pricePence % 100 === 0 ? 0 : 2) : "—"}
+        </span>
+        {(selected?.mode === "subscription" || selected?.mode === "pass") && (
+          <span className="text-base text-kapture-smoke dark:text-white/55 font-medium">/mo</span>
+        )}
       </div>
 
-      {/* Email (optional pre-fill) */}
-      <label htmlFor="buy-email" className="font-mono text-[0.625rem] uppercase tracking-widest text-kapture-smoke dark:text-white/55 mb-1.5 block">
-        Email (we&apos;ll send your magic link here)
-      </label>
-      <input
-        id="buy-email"
-        type="email"
-        autoComplete="email"
-        placeholder="you@example.com"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full bg-white dark:bg-kapture-coal text-kapture-black dark:text-white border border-kapture-fog dark:border-white/15 rounded-xl px-3.5 py-2.5 text-sm placeholder:text-kapture-mist focus:outline-none focus:border-kapture-black dark:focus:border-white/40 mb-4"
-      />
+      {/* Plan segmented control */}
+      {hasMultiple && (
+        <div className="mb-6 grid gap-2 p-1 rounded-2xl bg-kapture-paper dark:bg-white/[0.05] border border-kapture-fog dark:border-white/10"
+             style={{ gridTemplateColumns: `repeat(${product.options.length}, minmax(0, 1fr))` }}>
+          {product.options.map((opt) => {
+            const active = opt.id === selectedId;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setSelectedId(opt.id)}
+                className={`px-3 py-2.5 rounded-xl text-sm font-semibold transition ${
+                  active
+                    ? "bg-white dark:bg-kapture-black text-kapture-black dark:text-white shadow-sm"
+                    : "text-kapture-smoke dark:text-white/65 hover:text-kapture-black dark:hover:text-white"
+                }`}
+              >
+                {planLabel(opt.mode)}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
-      {/* CTAs */}
-      <div className="space-y-2">
-        <button
-          type="button"
-          onClick={buy}
-          disabled={loading}
-          className="w-full inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 px-4 py-3 rounded-xl font-semibold text-sm transition"
-        >
-          {loading ? "Opening Stripe…" : selected?.mode === "preorder" ? "Reserve · pre-order →" : selected?.mode === "pass" ? "Start Designer Pass →" : selected?.mode === "subscription" ? "Subscribe →" : "Buy now →"}
-        </button>
-        <button
-          type="button"
-          onClick={buy}
-          disabled={loading}
-          className="w-full inline-flex items-center justify-center gap-2 bg-kapture-black text-white dark:bg-white dark:text-kapture-black hover:opacity-90 disabled:opacity-60 px-4 py-3 rounded-xl font-semibold text-sm transition"
-        >
-          Add to cart & checkout
-        </button>
-      </div>
+      {/* Single CTA */}
+      <button
+        type="button"
+        onClick={buy}
+        disabled={loading}
+        className="w-full inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 px-5 py-4 rounded-full font-bold text-base transition active:scale-[0.99]"
+      >
+        {ctaLabel}
+      </button>
 
-      {error && <p className="mt-3 text-xs text-status-critical font-mono">{error}</p>}
+      {error && <p className="mt-3 text-xs text-status-critical font-mono text-center">{error}</p>}
 
-      {/* Trust line */}
-      <ul className="mt-5 space-y-1.5 text-xs text-kapture-smoke dark:text-white/65">
-        {trustLines(product).map((t) => (
-          <li key={t} className="flex items-center gap-2">
-            <Check size={14} strokeWidth={2.5} className="text-kapture-yellow shrink-0" />
-            <span>{t}</span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-4 pt-4 border-t border-kapture-fog dark:border-white/10 font-mono text-[0.625rem] uppercase tracking-widest text-kapture-mist dark:text-white/40">
-        Stripe checkout · UK VAT auto-applied · Instant magic-link delivery
-      </div>
+      {/* Single quiet trust line */}
+      <p className="mt-5 text-center text-xs text-kapture-mist dark:text-white/50 font-medium">
+        {trustLine(product, selected)}
+      </p>
     </div>
   );
 }
 
-function trustLines(p: StoreProduct): string[] {
-  if (p.status === "soon") {
-    return [
-      "Reserve fee locks 50% off the launch price",
-      "Full pack delivered free at launch",
-      "Cancel before launch for full refund",
-      "SHA-256 audit hash on every submission",
-    ];
+function planLabel(mode: StoreProduct["options"][number]["mode"]): string {
+  switch (mode) {
+    case "oneoff": return "One-off";
+    case "subscription": return "Hosted";
+    case "preorder": return "Pre-order";
+    case "bundle": return "Bundle";
+    case "pass": return "Monthly";
   }
-  if (p.isPass) {
-    return [
-      "Unlimited downloads in every format",
-      "Source files · Figma · brand tokens",
-      "White-label rights · one client domain",
-      "Cancel anytime",
-    ];
-  }
-  if (p.status === "bundle") {
-    return [
-      `${p.whatsIncluded.length} packs in one purchase`,
-      "Save vs individual purchase",
-      "Same audit hash across the bundle",
-      "Lifetime updates as packs ship",
-    ];
-  }
-  return [
-    "Lifetime updates as regulators change",
-    "Five export formats included",
-    "Audit-hashed on every submission",
-    "Instant magic-link delivery",
-  ];
+}
+
+function trustLine(p: StoreProduct, sel: StoreProduct["options"][number] | undefined): string {
+  if (!sel) return "Stripe checkout";
+  if (sel.mode === "preorder") return `Free at launch · refundable until ${p.release ?? "ship"}`;
+  if (sel.mode === "subscription" || sel.mode === "pass") return "Cancel anytime · UK VAT applied";
+  if (sel.mode === "bundle") return `Lifetime updates · save vs individual`;
+  return "Lifetime updates · UK VAT applied";
 }
