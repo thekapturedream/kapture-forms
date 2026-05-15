@@ -33,14 +33,29 @@ export interface IndustryNode {
   slug: string;
   tagline: string;
   description: string;
+  /**
+   * Render priority — higher renders first in the CategoryGrid. Drives
+   * the hierarchy on the landing page so the most-useful categories
+   * lead. Defaults to 0.
+   */
+  priority?: number;
+  /**
+   * When true, CategoryGrid uses reverse colours (dark in light mode,
+   * light in dark mode) to make this category pop as the highlighted
+   * pick. Pair with the highest priority.
+   */
+  featured?: boolean;
   subcategories: Subcategory[];
 }
 
 export type SearchIndustry =
+  | "Legal & agreements"
+  | "Applications"
+  | "Appointments"
+  | "Bookings"
   | "Healthcare"
   | "HR & people"
   | "Finance"
-  | "Legal & agreements"
   | "Education"
   | "Hospitality"
   | "Real estate"
@@ -72,6 +87,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "healthcare",
     tagline: "Regulator-mapped forms for every clinical setting.",
     description: "From a GP surgery to a 200-bed care home. CQC SAF, NMC, HCPC, DSPT, MCA — every field cited.",
+    priority: 70,
     subcategories: [
       {
         id: "care-homes",
@@ -227,6 +243,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "hr",
     tagline: "Hire to retire, performance to PIP.",
     description: "Manage the full employee lifecycle with regulator-mapped HR packs.",
+    priority: 65,
     subcategories: [
       {
         id: "hiring-onboarding",
@@ -297,6 +314,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "finance",
     tagline: "AML, KYC, FCA, lending — the regulated finance stack.",
     description: "Banking, insurance, advice and lending packs mapped to FCA, FCA SMCR and HMRC.",
+    priority: 55,
     subcategories: [
       {
         id: "banking",
@@ -366,6 +384,8 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "legal",
     tagline: "Affidavits, agreements, contracts. The paper of business and life.",
     description: "From a one-page NDA to a 30-page lease. Lawyer-reviewed templates with English & Welsh law footers.",
+    priority: 100,
+    featured: true,
     subcategories: [
       {
         id: "personal-agreements",
@@ -470,6 +490,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "education",
     tagline: "Admissions to SEND, trips to behaviour.",
     description: "DfE-mapped packs for schools, colleges, MATs.",
+    priority: 60,
     subcategories: [
       {
         id: "admissions",
@@ -526,6 +547,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "hospitality",
     tagline: "Bookings, allergens, suppliers.",
     description: "EHO-mapped packs for hotels, restaurants and pubs.",
+    priority: 45,
     subcategories: [
       {
         id: "bookings",
@@ -578,6 +600,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "real-estate",
     tagline: "Letting, sales, surveys, management.",
     description: "ARLA / RICS-mapped packs for agents, landlords, sellers.",
+    priority: 50,
     subcategories: [
       {
         id: "lettings",
@@ -635,6 +658,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "construction",
     tagline: "RAMS, CDM, near-miss, toolbox.",
     description: "HSE / CDM 2015-mapped packs for principal contractors and trades.",
+    priority: 40,
     subcategories: [
       {
         id: "rams-hs",
@@ -690,6 +714,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "public",
     tagline: "Citizens, grants, licensing, FOI.",
     description: "Council, NHS, education-adjacent forms.",
+    priority: 35,
     subcategories: [
       {
         id: "citizen",
@@ -743,6 +768,7 @@ export const TAXONOMY: IndustryNode[] = [
     slug: "logistics",
     tagline: "Drivers, vehicles, customs, dangerous goods.",
     description: "DVSA / DVLA / HMRC-mapped packs for fleets and freight.",
+    priority: 30,
     subcategories: [
       {
         id: "drivers",
@@ -803,7 +829,238 @@ export const TAXONOMY: IndustryNode[] = [
       },
     ],
   },
+  // ════════════════════════════════════════════════════════════════
+  // APPLICATIONS — receive any application (grants, schools, jobs, members)
+  // ════════════════════════════════════════════════════════════════
+  {
+    id: "applications",
+    name: "Applications",
+    slug: "applications",
+    tagline: "Receive applications — grants, schools, jobs, members.",
+    description:
+      "Open the door to your programme, school, fund, club, or job. One form captures everything you need to decide.",
+    priority: 90,
+    subcategories: [
+      {
+        id: "grants-funding",
+        name: "Grants, funding & donors",
+        tagline: "Open calls for funding from organisations or individuals.",
+        forms: [
+          soon("Grant application · organisation", "Q1 2027", ["grant","org","funding"]),
+          soon("Grant application · individual or artist", "Q1 2027", ["grant","artist"]),
+          soon("Donor pledge & gift form", "Q1 2027", ["donor","pledge","gift"]),
+          soon("Hardship / emergency fund application", "Q1 2027", ["hardship","emergency"]),
+          soon("Bursary / scholarship application", "Q1 2027", ["bursary","scholarship"]),
+          soon("Sponsorship application", "Q1 2027", ["sponsorship"]),
+          soon("Crowdfunding pledge", "Q2 2027", ["crowdfund","pledge"]),
+        ],
+      },
+      {
+        id: "school-college",
+        name: "School & college applications",
+        tagline: "Nursery to university — receive applications cleanly.",
+        forms: [
+          soon("Nursery / pre-school application", "Q1 2027", ["nursery","preschool"]),
+          soon("Primary school application", "Q1 2027", ["primary","admission"]),
+          soon("Secondary school application", "Q1 2027", ["secondary","admission"]),
+          soon("Sixth form application", "Q1 2027", ["sixth form","A level"]),
+          soon("College / FE application", "Q1 2027", ["college","FE"]),
+          soon("University course application", "Q1 2027", ["university","UCAS"]),
+          soon("Summer school enrolment", "Q2 2027", ["summer school"]),
+        ],
+      },
+      {
+        id: "membership",
+        name: "Membership & registration",
+        tagline: "Clubs, networks, gyms, communities.",
+        forms: [
+          soon("Membership application · club", "Q1 2027", ["membership","club"]),
+          soon("Gym & fitness membership", "Q1 2027", ["gym","fitness"]),
+          soon("Professional body registration", "Q1 2027", ["professional","membership"]),
+          soon("Co-working / studio membership", "Q1 2027", ["coworking"]),
+          soon("Society / association sign-up", "Q1 2027", ["society"]),
+        ],
+      },
+      {
+        id: "employment-applications",
+        name: "Jobs, volunteering & internships",
+        tagline: "Open roles, apprenticeships, volunteer slots.",
+        forms: [
+          soon("Job application · standard", "Q1 2027", ["job","application"]),
+          soon("Apprenticeship application", "Q1 2027", ["apprenticeship"]),
+          soon("Volunteer application", "Q1 2027", ["volunteer"]),
+          soon("Internship / placement application", "Q1 2027", ["intern","placement"]),
+          soon("Freelance / contractor pitch", "Q1 2027", ["freelance","contractor"]),
+        ],
+      },
+      {
+        id: "programmes",
+        name: "Programmes & competitions",
+        tagline: "Accelerator, residency, awards entry.",
+        forms: [
+          soon("Accelerator / incubator application", "Q2 2027", ["accelerator","startup"]),
+          soon("Residency application", "Q2 2027", ["residency"]),
+          soon("Competition / awards entry", "Q2 2027", ["awards","competition"]),
+          soon("Pitch competition application", "Q2 2027", ["pitch","competition"]),
+          soon("Workshop / cohort application", "Q2 2027", ["workshop","cohort"]),
+        ],
+      },
+    ],
+  },
+  // ════════════════════════════════════════════════════════════════
+  // APPOINTMENTS — clinical, optical, therapy, beauty, wellness
+  // ════════════════════════════════════════════════════════════════
+  {
+    id: "appointments",
+    name: "Appointments",
+    slug: "appointments",
+    tagline: "Book a slot — medical, dental, optical, therapy, beauty.",
+    description:
+      "Take appointment requests for any clinic, practice, or studio. Conditional fields per service; sensible defaults baked in.",
+    priority: 85,
+    subcategories: [
+      {
+        id: "medical-appointments",
+        name: "Medical & GP",
+        tagline: "GP, nurse, urgent care, NHS.",
+        forms: [
+          soon("GP appointment request", "Q1 2027", ["GP","appointment","NHS"]),
+          soon("Nurse triage booking", "Q1 2027", ["triage","nurse"]),
+          soon("Vaccination appointment", "Q1 2027", ["vaccine","jab"]),
+          soon("Health check booking", "Q1 2027", ["health check"]),
+          soon("Urgent care request", "Q1 2027", ["urgent care"]),
+        ],
+      },
+      {
+        id: "dental-appointments",
+        name: "Dental & orthodontics",
+        tagline: "NHS and private dentistry.",
+        forms: [
+          soon("Dental check-up booking", "Q1 2027", ["dentist","check-up"]),
+          soon("Dental hygienist booking", "Q1 2027", ["hygienist"]),
+          soon("Orthodontic consultation", "Q1 2027", ["orthodontist","braces"]),
+          soon("Emergency dental appointment", "Q1 2027", ["emergency dental"]),
+          soon("Cosmetic dentistry consult", "Q1 2027", ["cosmetic","whitening"]),
+        ],
+      },
+      {
+        id: "optical-appointments",
+        name: "Optical & eye care",
+        tagline: "Opticians and eye-care professionals.",
+        forms: [
+          soon("Eye test booking · adult", "Q1 2027", ["eye test","optician"]),
+          soon("Eye test booking · child", "Q1 2027", ["child","eye test"]),
+          soon("Contact lens fitting", "Q1 2027", ["contact lens"]),
+          soon("Glasses fitting follow-up", "Q1 2027", ["glasses"]),
+          soon("Myopia management consult", "Q2 2027", ["myopia"]),
+        ],
+      },
+      {
+        id: "therapy-appointments",
+        name: "Therapy & mental health",
+        tagline: "Counsellors, psychologists, coaches.",
+        forms: [
+          soon("Therapy intake form", "Q1 2027", ["therapy","intake"]),
+          soon("Counselling appointment request", "Q1 2027", ["counsellor"]),
+          soon("CBT / psychotherapy intake", "Q1 2027", ["CBT","psychotherapy"]),
+          soon("Coaching session booking", "Q1 2027", ["coaching"]),
+          soon("Couples therapy intake", "Q2 2027", ["couples"]),
+        ],
+      },
+      {
+        id: "wellness-appointments",
+        name: "Beauty & wellness",
+        tagline: "Salon, spa, massage, aesthetics.",
+        forms: [
+          soon("Hair salon booking", "Q1 2027", ["salon","hair"]),
+          soon("Massage appointment", "Q1 2027", ["massage"]),
+          soon("Aesthetic consultation", "Q1 2027", ["aesthetic","Botox"]),
+          soon("Spa day booking", "Q2 2027", ["spa"]),
+          soon("Nails / beauty therapy", "Q2 2027", ["nails","beauty"]),
+        ],
+      },
+    ],
+  },
+  // ════════════════════════════════════════════════════════════════
+  // BOOKINGS — venues, classes, services, equipment, events
+  // ════════════════════════════════════════════════════════════════
+  {
+    id: "bookings",
+    name: "Bookings",
+    slug: "bookings",
+    tagline: "Reserve a slot, a venue, a class, a service.",
+    description:
+      "Catch-all booking pack for studios, venues, classes, equipment hire, and consultations. Customise per service.",
+    priority: 80,
+    subcategories: [
+      {
+        id: "venue-bookings",
+        name: "Venues & spaces",
+        tagline: "Hire a room, studio, hall, or pitch.",
+        forms: [
+          soon("Venue hire enquiry", "Q1 2027", ["venue","hire"]),
+          soon("Studio booking", "Q1 2027", ["studio"]),
+          soon("Meeting room booking", "Q1 2027", ["meeting room"]),
+          soon("Sports pitch / court booking", "Q1 2027", ["pitch","court"]),
+          soon("Community hall booking", "Q1 2027", ["community hall"]),
+        ],
+      },
+      {
+        id: "class-bookings",
+        name: "Classes & workshops",
+        tagline: "Yoga, fitness, music, craft, language.",
+        forms: [
+          soon("Class / workshop sign-up", "Q1 2027", ["class","workshop"]),
+          soon("Yoga / fitness class booking", "Q1 2027", ["yoga","fitness"]),
+          soon("Music lesson booking", "Q1 2027", ["music","lesson"]),
+          soon("Language class enrolment", "Q2 2027", ["language"]),
+          soon("Cooking / craft workshop", "Q2 2027", ["cooking","craft"]),
+        ],
+      },
+      {
+        id: "service-bookings",
+        name: "Service appointments",
+        tagline: "Tradespeople, home services, repairs.",
+        forms: [
+          soon("Tradesperson site visit", "Q1 2027", ["trade","quote"]),
+          soon("Cleaning service booking", "Q1 2027", ["cleaning"]),
+          soon("Pet grooming appointment", "Q2 2027", ["pet","grooming"]),
+          soon("Garden / landscaping visit", "Q2 2027", ["garden"]),
+        ],
+      },
+      {
+        id: "equipment-bookings",
+        name: "Equipment & rentals",
+        tagline: "Hire equipment by the hour or day.",
+        forms: [
+          soon("Equipment hire enquiry", "Q1 2027", ["hire","equipment"]),
+          soon("Camera / AV kit hire", "Q2 2027", ["camera","AV"]),
+          soon("Vehicle hire booking", "Q2 2027", ["car hire","vehicle"]),
+          soon("Tool / construction hire", "Q2 2027", ["tool","hire"]),
+        ],
+      },
+      {
+        id: "event-bookings",
+        name: "Events & functions",
+        tagline: "Weddings, parties, conferences.",
+        forms: [
+          soon("Wedding enquiry", "Q2 2027", ["wedding"]),
+          soon("Party / function enquiry", "Q2 2027", ["party","function"]),
+          soon("Conference / corporate event", "Q2 2027", ["conference","corporate"]),
+          soon("Catering booking", "Q2 2027", ["catering"]),
+        ],
+      },
+    ],
+  },
 ];
+
+/**
+ * Industries sorted by priority (descending). Featured first, then most
+ * useful. Drives CategoryGrid order on the landing page.
+ */
+export function listIndustriesByPriority(): IndustryNode[] {
+  return [...TAXONOMY].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+}
 
 /** All industries — for the landing grid. */
 export function getIndustryNodes(): IndustryNode[] {

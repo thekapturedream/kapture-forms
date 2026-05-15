@@ -415,6 +415,21 @@ export function BuilderClient() {
         {/* EDITOR */}
         <section className="border-b lg:border-b-0 lg:border-r border-kapture-fog dark:border-white/10 overflow-y-auto">
           <div className="px-5 sm:px-7 py-6 space-y-5 max-w-[760px] mx-auto">
+            {/* Subtle how-it-works strip — three steps, no dismiss noise */}
+            <div className="flex items-center gap-x-4 gap-y-2 flex-wrap text-[0.6875rem] font-mono font-semibold tracking-wider text-kapture-smoke dark:text-white/55 pb-1">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-kapture-yellow text-kapture-black text-[0.5625rem] font-bold">1</span>
+                TAP A PRIMITIVE
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-kapture-yellow text-kapture-black text-[0.5625rem] font-bold">2</span>
+                CLICK ⚙ TO CONFIGURE
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-kapture-yellow text-kapture-black text-[0.5625rem] font-bold">3</span>
+                GENERATE · £2
+              </span>
+            </div>
             {state.sections.map((section, sIdx) => (
               <SectionEditor
                 key={section.id}
@@ -447,7 +462,11 @@ export function BuilderClient() {
 
         {/* PREVIEW */}
         <aside className="bg-kapture-paper/40 dark:bg-white/[0.02] lg:max-h-[calc(100vh-7.5rem)] lg:sticky lg:top-[7.5rem] overflow-y-auto">
-          <LivePreview schema={previewSchema} />
+          <LivePreview
+            schema={previewSchema}
+            onGenerate={() => setShowCheckout(true)}
+            canGenerate={totalFields > 0}
+          />
         </aside>
       </main>
 
@@ -802,7 +821,15 @@ function FieldRow({
 
 /* ─────────── live preview ─────────── */
 
-function LivePreview({ schema }: { schema: PackSchema }) {
+function LivePreview({
+  schema,
+  onGenerate,
+  canGenerate,
+}: {
+  schema: PackSchema;
+  onGenerate: () => void;
+  canGenerate: boolean;
+}) {
   const totalFields = schema.sections.reduce((n, s) => n + s.fields.length, 0);
   return (
     <div className="p-5 sm:p-7">
@@ -840,15 +867,22 @@ function LivePreview({ schema }: { schema: PackSchema }) {
               </div>
             </div>
           ))}
+          {/* Preview submit → opens the £2 Generate dialog. This is the
+              same action as the header 'Generate · £2' button, surfaced
+              where the form's submit button visually lives. */}
           <button
             type="button"
-            disabled
-            className="w-full bg-kapture-yellow text-kapture-black px-4 py-3 rounded-xl text-sm font-bold opacity-90 cursor-not-allowed"
+            onClick={onGenerate}
+            disabled={!canGenerate}
+            className="w-full inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 disabled:cursor-not-allowed px-4 py-3 rounded-xl text-sm font-bold transition active:scale-[0.99]"
           >
-            Submit · sign · audit-hash
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+            Generate this form · £2
           </button>
           <p className="text-center text-[0.6875rem] font-medium text-kapture-smoke dark:text-white/55">
-            Preview only · publish to make the submit live
+            Pay £2 → we email the file in your chosen format.
           </p>
         </div>
       )}
