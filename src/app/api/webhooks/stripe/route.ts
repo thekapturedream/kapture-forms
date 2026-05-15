@@ -4,6 +4,7 @@ import { getStripe } from "@lib/stripe";
 import { createSupabaseAdminClient } from "@lib/supabase/server";
 import { getProduct } from "@lib/products";
 import { getSchema } from "@lib/schemas";
+import { fulfillBuilderOrder } from "@lib/builder/fulfill";
 import { randomBytes } from "crypto";
 
 export const runtime = "nodejs";
@@ -34,6 +35,33 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
+  // Idempotency — Stripe occasionally redelivers events and we MUST NOT
+  // re-fulfill a builder order or re-issue a license twice. Record the
+  // event id atomically; if the row already exists, bail with a 200 so
+  // Stripe stops retrying.
+  try {
+    const supabaseIdem = createSupabaseAdminClient();
+    const insert = await supabaseIdem
+      .from("stripe_events")
+      .insert({ event_id: event.id, event_type: event.type })
+      .select("event_id")
+      .maybeSingle();
+    // Duplicate primary key → insert.data is null AND error.code is 23505.
+    if (insert.error && (insert.error as { code?: string }).code === "23505") {
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+    // Any other error: log and proceed. We'd rather risk a duplicate
+    // fulfillment than refuse the webhook and break the funnel.
+    if (insert.error) {
+      // eslint-disable-next-line no-console
+      console.warn("stripe_events insert non-fatal error", insert.error);
+    }
+  } catch (err) {
+    // Same fallback — don't block on idempotency table issues.
+    // eslint-disable-next-line no-console
+    console.warn("stripe_events insert threw", err);
+  }
+
   try {
     switch (event.type) {
       case "checkout.session.completed":
@@ -58,6 +86,25 @@ export async function POST(req: NextRequest) {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  // Builder fulfillment path: a paid £2 generate-and-send from /builder.
+  // Routes to the builder fulfillment helper which renders the schema in
+  // the requested format and emails it via Resend.
+  if (session.metadata?.type === "builder") {
+    const orderId = session.metadata.builderOrderId as string | undefined;
+    if (orderId) {
+      const supabase = createSupabaseAdminClient();
+      try {
+        await fulfillBuilderOrder(supabase, orderId);
+      } catch (err) {
+        // Don't 500 the webhook — Stripe will retry forever otherwise.
+        // The order row is marked failed inside fulfillBuilderOrder.
+        // eslint-disable-next-line no-console
+        console.error("Builder fulfillment failed", orderId, err);
+      }
+    }
+    return;
+  }
+
   const productId = (session.metadata?.productId as string | undefined) ?? null;
   const mode = (session.metadata?.mode as "oneoff" | "subscription" | undefined) ?? "oneoff";
   if (!productId) return;

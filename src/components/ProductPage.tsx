@@ -53,9 +53,11 @@ export function ProductPageContent({ product }: { product: StoreProduct }) {
             tablet keep aspect ratios for natural stacking. */}
         <section className="bg-white dark:bg-kapture-black lg:h-[calc(100svh-3.5rem)] lg:overflow-hidden lg:flex lg:items-center">
           <div className="kap-shell py-10 sm:py-12 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
-            {/* LEFT — device showcase */}
-            <div className="lg:col-span-7 order-2 lg:order-1">
-              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-auto lg:h-[calc(100svh-3.5rem-5rem)] flex items-center justify-center rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03] p-4 sm:p-6 lg:p-6">
+            {/* LEFT — device showcase. overflow-hidden + min-w-0 contain any
+                device frame that would otherwise burst out of the card on a
+                narrow viewport. */}
+            <div className="lg:col-span-7 order-2 lg:order-1 min-w-0">
+              <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-auto lg:h-[calc(100svh-3.5rem-5rem)] flex items-center justify-center rounded-[24px] sm:rounded-[32px] bg-kapture-paper/60 dark:bg-white/[0.03] p-5 sm:p-6 lg:p-6 overflow-hidden">
                 <DeviceShowcase
                   product={product}
                   accent={accent}

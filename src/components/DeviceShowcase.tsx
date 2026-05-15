@@ -85,12 +85,19 @@ export function DeviceShowcase({ product, accent, fontFamily, headline }: Device
 
 /* ─────────── device frames ─────────── */
 
+/*
+ * Mobile-first device sizing. Each device must fit comfortably inside the
+ * product hero card on a 360–414px viewport (≈320px content area after
+ * kap-shell + card padding). The xs sizes target that constraint; sm and
+ * md scale up for tablets and desktops.
+ */
+
 function Phone(props: DeviceShowcaseProps) {
   return (
-    <div className="relative w-[210px] sm:w-[240px] h-[430px] sm:h-[490px] rounded-[44px] bg-kapture-black dark:bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] p-[6px]">
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-kapture-black dark:bg-white rounded-full z-10" />
-      <div className="w-full h-full rounded-[38px] bg-white dark:bg-kapture-coal overflow-hidden">
-        <div className="pt-9 px-5 pb-5 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
+    <div className="relative w-[180px] sm:w-[210px] md:w-[240px] h-[368px] sm:h-[430px] md:h-[490px] max-w-full rounded-[40px] sm:rounded-[44px] bg-kapture-black dark:bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] p-[6px]">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-4 sm:h-5 bg-kapture-black dark:bg-white rounded-full z-10" />
+      <div className="w-full h-full rounded-[34px] sm:rounded-[38px] bg-white dark:bg-kapture-coal overflow-hidden">
+        <div className="pt-8 sm:pt-9 px-4 sm:px-5 pb-4 sm:pb-5 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
           <FormPreview {...props} compact />
         </div>
       </div>
@@ -100,10 +107,10 @@ function Phone(props: DeviceShowcaseProps) {
 
 function Tablet(props: DeviceShowcaseProps) {
   return (
-    <div className="relative w-[360px] sm:w-[420px] h-[450px] sm:h-[520px] rounded-[32px] bg-kapture-black dark:bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] p-[8px]">
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-kapture-paper rounded-full z-10" />
-      <div className="w-full h-full rounded-[24px] bg-white dark:bg-kapture-coal overflow-hidden">
-        <div className="pt-9 px-9 pb-7 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
+    <div className="relative w-[260px] sm:w-[340px] md:w-[400px] lg:w-[420px] h-[330px] sm:h-[430px] md:h-[500px] lg:h-[520px] max-w-full rounded-[24px] sm:rounded-[28px] md:rounded-[32px] bg-kapture-black dark:bg-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] p-[7px] sm:p-[8px]">
+      <div className="absolute top-2.5 sm:top-3 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-kapture-paper rounded-full z-10" />
+      <div className="w-full h-full rounded-[18px] sm:rounded-[22px] md:rounded-[24px] bg-white dark:bg-kapture-coal overflow-hidden">
+        <div className="pt-7 sm:pt-9 px-6 sm:px-8 md:px-9 pb-6 sm:pb-7 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
           <FormPreview {...props} />
         </div>
       </div>
@@ -113,19 +120,19 @@ function Tablet(props: DeviceShowcaseProps) {
 
 function Laptop(props: DeviceShowcaseProps) {
   return (
-    <div className="w-[420px] sm:w-[500px] shrink-0">
+    <div className="w-[280px] sm:w-[380px] md:w-[460px] lg:w-[500px] max-w-full shrink-0">
       {/* Screen */}
-      <div className="relative w-full h-[290px] sm:h-[330px] rounded-t-2xl bg-kapture-black dark:bg-white p-[8px] shadow-[0_-20px_40px_-30px_rgba(0,0,0,0.25)]">
-        <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-kapture-paper rounded-full z-10" />
+      <div className="relative w-full h-[200px] sm:h-[270px] md:h-[310px] lg:h-[330px] rounded-t-xl sm:rounded-t-2xl bg-kapture-black dark:bg-white p-[7px] sm:p-[8px] shadow-[0_-20px_40px_-30px_rgba(0,0,0,0.25)]">
+        <div className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-kapture-paper rounded-full z-10" />
         <div className="w-full h-full rounded-md bg-white dark:bg-kapture-coal overflow-hidden">
-          <div className="pt-7 px-10 pb-6 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
+          <div className="pt-5 sm:pt-6 md:pt-7 px-6 sm:px-8 md:px-10 pb-5 sm:pb-6 h-full overflow-hidden" style={{ fontFamily: props.fontFamily }}>
             <FormPreview {...props} wide />
           </div>
         </div>
       </div>
       {/* Hinge */}
-      <div className="relative h-3 bg-kapture-fog dark:bg-white/20 rounded-b-2xl">
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 w-16 h-1 bg-kapture-mist dark:bg-white/40 rounded-b-md" />
+      <div className="relative h-2.5 sm:h-3 bg-kapture-fog dark:bg-white/20 rounded-b-xl sm:rounded-b-2xl">
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 w-12 sm:w-16 h-1 bg-kapture-mist dark:bg-white/40 rounded-b-md" />
       </div>
     </div>
   );

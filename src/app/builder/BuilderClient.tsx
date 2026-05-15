@@ -25,6 +25,7 @@ import Link from "next/link";
 import { Logo } from "@components/Logo";
 import { ThemeToggle } from "@components/ThemeToggle";
 import { CartButton } from "@components/cart/CartButton";
+import { BuilderCheckoutDialog } from "@components/builder/BuilderCheckoutDialog";
 import {
   listPrimitives,
   listCategories,
@@ -109,7 +110,24 @@ export function BuilderClient() {
   const [activeSectionId, setActiveSectionId] = useState<string>(INITIAL_STATE.sections[0].id);
   const [editingFieldId, setEditingFieldId] = useState<string | null>(null);
   const [showExportToast, setShowExportToast] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [paidBanner, setPaidBanner] = useState(false);
   const hydrated = useRef(false);
+
+  // Show a 'we sent it' banner when the user comes back from Stripe success.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("paid") === "1") {
+      setPaidBanner(true);
+      // Clean the URL so a refresh doesn't replay the banner.
+      const url = new URL(window.location.href);
+      url.searchParams.delete("paid");
+      url.searchParams.delete("order");
+      url.searchParams.delete("cancelled");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, []);
 
   // Hydrate.
   useEffect(() => {
@@ -342,7 +360,7 @@ export function BuilderClient() {
             <button
               type="button"
               onClick={exportJson}
-              className="inline-flex items-center gap-1.5 bg-kapture-black dark:bg-white text-white dark:text-kapture-black hover:opacity-90 px-3.5 py-2 rounded-lg text-xs font-bold transition"
+              className="hidden sm:inline-flex items-center gap-1.5 border border-kapture-fog dark:border-white/15 hover:border-kapture-black dark:hover:border-white/40 text-kapture-black dark:text-white px-3.5 py-2 rounded-lg text-xs font-bold transition"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
@@ -350,6 +368,17 @@ export function BuilderClient() {
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
               Export JSON
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowCheckout(true)}
+              disabled={totalFields === 0}
+              className="inline-flex items-center gap-1.5 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-50 disabled:cursor-not-allowed px-3.5 py-2 rounded-lg text-xs font-bold transition active:scale-[0.99]"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+              Generate · £2
             </button>
             <CartButton size={32} />
             <ThemeToggle size={32} />
@@ -422,12 +451,43 @@ export function BuilderClient() {
         </aside>
       </main>
 
+      {/* PAID BANNER — appears after Stripe success bounce */}
+      {paidBanner && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 max-w-[480px] w-[calc(100vw-2rem)] bg-kapture-black text-white dark:bg-white dark:text-kapture-black rounded-2xl shadow-2xl z-50 px-5 py-4 flex items-start gap-3">
+          <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-kapture-yellow text-kapture-black font-bold text-sm shrink-0">✓</span>
+          <div className="flex-1 min-w-0">
+            <div className="font-bold text-sm tracking-[-0.005em]">Payment received. Your form is on the way.</div>
+            <div className="mt-0.5 text-xs font-medium opacity-75 leading-relaxed">
+              Watch your inbox — usually under a minute. Check the spam folder if it's not there in 5.
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setPaidBanner(false)}
+            aria-label="Dismiss"
+            className="opacity-60 hover:opacity-100 shrink-0"
+          >
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+              <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      )}
+
       {/* TOAST */}
       {showExportToast && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-kapture-black text-white dark:bg-white dark:text-kapture-black px-5 py-3 rounded-xl shadow-2xl font-bold text-sm z-50">
           Schema exported · check your downloads
         </div>
       )}
+
+      {/* GENERATE-AND-SEND DIALOG */}
+      <BuilderCheckoutDialog
+        open={showCheckout}
+        onClose={() => setShowCheckout(false)}
+        schema={previewSchema}
+        title={state.title}
+      />
     </div>
   );
 }

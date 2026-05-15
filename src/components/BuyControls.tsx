@@ -99,7 +99,7 @@ export function BuyControls({ product }: BuyControlsProps) {
               role="radio"
               aria-checked={active}
               onClick={() => setSelectedId(opt.id)}
-              className={`text-left rounded-2xl border bg-white dark:bg-white/[0.04] px-4 py-3.5 transition flex flex-col ${
+              className={`w-full text-left rounded-2xl border bg-white dark:bg-white/[0.04] px-4 py-3.5 transition flex flex-col ${
                 twoOptions ? "h-full" : ""
               } ${
                 active
@@ -117,33 +117,44 @@ export function BuyControls({ product }: BuyControlsProps) {
         })}
       </div>
 
-      {/* CTAs */}
-      <div className="grid grid-cols-[1fr_auto] gap-2">
-        <button
-          type="button"
-          onClick={buy}
-          disabled={loading}
-          className="inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 px-5 py-3.5 rounded-2xl font-bold text-sm transition active:scale-[0.99]"
-        >
-          {buyLabel}
-        </button>
-        {selected?.mode !== "subscription" && selected?.mode !== "pass" && (
-          <button
-            type="button"
-            onClick={addToCart}
-            disabled={loading}
-            aria-label="Add to cart"
-            title="Add to cart"
-            className="inline-flex items-center justify-center bg-white dark:bg-white/[0.06] text-kapture-black dark:text-white border-2 border-kapture-black dark:border-white hover:bg-kapture-paper dark:hover:bg-white/[0.12] disabled:opacity-60 w-[52px] h-[52px] rounded-2xl transition active:scale-[0.99]"
-          >
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
-            </svg>
-          </button>
-        )}
-      </div>
+      {/* CTAs — Buy claims the row via flex-1, cart icon only shows for
+          one-off / bundle. Subscription, pass, AND preorder hide the cart
+          (reservations aren't cart items; subs / passes can't be in a cart
+          alongside one-offs). */}
+      {(() => {
+        const showCart =
+          selected?.mode !== "subscription" &&
+          selected?.mode !== "pass" &&
+          selected?.mode !== "preorder";
+        return (
+          <div className="flex items-stretch gap-2">
+            <button
+              type="button"
+              onClick={buy}
+              disabled={loading}
+              className="flex-1 inline-flex items-center justify-center gap-2 bg-kapture-yellow text-kapture-black hover:bg-kapture-amber disabled:opacity-60 px-5 py-3.5 rounded-2xl font-bold text-sm transition active:scale-[0.99]"
+            >
+              {buyLabel}
+            </button>
+            {showCart && (
+              <button
+                type="button"
+                onClick={addToCart}
+                disabled={loading}
+                aria-label="Add to cart"
+                title="Add to cart"
+                className="shrink-0 inline-flex items-center justify-center bg-white dark:bg-white/[0.06] text-kapture-black dark:text-white border-2 border-kapture-black dark:border-white hover:bg-kapture-paper dark:hover:bg-white/[0.12] disabled:opacity-60 w-[52px] h-[52px] rounded-2xl transition active:scale-[0.99]"
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+                </svg>
+              </button>
+            )}
+          </div>
+        );
+      })()}
 
       {error && <p className="text-xs text-status-critical font-mono text-center">{error}</p>}
 

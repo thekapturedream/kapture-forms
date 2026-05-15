@@ -14,21 +14,25 @@ interface Props {
 }
 
 /**
- * Test Form modal — rebalanced layout.
+ * Test Form modal — mobile-first, minimal density.
  *
- *  Top strip       — DEMO pill · form name · pathway picker · close.
- *  Header band     — form title + one-line use-case subtitle. Always visible
- *                    so the buyer knows what they're testing without scrolling.
- *  Progress strip  — one dot per section, current dot yellow, completed dots
- *                    filled, future dots outlined. Section name + 'X of Y'
- *                    indicator on the right. Real progress, no chip rail.
- *  Form body       — section intro, then a 2-column responsive grid of fields.
- *                    Textarea / signature / multi-select / checkbox span the
- *                    full row. Single column on mobile.
- *  Footer          — generous padding. Back ← / Next →.
+ * Mobile fix (Acie feedback "popup doesn't scroll, terrible overflow"):
+ *   - Positioning wrapper now uses inset-0 on mobile so the panel has a
+ *     bounded height; previously inset-x-0 top-0 gave the panel no
+ *     bottom edge and flex-1 overflow-y-auto silently failed.
+ *   - Panel uses h-[100dvh] on mobile so iOS Safari's collapsing
+ *     toolbar doesn't clip the footer.
+ *   - Body region is the only scroll container; top strip, progress,
+ *     and footer are shrink-0 around it.
  *
- * Pathway switching, conditional field visibility, validation gating, and
- * the finished-state checkout flow are unchanged.
+ * Density cut (Acie feedback "too busy, less info density"):
+ *   - Removed the persistent header band (form title + long use-case
+ *     subtitle) — the form title now lives in the top strip where it
+ *     belongs as chrome.
+ *   - Progress strip shows only dots + 'X / Y'; section name was a
+ *     duplicate of the H1 that follows immediately.
+ *   - Section content: H1 + short intro + fields. That's it.
+ *   - 44px close button hit target on mobile.
  */
 export function FormDemoModal({ open, onClose, schema, product }: Props) {
   const { addItem, openCart } = useCart();
@@ -119,7 +123,6 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
       setFinished(true);
     } else {
       setSectionIdx((i) => i + 1);
-      // Scroll the form region to the top when advancing.
       requestAnimationFrame(() => {
         const main = document.getElementById("kap-demo-main");
         if (main) main.scrollTop = 0;
@@ -181,23 +184,25 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
 
   return (
     <div className="fixed inset-0 z-[70]" role="dialog" aria-modal="true" aria-label="Test form">
+      {/* Scrim */}
       <button
         type="button"
         onClick={onClose}
         aria-label="Close test form"
         className="absolute inset-0 bg-black/55 backdrop-blur-sm"
       />
-      <div className="absolute inset-x-0 top-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-6">
-        <div className="bg-white dark:bg-kapture-coal text-kapture-black dark:text-white w-full sm:max-w-[880px] h-full sm:h-auto sm:max-h-[92vh] sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+      {/* Positioning wrapper — inset-0 on mobile so the panel has a bounded
+          height for flex-1 overflow-y-auto to work against. */}
+      <div className="absolute inset-0 sm:flex sm:items-center sm:justify-center sm:p-6">
+        <div className="bg-white dark:bg-kapture-coal text-kapture-black dark:text-white w-full h-[100dvh] sm:h-auto sm:max-w-[680px] sm:max-h-[92vh] sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden">
           {/* ── TOP STRIP ── */}
-          <div className="flex items-center gap-3 px-5 sm:px-8 h-[60px] border-b border-kapture-fog dark:border-white/10 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-7 h-[60px] border-b border-kapture-fog dark:border-white/10 shrink-0">
             <span className="inline-flex items-center bg-kapture-yellow text-kapture-black font-mono text-[0.625rem] font-bold tracking-widest px-2 py-1 rounded shrink-0">
               DEMO
             </span>
-            <span className="hidden sm:inline text-xs font-bold tracking-[-0.005em] truncate text-kapture-smoke dark:text-white/65">
+            <span className="font-bold text-sm tracking-[-0.005em] truncate flex-1 min-w-0 text-kapture-black dark:text-white">
               {schema.title}
             </span>
-            <div className="flex-1" />
             {schema.pathways.length > 1 && !finished && (
               <div className="relative shrink-0">
                 <select
@@ -209,7 +214,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
                     setFinished(false);
                   }}
                   aria-label="Pathway"
-                  className="appearance-none bg-kapture-black dark:bg-white text-white dark:text-kapture-black text-xs font-bold pl-3.5 pr-9 py-2.5 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-kapture-yellow"
+                  className="appearance-none bg-kapture-black dark:bg-white text-white dark:text-kapture-black text-xs font-bold pl-3 pr-8 py-2 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-kapture-yellow max-w-[180px] sm:max-w-none"
                 >
                   {schema.pathways.map((p) => (
                     <option key={p.id} value={p.id} className="bg-white text-kapture-black">
@@ -222,7 +227,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
                   height="6"
                   viewBox="0 0 10 6"
                   fill="none"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white dark:text-kapture-black"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-white dark:text-kapture-black"
                   aria-hidden
                 >
                   <path
@@ -238,7 +243,7 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full w-9 h-9 flex items-center justify-center hover:bg-kapture-paper dark:hover:bg-white/[0.06] shrink-0"
+              className="rounded-full w-11 h-11 sm:w-9 sm:h-9 flex items-center justify-center hover:bg-kapture-paper dark:hover:bg-white/[0.06] shrink-0 -mr-2 sm:mr-0"
               aria-label="Close"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -257,46 +262,32 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
             />
           ) : (
             <>
-              {/* ── HEADER BAND ── form-level use-case context */}
-              <div className="px-5 sm:px-10 pt-6 pb-5 sm:pt-7 sm:pb-6 border-b border-kapture-fog dark:border-white/10 bg-kapture-paper/40 dark:bg-white/[0.02]">
-                <h2 className="font-bold text-xl sm:text-2xl tracking-[-0.015em] leading-[1.2]">
-                  {schema.title}
-                </h2>
-                <p className="mt-1.5 text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed max-w-[640px]">
-                  {product.hook}
-                </p>
-              </div>
-
-              {/* ── PROGRESS STRIP ── dots + section indicator */}
-              <div className="px-5 sm:px-10 py-3.5 flex items-center justify-between gap-4 border-b border-kapture-fog dark:border-white/10 shrink-0">
+              {/* ── PROGRESS STRIP — dots + X / Y. No section name here; the H1
+                  below carries that context. */}
+              <div className="px-4 sm:px-7 py-3 flex items-center justify-between gap-4 border-b border-kapture-fog dark:border-white/10 shrink-0">
                 <ProgressDots total={totalSections} current={sectionIdx} />
-                <div className="flex items-baseline gap-2 shrink-0 min-w-0">
-                  <span className="hidden sm:inline text-xs font-bold tracking-[-0.005em] text-kapture-black dark:text-white truncate">
-                    {current?.name ?? ""}
-                  </span>
-                  <span className="font-mono text-[0.6875rem] font-bold tracking-wider text-kapture-mist dark:text-white/45 whitespace-nowrap">
-                    {sectionIdx + 1} / {totalSections}
-                  </span>
-                </div>
+                <span className="font-mono text-[0.6875rem] font-bold tracking-wider text-kapture-mist dark:text-white/45 whitespace-nowrap shrink-0">
+                  {sectionIdx + 1} / {totalSections}
+                </span>
               </div>
 
-              {/* ── FORM BODY ── soft grey so the white field inputs pop */}
+              {/* ── FORM BODY — only scroll container in the modal */}
               <div
                 id="kap-demo-main"
-                className="flex-1 overflow-y-auto bg-kapture-paper/70 dark:bg-white/[0.02]"
+                className="flex-1 overflow-y-auto bg-kapture-paper/70 dark:bg-white/[0.02] overscroll-contain"
               >
-                <div className="px-5 sm:px-10 py-7 sm:py-9">
+                <div className="px-4 sm:px-7 py-6 sm:py-8">
                   {current ? (
                     <>
-                      <h3 className="font-bold text-lg sm:text-xl tracking-[-0.01em] mb-2 sm:hidden">
+                      <h2 className="font-bold text-xl sm:text-2xl tracking-[-0.015em] leading-[1.2] mb-1.5">
                         {current.name}
-                      </h3>
+                      </h2>
                       {current.intro && (
-                        <p className="text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed mb-7 sm:mb-8 max-w-[640px]">
+                        <p className="text-[0.8125rem] sm:text-sm font-medium text-kapture-smoke dark:text-white/65 leading-relaxed mb-6">
                           {current.intro}
                         </p>
                       )}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-x-6 sm:gap-y-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-x-5 sm:gap-y-5">
                         {current.fields.map((f) => (
                           <div key={f.id} className={spanClassFor(f)}>
                             <FieldRenderer
@@ -318,21 +309,21 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
               </div>
 
               {/* ── FOOTER ── */}
-              <footer className="flex items-center justify-between gap-3 px-5 sm:px-10 py-4 sm:py-5 border-t border-kapture-fog dark:border-white/10 bg-white dark:bg-kapture-coal shrink-0">
+              <footer className="flex items-center justify-between gap-3 px-4 sm:px-7 py-3 sm:py-3.5 border-t border-kapture-fog dark:border-white/10 bg-white dark:bg-kapture-coal shrink-0">
                 <button
                   type="button"
                   onClick={goBack}
                   disabled={sectionIdx === 0}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-lg text-sm font-bold text-kapture-smoke dark:text-white/65 hover:text-kapture-black dark:hover:text-white hover:bg-kapture-paper dark:hover:bg-white/[0.06] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                  className="px-4 py-2.5 rounded-lg text-sm font-bold text-kapture-smoke dark:text-white/65 hover:text-kapture-black dark:hover:text-white hover:bg-kapture-paper dark:hover:bg-white/[0.06] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 >
                   ← Back
                 </button>
                 <button
                   type="button"
                   onClick={goNext}
-                  className="inline-flex items-center gap-2 bg-kapture-black dark:bg-white text-white dark:text-kapture-black hover:opacity-90 px-6 py-3 rounded-xl font-bold text-sm transition active:scale-[0.99]"
+                  className="inline-flex items-center gap-2 bg-kapture-black dark:bg-white text-white dark:text-kapture-black hover:opacity-90 px-5 py-2.5 rounded-xl font-bold text-sm transition active:scale-[0.99]"
                 >
-                  {isLast ? "Finish demo →" : "Next section →"}
+                  {isLast ? "Finish →" : "Next →"}
                 </button>
               </footer>
             </>
@@ -346,11 +337,9 @@ export function FormDemoModal({ open, onClose, schema, product }: Props) {
 /* ─────────── progress dots ─────────── */
 
 function ProgressDots({ total, current }: { total: number; current: number }) {
-  // Cap the dot count for very long forms (>12 sections) — fall back to a
-  // hairline with current/total numerals so we don't paint a pixel parade.
   if (total > 12) {
     return (
-      <div className="flex-1 flex items-center gap-3">
+      <div className="flex-1 flex items-center gap-3 min-w-0">
         <div className="h-1 flex-1 bg-kapture-fog dark:bg-white/10 rounded-full overflow-hidden">
           <div
             className="h-full bg-kapture-yellow transition-all duration-300 rounded-full"
@@ -361,7 +350,13 @@ function ProgressDots({ total, current }: { total: number; current: number }) {
     );
   }
   return (
-    <div className="flex items-center gap-1.5 flex-wrap" role="progressbar" aria-valuenow={current + 1} aria-valuemin={1} aria-valuemax={total}>
+    <div
+      className="flex items-center gap-1.5 flex-wrap min-w-0"
+      role="progressbar"
+      aria-valuenow={current + 1}
+      aria-valuemin={1}
+      aria-valuemax={total}
+    >
       {Array.from({ length: total }).map((_, i) => {
         const isPast = i < current;
         const isCurrent = i === current;
@@ -370,7 +365,7 @@ function ProgressDots({ total, current }: { total: number; current: number }) {
             key={i}
             className={`block h-1.5 rounded-full transition-all ${
               isCurrent
-                ? "w-6 bg-kapture-yellow"
+                ? "w-5 bg-kapture-yellow"
                 : isPast
                   ? "w-1.5 bg-kapture-black dark:bg-white"
                   : "w-1.5 bg-kapture-fog dark:bg-white/15"
@@ -401,18 +396,18 @@ function FinishedState({
   const primary =
     product.options.find((o) => o.primary) ?? product.options[0];
   return (
-    <div className="flex-1 overflow-y-auto">
-      <div className="max-w-[520px] mx-auto px-6 sm:px-10 py-12 sm:py-16 text-center">
-        <div className="w-12 h-12 rounded-full bg-kapture-yellow text-kapture-black mx-auto mb-6 flex items-center justify-center font-bold text-xl">
+    <div className="flex-1 overflow-y-auto bg-kapture-paper/70 dark:bg-white/[0.02] overscroll-contain">
+      <div className="max-w-[440px] mx-auto px-5 sm:px-7 py-10 sm:py-16 text-center">
+        <div className="w-12 h-12 rounded-full bg-kapture-yellow text-kapture-black mx-auto mb-5 flex items-center justify-center font-bold text-xl">
           ✓
         </div>
         <h3 className="font-bold text-2xl sm:text-[1.75rem] tracking-[-0.02em] leading-[1.15] mb-3">
           You reached the end.
         </h3>
-        <p className="text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed mb-8 max-w-[420px] mx-auto">
-          Nothing was submitted — this was a test pass. To make it real, add the pack to your cart or check out now.
+        <p className="text-sm font-medium text-kapture-smoke dark:text-white/70 leading-relaxed mb-7">
+          Nothing was submitted. To make this form real, add the pack to your cart or check out now.
         </p>
-        <div className="flex flex-col sm:flex-row items-stretch gap-2.5 max-w-[420px] mx-auto">
+        <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
           <button
             type="button"
             onClick={onAddToCart}
@@ -464,7 +459,7 @@ function FieldRenderer({
   const id = `demo-${field.id}`;
   const labelEl = (
     <div className="flex items-baseline justify-between gap-2 mb-1.5">
-      <label htmlFor={id} className="font-mono text-[0.625rem] uppercase tracking-[0.12em] font-bold text-kapture-smoke dark:text-white/70">
+      <label htmlFor={id} className="font-mono text-[0.625rem] uppercase tracking-[0.1em] font-bold text-kapture-smoke dark:text-white/70">
         {field.label}
         {field.required && <span className="text-status-critical ml-1">*</span>}
       </label>
@@ -622,18 +617,12 @@ function FieldRenderer({
 
 /* ─────────── grid span ─────────── */
 
-/**
- * Decide whether a field gets one or two grid columns on desktop. Long-form
- * inputs span the full row so they read like prose; short fields pair up.
- */
 function spanClassFor(field: Field): string {
   const isWide =
     field.type === "textarea" ||
     field.type === "signature" ||
     field.type === "checkbox" ||
     field.type === "multi-select" ||
-    // Heuristic: address-like fields are usually 'Address line 1', 'line 2'
-    // — keep those full-width so the URL bar of an input doesn't get cramped.
     /address line|address|notes|statement|exhibits|describe|comments/i.test(field.label);
   return isWide ? "sm:col-span-2" : "sm:col-span-1";
 }
