@@ -509,9 +509,9 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Parents & consent",
         tagline: "Trip, photo, media, transport.",
         forms: [
-          soon("Parental consent · school", "Q1 2027", ["parent","consent"]),
+          live("Parental consent · school", "/products/parental-consent-school", ["parent","consent"]),
           live("Photography & media consent", "/products/photography-media-consent", ["photo","media"]),
-          soon("Educational visit consent", "Q1 2027", ["trip","visit"]),
+          live("Educational visit consent", "/products/educational-visit-consent", ["trip","visit"]),
           soon("School transport request", "Q1 2027", ["transport","bus"]),
           soon("Medication-in-school form", "Q1 2027", ["medication","school"]),
         ],
@@ -521,7 +521,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "SEND & inclusion",
         tagline: "Identification, EHCP, support plans.",
         forms: [
-          soon("SEND support plan", "Q1 2027", ["SEND","support"]),
+          live("SEND support plan", "/products/send-support-plan", ["SEND","support"]),
           soon("EHCP referral", "Q1 2027", ["EHCP","education health care"]),
           soon("Pupil profile · one-page", "Q2 2027", ["one-page","SEND"]),
           soon("Annual EHCP review", "Q2 2027", ["EHCP review"]),
@@ -609,11 +609,11 @@ export const TAXONOMY: IndustryNode[] = [
         forms: [
           live("Tenant referencing", "/products/tenant-referencing", ["tenant","reference"]),
           soon("Right-to-rent check", "Q2 2027", ["RtR","right to rent"]),
-          soon("AST · assured shorthold tenancy", "Q2 2027", ["AST"]),
-          soon("Inventory · check-in", "Q2 2027", ["inventory","check-in"]),
+          live("AST · assured shorthold tenancy", "/products/ast-assured-shorthold-tenancy", ["AST"]),
+          live("Inventory · check-in", "/products/inventory-check-in", ["inventory","check-in"]),
           soon("Inventory · check-out", "Q2 2027", ["check-out"]),
           soon("Deposit protection certificate", "Q2 2027", ["deposit","TDS"]),
-          soon("Notice to quit · Section 21", "Q2 2027", ["S21","notice"]),
+          live("Notice to quit · Section 21", "/products/notice-to-quit-section-21", ["S21","notice"]),
         ],
       },
       {
@@ -721,10 +721,10 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Citizen services",
         tagline: "Council day-to-day requests.",
         forms: [
-          soon("Council tax · single person discount", "Q3 2027", ["council tax"]),
+          live("Council tax · single person discount", "/products/council-tax-single-person-discount", ["council tax"]),
           soon("Missed bin · service request", "Q3 2027", ["bin","waste"]),
           soon("Pothole report", "Q3 2027", ["pothole","highway"]),
-          soon("Blue badge application", "Q3 2027", ["blue badge"]),
+          live("Blue badge application", "/products/blue-badge-application", ["blue badge"]),
           soon("Housing application", "Q3 2027", ["housing","social"]),
         ],
       },
@@ -743,7 +743,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "FOI & disclosure",
         tagline: "FOI, EIR, redaction.",
         forms: [
-          soon("FOI request", "Q3 2027", ["FOI"]),
+          live("FOI request", "/products/foi-request", ["FOI"]),
           soon("EIR request", "Q3 2027", ["EIR"]),
           soon("Internal review · FOI", "Q3 2027", ["FOI review"]),
         ],
@@ -775,7 +775,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Drivers",
         tagline: "From licence check to CPC.",
         forms: [
-          soon("Driver onboarding · HGV", "Q4 2027", ["driver","HGV","CPC"]),
+          live("Driver onboarding · HGV", "/products/driver-onboarding-hgv", ["driver","HGV","CPC"]),
           soon("DVLA licence check (mandate)", "Q4 2027", ["DVLA","licence"]),
           soon("CPC training log", "Q4 2027", ["CPC"]),
           soon("Driver eyesight declaration", "Q4 2027", ["eyesight"]),
@@ -787,8 +787,8 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Vehicles",
         tagline: "Walk-around, defects, MOT.",
         forms: [
-          soon("Vehicle defect report (VOR)", "Q4 2027", ["VOR","defect"]),
-          soon("Walk-around check · daily", "Q4 2027", ["walk-around"]),
+          live("Vehicle defect report (VOR)", "/products/vehicle-defect-report-vor", ["VOR","defect"]),
+          live("Walk-around check · daily", "/products/walk-around-check-daily", ["walk-around"]),
           soon("Vehicle inspection · 6-week", "Q4 2027", ["inspection"]),
           soon("Tachograph download log", "Q4 2027", ["tachograph"]),
           soon("Accident report · fleet", "Q4 2027", ["accident","FNOL"]),
