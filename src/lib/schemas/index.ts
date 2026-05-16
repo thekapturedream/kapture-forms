@@ -35,6 +35,22 @@ import SPONSORSHIP_APPLICATION from "./sponsorship-application";
 import COUNSELLING_APPOINTMENT from "./counselling-appointment-request";
 import HAIR_SALON_BOOKING from "./hair-salon-booking";
 import MASSAGE_APPOINTMENT from "./massage-appointment";
+// ── HR & people ─────────────────────────────────────────────────────
+import HR_ONBOARDING_UK_EMPLOYER from "./hr-onboarding-uk-employer";
+import PERFORMANCE_REVIEW from "./performance-review";
+import HOLIDAY_REQUEST from "./holiday-request";
+import EXIT_INTERVIEW from "./exit-interview";
+// ── Finance ─────────────────────────────────────────────────────────
+import AML_KYC_ONBOARDING from "./aml-kyc-onboarding";
+import CREDIT_APPLICATION_PERSONAL from "./credit-application-personal";
+import DIRECT_DEBIT_MANDATE from "./direct-debit-mandate";
+// ── Hospitality ─────────────────────────────────────────────────────
+import RESTAURANT_BOOKING_TCS from "./restaurant-booking-tcs";
+import ALLERGEN_DISCLOSURE from "./allergen-disclosure";
+import HOTEL_BOOKING_TCS from "./hotel-booking-tcs";
+// ── Construction ────────────────────────────────────────────────────
+import RAMS_RISK_METHOD from "./rams-risk-method";
+import SITE_INDUCTION from "./site-induction";
 
 /**
  * Schema registry — productId → PackSchema.
@@ -88,6 +104,22 @@ const SCHEMAS: Record<string, PackSchema> = {
   "counselling-appointment-request": COUNSELLING_APPOINTMENT,
   "hair-salon-booking": HAIR_SALON_BOOKING,
   "massage-appointment": MASSAGE_APPOINTMENT,
+  // HR
+  "hr-onboarding-uk-employer": HR_ONBOARDING_UK_EMPLOYER,
+  "performance-review": PERFORMANCE_REVIEW,
+  "holiday-request": HOLIDAY_REQUEST,
+  "exit-interview": EXIT_INTERVIEW,
+  // Finance
+  "aml-kyc-onboarding": AML_KYC_ONBOARDING,
+  "credit-application-personal": CREDIT_APPLICATION_PERSONAL,
+  "direct-debit-mandate": DIRECT_DEBIT_MANDATE,
+  // Hospitality
+  "restaurant-booking-t-cs": RESTAURANT_BOOKING_TCS,
+  "allergen-disclosure-natasha-s-law": ALLERGEN_DISCLOSURE,
+  "hotel-booking-t-cs": HOTEL_BOOKING_TCS,
+  // Construction
+  "rams-risk-method": RAMS_RISK_METHOD,
+  "site-induction": SITE_INDUCTION,
 };
 
 /**

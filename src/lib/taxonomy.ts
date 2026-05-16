@@ -250,7 +250,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Hiring & onboarding",
         tagline: "Offer to first-day-fit.",
         forms: [
-          soon("HR onboarding · UK employer", "Q3 2026", ["onboarding","P45","new starter"]),
+          live("HR onboarding · UK employer", "/products/hr-onboarding-uk-employer", ["onboarding","P45","new starter"]),
           soon("Right-to-work check", "Q3 2026", ["right to work","RtW"]),
           soon("Reference request", "Q3 2026", ["reference"]),
           soon("Offer letter", "Q3 2026", ["offer letter"]),
@@ -263,7 +263,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Performance",
         tagline: "Reviews, objectives, calibration.",
         forms: [
-          soon("Performance review", "Q3 2026", ["appraisal","review"]),
+          live("Performance review", "/products/performance-review", ["appraisal","review"]),
           soon("Quarterly OKR check-in", "Q3 2026", ["OKR","check-in"]),
           soon("1:1 meeting notes", "Q3 2026", ["1-on-1","manager"]),
           soon("PIP · performance improvement plan", "Q4 2026", ["PIP"]),
@@ -275,7 +275,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Time & leave",
         tagline: "Absence, holidays, statutory leave.",
         forms: [
-          soon("Holiday request", "Q3 2026", ["holiday","annual leave"]),
+          live("Holiday request", "/products/holiday-request", ["holiday","annual leave"]),
           soon("Return to work · absence", "Q4 2026", ["return to work","sickness"]),
           soon("Parental leave request", "Q4 2026", ["maternity","paternity","SPL"]),
           soon("Flexible working request", "Q1 2027", ["flexible","hybrid"]),
@@ -287,7 +287,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Exit & disputes",
         tagline: "Leaving cleanly, fairly, and fast.",
         forms: [
-          soon("Exit interview", "Q3 2026", ["leaver","exit"]),
+          live("Exit interview", "/products/exit-interview", ["leaver","exit"]),
           soon("Grievance · disciplinary", "Q4 2026", ["grievance","ACAS"]),
           soon("Whistleblowing report", "Q4 2026", ["whistleblowing","PIDA"]),
           soon("Settlement agreement (COT3)", "Q1 2027", ["settlement","COT3"]),
@@ -324,7 +324,7 @@ export const TAXONOMY: IndustryNode[] = [
           soon("Customer onboarding · banking", "Q1 2027", ["onboarding","banking"]),
           soon("Account opening · personal", "Q1 2027", ["account","personal"]),
           soon("Account opening · SME", "Q1 2027", ["SME","business banking"]),
-          soon("Direct debit mandate", "Q1 2027", ["DDM","mandate"]),
+          live("Direct debit mandate", "/products/direct-debit-mandate", ["DDM","mandate"]),
           soon("Bereavement notification · bank", "Q1 2027", ["bereavement"]),
         ],
       },
@@ -333,7 +333,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "AML / KYC",
         tagline: "Anti-money-laundering for any regulated firm.",
         forms: [
-          soon("AML / KYC onboarding", "Q4 2026", ["AML","KYC","PEP"]),
+          live("AML / KYC onboarding", "/products/aml-kyc-onboarding", ["AML","KYC","PEP"]),
           soon("Source of funds declaration", "Q4 2026", ["source of funds","SoF"]),
           soon("Enhanced due diligence (EDD)", "Q4 2026", ["EDD","high risk"]),
           soon("SAR · suspicious activity report", "Q1 2027", ["SAR","NCA"]),
@@ -345,7 +345,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Lending",
         tagline: "Personal, mortgage, SME credit.",
         forms: [
-          soon("Credit application · personal", "Q1 2027", ["credit","loan"]),
+          live("Credit application · personal", "/products/credit-application-personal", ["credit","loan"]),
           soon("Mortgage application · DIP", "Q1 2027", ["mortgage","DIP"]),
           soon("Bridging loan application", "Q1 2027", ["bridging"]),
           soon("SME finance application", "Q1 2027", ["SME","business loan"]),
@@ -554,8 +554,8 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Bookings & T&Cs",
         tagline: "Walk-in to large-party booking.",
         forms: [
-          soon("Restaurant booking T&Cs", "Q2 2027", ["restaurant","booking"]),
-          soon("Hotel booking T&Cs", "Q2 2027", ["hotel","booking"]),
+          live("Restaurant booking T&Cs", "/products/restaurant-booking-t-cs", ["restaurant","booking"]),
+          live("Hotel booking T&Cs", "/products/hotel-booking-t-cs", ["hotel","booking"]),
           soon("Event booking · catering", "Q2 2027", ["event","catering"]),
           soon("Cancellation request", "Q2 2027", ["cancellation"]),
         ],
@@ -565,7 +565,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "Food safety & allergens",
         tagline: "Natasha's Law, HACCP, EHO.",
         forms: [
-          soon("Allergen disclosure (Natasha's Law)", "Q2 2027", ["allergen","Natasha"]),
+          live("Allergen disclosure (Natasha's Law)", "/products/allergen-disclosure-natasha-s-law", ["allergen","Natasha"]),
           soon("HACCP daily check", "Q2 2027", ["HACCP","food safety"]),
           soon("EHO inspection prep", "Q2 2027", ["EHO","inspection"]),
           soon("Food incident report", "Q2 2027", ["food","incident"]),
@@ -665,7 +665,7 @@ export const TAXONOMY: IndustryNode[] = [
         name: "RAMS & H&S",
         tagline: "Risk + method statements for every task.",
         forms: [
-          soon("RAMS · risk + method", "Q3 2027", ["RAMS"]),
+          live("RAMS · risk + method", "/products/rams-risk-method", ["RAMS"]),
           soon("Permit to work · hot work", "Q3 2027", ["permit","hot work"]),
           soon("Confined space permit", "Q3 2027", ["confined space"]),
           soon("Lifting plan", "Q3 2027", ["lifting","LOLER"]),
@@ -678,7 +678,7 @@ export const TAXONOMY: IndustryNode[] = [
         tagline: "PQQ, induction, paperwork.",
         forms: [
           soon("Contractor onboarding", "Q3 2027", ["contractor","onboarding"]),
-          soon("Site induction", "Q3 2027", ["induction"]),
+          live("Site induction", "/products/site-induction", ["induction"]),
           soon("PQQ · pre-qualification questionnaire", "Q3 2027", ["PQQ"]),
           soon("Sub-contractor agreement", "Q3 2027", ["subcontractor"]),
         ],
