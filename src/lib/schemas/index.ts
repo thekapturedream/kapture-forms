@@ -5,6 +5,36 @@ import TENANT_REFERENCING from "./tenant-referencing";
 import GDPR_DSAR from "./gdpr-dsar";
 import AFFIDAVIT_GENERAL from "./affidavit-general";
 import PHOTOGRAPHY_CONSENT from "./photography-consent";
+// ── Applications · cross-sector ──────────────────────────────────────
+import JOB_APPLICATION_STANDARD from "./job-application-standard";
+import VOLUNTEER_APPLICATION from "./volunteer-application";
+import GRANT_APPLICATION_ORGANISATION from "./grant-application-organisation";
+import MEMBERSHIP_APPLICATION_CLUB from "./membership-application-club";
+// ── Appointments · clinical & wellness ───────────────────────────────
+import GP_APPOINTMENT_REQUEST from "./gp-appointment-request";
+import DENTAL_CHECK_UP_BOOKING from "./dental-check-up-booking";
+import EYE_TEST_BOOKING_ADULT from "./eye-test-booking-adult";
+import THERAPY_INTAKE_FORM from "./therapy-intake-form";
+// ── Bookings · venues, classes, services ─────────────────────────────
+import VENUE_HIRE_ENQUIRY from "./venue-hire-enquiry";
+import CLASS_WORKSHOP_SIGN_UP from "./class-workshop-sign-up";
+import WEDDING_ENQUIRY from "./wedding-enquiry";
+import TRADESPERSON_SITE_VISIT from "./tradesperson-site-visit";
+import PARTY_FUNCTION_ENQUIRY from "./party-function-enquiry";
+import CLEANING_SERVICE from "./cleaning-service-booking";
+// ── Legal · extra packs ──────────────────────────────────────────────
+import ONE_WAY_NDA from "./one-way-nda";
+import STATUTORY_DECLARATION from "./statutory-declaration";
+import SIMPLE_WILL from "./simple-will";
+import LPA_FINANCE from "./lpa-finance";
+// ── Applications · extras ────────────────────────────────────────────
+import BURSARY_SCHOLARSHIP from "./bursary-scholarship-application";
+import APPRENTICESHIP_APPLICATION from "./apprenticeship-application";
+import SPONSORSHIP_APPLICATION from "./sponsorship-application";
+// ── Appointments · extras ────────────────────────────────────────────
+import COUNSELLING_APPOINTMENT from "./counselling-appointment-request";
+import HAIR_SALON_BOOKING from "./hair-salon-booking";
+import MASSAGE_APPOINTMENT from "./massage-appointment";
 
 /**
  * Schema registry — productId → PackSchema.
@@ -28,6 +58,36 @@ const SCHEMAS: Record<string, PackSchema> = {
   "gdpr-dsar-subject-access": GDPR_DSAR,
   "affidavit-general-purpose": AFFIDAVIT_GENERAL,
   "photography-media-consent": PHOTOGRAPHY_CONSENT,
+  // Applications
+  "job-application-standard": JOB_APPLICATION_STANDARD,
+  "volunteer-application": VOLUNTEER_APPLICATION,
+  "grant-application-organisation": GRANT_APPLICATION_ORGANISATION,
+  "membership-application-club": MEMBERSHIP_APPLICATION_CLUB,
+  // Appointments
+  "gp-appointment-request": GP_APPOINTMENT_REQUEST,
+  "dental-check-up-booking": DENTAL_CHECK_UP_BOOKING,
+  "eye-test-booking-adult": EYE_TEST_BOOKING_ADULT,
+  "therapy-intake-form": THERAPY_INTAKE_FORM,
+  // Bookings
+  "venue-hire-enquiry": VENUE_HIRE_ENQUIRY,
+  "class-workshop-sign-up": CLASS_WORKSHOP_SIGN_UP,
+  "wedding-enquiry": WEDDING_ENQUIRY,
+  "tradesperson-site-visit": TRADESPERSON_SITE_VISIT,
+  "party-function-enquiry": PARTY_FUNCTION_ENQUIRY,
+  "cleaning-service-booking": CLEANING_SERVICE,
+  // Legal · batch 2
+  "one-way-nda": ONE_WAY_NDA,
+  "statutory-declaration": STATUTORY_DECLARATION,
+  "simple-will": SIMPLE_WILL,
+  "power-of-attorney-lpa-finance": LPA_FINANCE,
+  // Applications · batch 2
+  "bursary-scholarship-application": BURSARY_SCHOLARSHIP,
+  "apprenticeship-application": APPRENTICESHIP_APPLICATION,
+  "sponsorship-application": SPONSORSHIP_APPLICATION,
+  // Appointments · batch 2
+  "counselling-appointment-request": COUNSELLING_APPOINTMENT,
+  "hair-salon-booking": HAIR_SALON_BOOKING,
+  "massage-appointment": MASSAGE_APPOINTMENT,
 };
 
 /**
